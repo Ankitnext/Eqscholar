@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Quiz Dashboard</title>
+    <style>
+        /* General Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #ecf0f1;
+            overflow-x: hidden;
+            padding-top: 80px;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #f39c12;
+        }
+
+        /* Main Dashboard Container */
+        .dashboard-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            font-weight: bold;
+            text-align: center;
+            color: #f39c12;
+            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
+            margin-bottom: 20px;
+        }
+
+        .dashboard-card {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* Responsive Layout for Leagues and Prizes */
+        .bottom-sections-container {
+            display: flex;
+            flex-direction: row;
+            gap: 40px;
+        }
+
+        .league-section, .prizes-section {
+            flex: 1;
+        }
+
+        /* --- LEADERBOARD STYLES --- */
+        .leaderboard-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .leaderboard-tabs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .leaderboard-tab {
+            background: rgba(0, 0, 0, 0.4);
+            color: white;
+            padding: 10px 25px;
+            border: 2px solid transparent;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .leaderboard-tab:hover {
+            transform: translateY(-2px);
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .leaderboard-tab.active {
+            background: linear-gradient(45deg, #e74c3c, #f39c12);
+            border: 2px solid #fff;
+            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
+            pointer-events: none;
+        }
+
+        .leaderboard-list-container {
+            width: 100%;
+        }
+
+        .leaderboard-list {
+            list-style: none;
+            padding: 0;
+            display: none;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .leaderboard-list.active {
+            display: block;
+        }
+
+        .leaderboard-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .leaderboard-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .rank {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #f39c12;
+            width: 40px;
+        }
+
+        .player-info {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            margin-left: 20px;
+        }
+
+        .player-name {
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+        
+        .player-league-icon {
+            font-size: 1.2rem;
+            margin-left: 10px;
+        }
+        
+        .player-score {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #ecf0f1;
+        }
+
+        /* --- LEAGUES STYLES --- */
+        .league-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .league-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .league-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 15px 20px;
+            margin-bottom: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            transition: background 0.3s ease;
+        }
+
+        .league-item:hover {
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .league-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .league-icon {
+            font-size: 2rem;
+        }
+
+        .league-name {
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        .league-score-needed {
+            font-size: 1rem;
+            color: #f39c12;
+            font-weight: bold;
+        }
+        
+        /* --- PRIZES STYLES --- */
+        .prizes-section {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .prizes-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            width: 100%;
+        }
+
+        .prize-item {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 20px;
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .prize-item:hover {
+            transform: scale(1.03);
+            background: rgba(0, 0, 0, 0.3);
+        }
+
+        .prize-item h4 {
+            font-size: 1.5rem;
+            color: #f39c12;
+            margin-bottom: 10px;
+        }
+
+        .prize-item p {
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Media Queries for Mobile */
+        @media (max-width: 768px) {
+            .nav-bar { padding: 15px 20px; }
+            .nav-links { display: none; }
+            .logo { font-size: 20px; }
+            .dashboard-container { padding: 20px 10px; }
+            .section-title { font-size: 2rem; }
+            .leaderboard-tab { padding: 8px 18px; font-size: 0.9rem; }
+            .leaderboard-item { padding: 12px 15px; font-size: 0.9rem; }
+            .bottom-sections-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <nav class="nav-bar">
+        <div class="logo">🧠 EQ Quiz Dashboard</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="leaderboard.html"> Leaderboard</a>
+            <a href="index3.html"> Profile</a>
+            <a href="index5.html">Take Quiz</a>
+            <a href="#rewards">Rewards</a>
+            <a href="#impact">Impact</a>
+        </div>
+    </nav>
+
+    <!-- Main Content Container -->
+    <main class="dashboard-container">
+        
+        <!-- Leaderboard Section -->
+        <section class="dashboard-card leaderboard-section">
+            <h2 class="section-title">Global Leaderboard</h2>
+            <div class="leaderboard-tabs">
+                <button class="leaderboard-tab active" data-tab="weekly">Weekly</button>
+                <button class="leaderboard-tab" data-tab="monthly">Monthly</button>
+                <button class="leaderboard-tab" data-tab="global">Global</button>
+            </div>
+            <div class="leaderboard-list-container">
+                <ul id="weekly-list" class="leaderboard-list active">
+                    <!-- Leaderboard items will be dynamically generated by JavaScript -->
+                </ul>
+                <ul id="monthly-list" class="leaderboard-list">
+                    <!-- Leaderboard items will be dynamically generated by JavaScript -->
+                </ul>
+                <ul id="global-list" class="leaderboard-list">
+                    <!-- Leaderboard items will be dynamically generated by JavaScript -->
+                </ul>
+            </div>
+        </section>
+
+        <!-- Container for League and Prizes sections -->
+        <div class="bottom-sections-container">
+            <!-- League Section -->
+            <section class="dashboard-card league-section">
+                <h2 class="section-title">League Tiers</h2>
+                <ul id="league-list" class="league-list">
+                    <!-- League items will be dynamically generated here by JavaScript -->
+                </ul>
+            </section>
+
+            <!-- Prizes Section -->
+            <section class="dashboard-card prizes-section">
+                <h2 class="section-title">🏆 Prize Pool</h2>
+                <div class="prizes-grid">
+                    <div class="prize-item">
+                        <h4>🥇 1st Place</h4>
+                        <p>300 rs</p>
+                    </div>
+                    <div class="prize-item">
+                        <h4>🥈 2nd Place</h4>
+                        <p>50 rs</p>
+                    </div>
+                    <div class="prize-item">
+                        <h4>🥉 3rd Place</h4>
+                        <p>30 rs</p>
+                    </div>
+                    <div class="prize-item">
+                        <h4>🏅 4th to 15th Place</h4>
+                        <p>10 rs</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Data for the leagues
+            const leagueTiers = [
+                { name: 'Diamond', minScore: 3000, icon: '💎' },
+                { name: 'Platinum', minScore: 2000, icon: '✨' },
+                { name: 'Gold', minScore: 1500, icon: '🥇' },
+                { name: 'Silver', minScore: 1000, icon: '🥈' },
+                { name: 'Bronze', minScore: 500, icon: '🥉' },
+                { name: 'Iron', minScore: 200, icon: '⛓️' },
+                { name: 'Stone', minScore: 0, icon: '🗿' }
+            ];
+
+            // Sample data for the leaderboards
+            const weeklyData = [
+                { name: 'Alex Johnson', score: 987 },
+                { name: 'Maria Lopez', score: 954 },
+                { name: 'David Chen', score: 931 },
+                { name: 'Sarah Williams', score: 912 },
+                { name: 'Chris Davis', score: 899 }
+            ];
+
+            const monthlyData = [
+                { name: 'Sophia Miller', score: 1502 },
+                { name: 'Daniel Wilson', score: 1488 },
+                { name: 'Olivia Moore', score: 1456 },
+                { name: 'Ethan Taylor', score: 1421 },
+                { name: 'Mia Anderson', score: 1390 }
+            ];
+
+            const globalData = [
+                { name: 'Isabella Thomas', score: 3205 },
+                { name: 'James Rodriguez', score: 3150 },
+                { name: 'Chloe Harris', score: 3099 },
+                { name: 'Benjamin Clark', score: 3011 },
+                { name: 'Liam Lewis', score: 2987 }
+            ];
+
+            // Helper function to get the league icon for a given score
+            function getLeagueIcon(score) {
+                // Find the first league where the score is greater than or equal to the minScore
+                const league = leagueTiers.find(tier => score >= tier.minScore);
+                return league ? league.icon : ''; // Return the icon or an empty string if not found
+            }
+
+            // Function to render the leaderboard list
+            function renderLeaderboard(listId, data) {
+                const list = document.getElementById(listId);
+                if (!list) return;
+
+                // Clear existing content
+                list.innerHTML = '';
+
+                // Loop through data and create list items
+                data.forEach((player, index) => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'leaderboard-item';
+
+                    const leagueIcon = getLeagueIcon(player.score);
+
+                    listItem.innerHTML = `
+                        <span class="rank">${index + 1}</span>
+                        <div class="player-info">
+                            <span class="player-name">${player.name}</span>
+                            <span class="player-league-icon">${leagueIcon}</span>
+                        </div>
+                        <span class="player-score">${player.score} EQ</span>
+                    `;
+                    list.appendChild(listItem);
+                });
+            }
+
+            // Function to generate the league tiers list
+            function generateLeagueList() {
+                const leagueList = document.getElementById('league-list');
+                if (!leagueList) return;
+
+                // Clear existing content
+                leagueList.innerHTML = '';
+
+                // Loop through league data and create list items
+                leagueTiers.forEach(league => {
+                    const listItem = document.createElement('li');
+                    listItem.className = 'league-item';
+                    listItem.innerHTML = `
+                        <div class="league-info">
+                            <span class="league-icon">${league.icon}</span>
+                            <span class="league-name">${league.name}</span>
+                        </div>
+                        <span class="league-score-needed">${league.minScore} EQ</span>
+                    `;
+                    leagueList.appendChild(listItem);
+                });
+            }
+
+            // Initial rendering of all leaderboards and league tiers
+            renderLeaderboard('weekly-list', weeklyData);
+            renderLeaderboard('monthly-list', monthlyData);
+            renderLeaderboard('global-list', globalData);
+            generateLeagueList();
+
+            // Tab functionality for leaderboard
+            const tabs = document.querySelectorAll('.leaderboard-tab');
+            const lists = document.querySelectorAll('.leaderboard-list');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    // Deactivate all tabs and lists
+                    tabs.forEach(t => t.classList.remove('active'));
+                    lists.forEach(l => l.classList.remove('active'));
+
+                    // Activate the clicked tab and its corresponding list
+                    tab.classList.add('active');
+                    const targetTabId = tab.getAttribute('data-tab');
+                    document.getElementById(targetTabId + '-list').classList.add('active');
+                });
+            });
+
+            // Add scroll effect to navigation
+            window.addEventListener('scroll', () => {
+                const nav = document.querySelector('.nav-bar');
+                if (window.scrollY > 10) {
+                    nav.style.background = 'rgba(0,0,0,0.95)';
+                } else {
+                    nav.style.background = 'rgba(0,0,0,0.9)';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

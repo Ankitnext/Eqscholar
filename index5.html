@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Quiz Platform - Unlock Your Power</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        
+        .header {
+            background: rgba(0,0,0,0.9);
+            padding: 20px 30px;
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 24px;
+            font-weight: bold;
+            color: #ffd700;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 30px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 8px;
+        }
+        
+        .nav-links a:hover {
+            color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+        
+        .hero-banner {
+            background: rgba(0,0,0,0.8);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .hero-banner::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+            animation: sweep 3s ease-in-out infinite;
+        }
+        
+        .hero-title {
+            font-size: 48px;
+            background: linear-gradient(45deg, #ffd700, #ff6b6b, #4ecdc4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 15px;
+            animation: pulse 2s ease-in-out infinite alternate;
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            color: #ccc;
+            margin-bottom: 20px;
+        }
+        
+        .search-bar {
+            width: 100%;
+            max-width: 500px;
+            padding: 15px 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 50px;
+            color: white;
+            font-size: 16px;
+            backdrop-filter: blur(10px);
+            margin: 20px auto;
+        }
+        
+        .search-bar::placeholder {
+            color: rgba(255,255,255,0.6);
+        }
+        
+        .category-section {
+            margin-bottom: 50px;
+        }
+        
+        .category-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding: 20px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .category-header:hover {
+            background: rgba(0,0,0,0.8);
+            transform: translateX(10px);
+        }
+        
+        .category-icon {
+            font-size: 40px;
+            width: 60px;
+            height: 60px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .category-info h3 {
+            font-size: 24px;
+            color: #ffd700;
+            margin-bottom: 5px;
+        }
+        
+        .category-info p {
+            color: #ccc;
+            font-size: 14px;
+        }
+        
+        .quiz-count {
+            margin-left: auto;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .subcategory-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+            padding-left: 20px;
+        }
+        
+        .subcategory-card {
+            background: rgba(0,0,0,0.7);
+            padding: 25px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .subcategory-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+        
+        .subcategory-card:hover::before {
+            left: 100%;
+        }
+        
+        .subcategory-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            border-color: #4ecdc4;
+        }
+        
+        .subcategory-icon {
+            font-size: 32px;
+            margin-bottom: 15px;
+        }
+        
+        .subcategory-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 8px;
+        }
+        
+        .subcategory-desc {
+            color: #ccc;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        
+        .quiz-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .difficulty {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .easy { background: rgba(76, 175, 80, 0.8); }
+        .medium { background: rgba(255, 152, 0, 0.8); }
+        .hard { background: rgba(244, 67, 54, 0.8); }
+        
+        .duration {
+            color: #4ecdc4;
+            font-size: 12px;
+        }
+        
+        .start-btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #4ecdc4, #44a08d);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .start-btn:hover {
+            background: linear-gradient(45deg, #44a08d, #4ecdc4);
+            transform: scale(1.02);
+        }
+        
+        .quiz-section {
+            display: none;
+            background: rgba(0,0,0,0.8);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .question-card {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .question-text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ffd700;
+            margin-bottom: 20px;
+        }
+        
+        .answers {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .answer-option {
+            background: rgba(255,255,255,0.05);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .answer-option:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: #4ecdc4;
+        }
+        
+        .answer-option.selected {
+            border-color: #ffd700;
+            background: rgba(255,215,0,0.1);
+        }
+        
+        .result-section {
+            display: none;
+            text-align: center;
+            background: rgba(0,0,0,0.8);
+            padding: 40px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .score-display {
+            font-size: 64px;
+            font-weight: bold;
+            color: #ffd700;
+            margin: 20px 0;
+            text-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
+        
+        .performance-indicator {
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+        }
+        
+        .excellent { background: rgba(76, 175, 80, 0.2); border: 2px solid #4caf50; }
+        .good { background: rgba(255, 152, 0, 0.2); border: 2px solid #ff9800; }
+        .needs-improvement { background: rgba(244, 67, 54, 0.2); border: 2px solid #f44336; }
+        
+        .back-btn {
+            background: linear-gradient(45deg, #ff6b6b, #e74c3c);
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        .back-btn:hover {
+            transform: scale(1.05);
+        }
+        
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes sweep {
+            0% { left: -100%; }
+            100% { left: 100%; }
+        }
+        
+        .floating-shapes {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .shape {
+            position: absolute;
+            opacity: 0.1;
+            animation: float-shapes 15s linear infinite;
+        }
+        
+        @keyframes float-shapes {
+            0% { transform: translateY(100vh) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .header { 
+                flex-direction: column; 
+                gap: 15px; 
+                padding: 20px;
+            }
+            .nav-links { 
+                flex-direction: column;
+                text-align: center;
+                gap: 10px;
+            }
+            .hero-title { font-size: 32px; }
+            .subcategory-grid { 
+                grid-template-columns: 1fr;
+                padding-left: 0;
+            }
+            .container { padding: 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">
+            🧠 EQ Quiz Platform
+        </div>
+        <nav class="nav-links">
+            <a href="index.html">🏠 Home</a>
+            <a href="#dashboard">📊 Community</a>
+            <a href="leaderboard.html">🏆 Leaderboard</a>
+            <a href="#rewards">💰 Rewards</a>
+            <a href="Index3.html">👤 Profile</a>
+        </nav>
+    </header>
+
+    <div class="container">
+        <!-- Hero Banner -->
+        <div class="hero-banner" id="home-section">
+            <div class="hero-title">UNLOCK YOUR POWER</div>
+            <div class="hero-subtitle">Master Your Emotions • Transform Society • Reduce Crime</div>
+            <input type="text" class="search-bar" placeholder="🔍 Search quizzes, categories, or topics..." oninput="searchQuizzes(this.value)">
+        </div>
+
+        <!-- Quiz Categories -->
+        <div id="categories-section">
+            <!-- Negative Emotions Category -->
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('negative-emotions')">
+                    <div class="category-icon">😠</div>
+                    <div class="category-info">
+                        <h3>Negative Emotions Control</h3>
+                        <p>Master destructive emotions that lead to harmful behaviors</p>
+                    </div>
+                    <div class="quiz-count">8 Quizzes</div>
+                    <div style="margin-left: 15px; transition: transform 0.3s ease;" id="arrow-negative-emotions">▼</div>
+                </div>
+                <div class="subcategory-grid" id="negative-emotions" style="display: none;">
+                    <div class="subcategory-card" onclick="startQuiz('Anger Management', 'negative-emotions')">
+                        <div class="subcategory-icon">😡</div>
+                        <div class="subcategory-title">Anger Management</div>
+                        <div class="subcategory-desc">Control explosive anger and prevent violent reactions</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 10 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Jealousy & Envy', 'negative-emotions')">
+                        <div class="subcategory-icon">😒</div>
+                        <div class="subcategory-title">Jealousy & Envy</div>
+                        <div class="subcategory-desc">Overcome destructive jealousy in relationships</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty easy">Easy</div>
+                            <div class="duration">⏱️ 8 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Fear & Anxiety', 'negative-emotions')">
+                        <div class="subcategory-icon">😨</div>
+                        <div class="subcategory-title">Fear & Anxiety</div>
+                        <div class="subcategory-desc">Manage fear responses and reduce panic attacks</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 12 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Depression & Sadness', 'negative-emotions')">
+                        <div class="subcategory-icon">😢</div>
+                        <div class="subcategory-title">Depression & Sadness</div>
+                        <div class="subcategory-desc">Break free from negative thought patterns</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty hard">Hard</div>
+                            <div class="duration">⏱️ 15 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Relationships Category -->
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('relationships')">
+                    <div class="category-icon">💕</div>
+                    <div class="category-info">
+                        <h3>Relationship Management</h3>
+                        <p>Build healthy connections and prevent relationship-based conflicts</p>
+                    </div>
+                    <div class="quiz-count">12 Quizzes</div>
+                    <div style="margin-left: 15px; transition: transform 0.3s ease;" id="arrow-relationships">▼</div>
+                </div>
+                <div class="subcategory-grid" id="relationships" style="display: none;">
+                    <div class="subcategory-card" onclick="startQuiz('Mother Relationship', 'relationships')">
+                        <div class="subcategory-icon">👩</div>
+                        <div class="subcategory-title">Mother Relationship</div>
+                        <div class="subcategory-desc">Strengthen maternal bonds and resolve conflicts</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty easy">Easy</div>
+                            <div class="duration">⏱️ 10 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Father Relationship', 'relationships')">
+                        <div class="subcategory-icon">👨</div>
+                        <div class="subcategory-title">Father Relationship</div>
+                        <div class="subcategory-desc">Build trust and communication with father figures</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty easy">Easy</div>
+                            <div class="duration">⏱️ 10 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Romantic Relationships', 'relationships')">
+                        <div class="subcategory-icon">💝</div>
+                        <div class="subcategory-title">Romantic Relationships</div>
+                        <div class="subcategory-desc">Navigate love, trust, and emotional intimacy</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 15 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Friendship Dynamics', 'relationships')">
+                        <div class="subcategory-icon">👫</div>
+                        <div class="subcategory-title">Friendship Dynamics</div>
+                        <div class="subcategory-desc">Maintain healthy friendships and peer relationships</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty easy">Easy</div>
+                            <div class="duration">⏱️ 8 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Safety & Boundaries Category -->
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('safety-boundaries')">
+                    <div class="category-icon">🛡️</div>
+                    <div class="category-info">
+                        <h3>Safety & Personal Boundaries</h3>
+                        <p>Recognize safe vs unsafe situations and protect yourself</p>
+                    </div>
+                    <div class="quiz-count">6 Quizzes</div>
+                    <div style="margin-left: 15px; transition: transform 0.3s ease;" id="arrow-safety-boundaries">▼</div>
+                </div>
+                <div class="subcategory-grid" id="safety-boundaries" style="display: none;">
+                    <div class="subcategory-card" onclick="startQuiz('Good Touch Bad Touch', 'safety-boundaries')">
+                        <div class="subcategory-icon">🚫</div>
+                        <div class="subcategory-title">Good Touch Bad Touch</div>
+                        <div class="subcategory-desc">Recognize inappropriate behavior and protect yourself</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty easy">Easy</div>
+                            <div class="duration">⏱️ 12 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Personal Boundaries', 'safety-boundaries')">
+                        <div class="subcategory-icon">⚡</div>
+                        <div class="subcategory-title">Personal Boundaries</div>
+                        <div class="subcategory-desc">Set healthy limits and say no effectively</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 10 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Digital Safety', 'safety-boundaries')">
+                        <div class="subcategory-icon">📱</div>
+                        <div class="subcategory-title">Digital Safety</div>
+                        <div class="subcategory-desc">Navigate online relationships and cyberbullying</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 12 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Skills Category -->
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('social-skills')">
+                    <div class="category-icon">🤝</div>
+                    <div class="category-info">
+                        <h3>Social Skills & Communication</h3>
+                        <p>Build positive social connections and prevent conflicts</p>
+                    </div>
+                    <div class="quiz-count">10 Quizzes</div>
+                    <div style="margin-left: 15px; transition: transform 0.3s ease;" id="arrow-social-skills">▼</div>
+                </div>
+                <div class="subcategory-grid" id="social-skills" style="display: none;">
+                    <div class="subcategory-card" onclick="startQuiz('Conflict Resolution', 'social-skills')">
+                        <div class="subcategory-icon">⚖️</div>
+                        <div class="subcategory-title">Conflict Resolution</div>
+                        <div class="subcategory-desc">Resolve disputes peacefully without violence</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty hard">Hard</div>
+                            <div class="duration">⏱️ 18 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Effective Communication', 'social-skills')">
+                        <div class="subcategory-icon">💬</div>
+                        <div class="subcategory-title">Effective Communication</div>
+                        <div class="subcategory-desc">Express yourself clearly without aggression</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 12 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Empathy Building', 'social-skills')">
+                        <div class="subcategory-icon">🤗</div>
+                        <div class="subcategory-title">Empathy Building</div>
+                        <div class="subcategory-desc">Understand others' perspectives and feelings</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 10 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Leadership Skills', 'social-skills')">
+                        <div class="subcategory-icon">👑</div>
+                        <div class="subcategory-title">Leadership Skills</div>
+                        <div class="subcategory-desc">Lead with emotional intelligence and inspire others</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty hard">Hard</div>
+                            <div class="duration">⏱️ 20 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self-Awareness Category -->
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('self-awareness')">
+                    <div class="category-icon">🧘</div>
+                    <div class="category-info">
+                        <h3>Self-Awareness & Growth</h3>
+                        <p>Understand yourself and develop emotional maturity</p>
+                    </div>
+                    <div class="quiz-count">7 Quizzes</div>
+                    <div style="margin-left: 15px; transition: transform 0.3s ease;" id="arrow-self-awareness">▼</div>
+                </div>
+                <div class="subcategory-grid" id="self-awareness" style="display: none;">
+                    <div class="subcategory-card" onclick="startQuiz('Emotional Intelligence', 'self-awareness')">
+                        <div class="subcategory-icon">🎯</div>
+                        <div class="subcategory-title">Emotional Intelligence</div>
+                        <div class="subcategory-desc">Assess your overall emotional intelligence level</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 15 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Stress Management', 'self-awareness')">
+                        <div class="subcategory-icon">😌</div>
+                        <div class="subcategory-title">Stress Management</div>
+                        <div class="subcategory-desc">Handle pressure without breaking down</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty easy">Easy</div>
+                            <div class="duration">⏱️ 8 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Self-Control Assessment', 'self-awareness')">
+                        <div class="subcategory-icon">🎮</div>
+                        <div class="subcategory-title">Self-Control Assessment</div>
+                        <div class="subcategory-desc">Test your impulse control and decision-making</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty hard">Hard</div>
+                            <div class="duration">⏱️ 18 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Crisis Situations Category -->
+            <div class="category-section">
+                <div class="category-header" onclick="toggleCategory('crisis-situations')">
+                    <div class="category-icon">🚨</div>
+                    <div class="category-info">
+                        <h3>Crisis & Emergency Response</h3>
+                        <p>Handle high-stress situations without resorting to violence</p>
+                    </div>
+                    <div class="quiz-count">5 Quizzes</div>
+                    <div style="margin-left: 15px; transition: transform 0.3s ease;" id="arrow-crisis-situations">▼</div>
+                </div>
+                <div class="subcategory-grid" id="crisis-situations" style="display: none;">
+                    <div class="subcategory-card" onclick="startQuiz('Bullying Response', 'crisis-situations')">
+                        <div class="subcategory-icon">🛡️</div>
+                        <div class="subcategory-title">Bullying Response</div>
+                        <div class="subcategory-desc">Handle bullies without becoming aggressive yourself</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty hard">Hard</div>
+                            <div class="duration">⏱️ 15 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Peer Pressure', 'crisis-situations')">
+                        <div class="subcategory-icon">👥</div>
+                        <div class="subcategory-title">Peer Pressure</div>
+                        <div class="subcategory-desc">Resist negative influences and make good choices</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty medium">Medium</div>
+                            <div class="duration">⏱️ 12 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Emergency Situations', 'crisis-situations')">
+                        <div class="subcategory-icon">🚑</div>
+                        <div class="subcategory-title">Emergency Situations</div>
+                        <div class="subcategory-desc">Stay calm and make rational decisions under pressure</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty hard">Hard</div>
+                            <div class="duration">⏱️ 20 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                    <div class="subcategory-card" onclick="startQuiz('Violence Prevention', 'crisis-situations')">
+                        <div class="subcategory-icon">✋</div>
+                        <div class="subcategory-title">Violence Prevention</div>
+                        <div class="subcategory-desc">De-escalate conflicts before they turn violent</div>
+                        <div class="quiz-meta">
+                            <div class="difficulty hard">Hard</div>
+                            <div class="duration">⏱️ 18 min</div>
+                        </div>
+                        <button class="start-btn">Start Quiz</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div class="quiz-section" id="quiz-section">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
+                <h2 id="quiz-title" style="color: #ffd700;"></h2>
+                <button class="back-btn" onclick="goBackToCategories()">← Back to Categories</button>
+            </div>
+            
+            <div id="question-container">
+                <!-- Questions will be loaded here dynamically -->
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px;">
+                <button id="submit-btn" class="start-btn" style="max-width: 200px;" onclick="submitQuiz()">Submit Quiz</button>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div class="result-section" id="result-section">
+            <h2 style="color: #ffd700; margin-bottom: 20px;">🎉 Quiz Completed!</h2>
+            <div class="score-display" id="final-score">0/15</div>
+            <div id="performance-feedback" class="performance-indicator">
+                <!-- Performance feedback will be shown here -->
+            </div>
+            <div style="background: rgba(255,255,255,0.05); padding: 25px; border-radius: 15px; margin: 20px 0;">
+                <h4 style="color: #4ecdc4; margin-bottom: 15px;">🌟 Impact Assessment</h4>
+                <p id="impact-message">Your emotional growth contributes to a safer community!</p>
+                <div style="margin-top: 15px;">
+                    <span style="color: #ffd700;">Community Impact Points: </span>
+                    <span id="impact-points" style="font-size: 18px; font-weight: bold;">+25</span>
+                </div>
+            </div>
+            <button class="back-btn" onclick="goBackToCategories()">🔄 Take Another Quiz</button>
+        </div>
+    </div>
+
+    <script>
+    // Sample quiz data (shared across pages, keep it global)
+    const quizData = {
+        'Anger Management': {
+            questions: [
+                { q: "When someone cuts in front of you in line, your first reaction is:", a: ["Take a deep breath and stay calm", "Politely ask them to move", "Feel annoyed but say nothing", "Confront them aggressively"], correct: 0 },
+                { q: "How often do you raise your voice when frustrated?", a: ["Never", "Rarely", "Sometimes", "Frequently"], correct: 0 }
+                // ... rest of questions
+            ],
+            category: 'negative-emotions'
+        },
+        'Good Touch Bad Touch': {
+            questions: [
+                { q: "A safe touch is one that:", a: ["Makes you feel comfortable", "An adult tells you is okay", "Happens in private", "Adults always do"], correct: 0 }
+                // ... rest of questions
+            ],
+            category: 'safety-boundaries'
+        }
+    };
+
+    function toggleCategory(categoryId) {
+        const categoryDiv = document.getElementById(categoryId);
+        const arrow = document.getElementById(`arrow-${categoryId}`);
+        
+        if (categoryDiv.style.display === 'none' || !categoryDiv.style.display) {
+            categoryDiv.style.display = 'grid';
+            arrow.style.transform = 'rotate(180deg)';
+        } else {
+            categoryDiv.style.display = 'none';
+            arrow.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    // 🚀 Redirect instead of rendering quiz
+    function startQuiz(quizName, category) {
+        if (!quizData[quizName]) {
+            alert(`Quiz "${quizName}" is coming soon!`);
+            return;
+        }
+        window.location.href = "index6.html?quiz=" + encodeURIComponent(quizName);
+    }
+
+    // Search still works
+    function searchQuizzes(searchTerm) {
+        if (!searchTerm) {
+            document.querySelectorAll('.category-section').forEach(section => section.style.display = 'block');
+            document.querySelectorAll('.subcategory-card').forEach(card => card.style.display = 'block');
+            return;
+        }
+
+        searchTerm = searchTerm.toLowerCase();
+        let foundResults = false;
+
+        document.querySelectorAll('.category-section').forEach(section => {
+            let categoryHasMatch = false;
+            const categoryName = section.querySelector('.category-info h3').textContent.toLowerCase();
+
+            if (categoryName.includes(searchTerm)) categoryHasMatch = true;
+
+            section.querySelectorAll('.subcategory-card').forEach(card => {
+                const title = card.querySelector('.subcategory-title').textContent.toLowerCase();
+                const desc = card.querySelector('.subcategory-desc').textContent.toLowerCase();
+
+                if (title.includes(searchTerm) || desc.includes(searchTerm)) {
+                    card.style.display = 'block';
+                    categoryHasMatch = true;
+                    foundResults = true;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            section.style.display = categoryHasMatch ? 'block' : 'none';
+            if (categoryHasMatch) foundResults = true;
+        });
+
+        if (!foundResults) console.log('No quiz categories found');
+    }
+</script>
+
+</body>
+</html>

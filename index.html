@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EQ Quiz - Unlock Your Power</title>
     <style>
+        /* General Reset & Body Styles */
         * {
             margin: 0;
             padding: 0;
@@ -12,12 +13,13 @@
         }
         
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             overflow-x: hidden;
         }
-        
+
+        /* Hero Section - Full Viewport Height */
         .hero-section {
             position: relative;
             height: 100vh;
@@ -27,17 +29,19 @@
             background: linear-gradient(90deg, rgba(255,215,0,0.1) 0%, rgba(139,0,0,0.1) 100%);
         }
         
+        /* Main Duality Container - Responsive with auto height */
         .duality-container {
             position: relative;
-            width: 100%;
+            width: 90%; /* Use a percentage for fluid width */
             max-width: 1200px;
-            height: 500px;
+            height: 500px; /* Fixed height for desktop */
             margin: 0 auto;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 30px 60px rgba(0,0,0,0.3);
         }
         
+        /* God and Devil Sides - Default Desktop Layout */
         .god-side {
             position: absolute;
             left: 0;
@@ -66,6 +70,7 @@
             clip-path: polygon(25% 0, 100% 0, 100% 100%, 15% 100%);
         }
         
+        /* Icons and Text - Scalable */
         .god-icon {
             font-size: 80px;
             color: #fff;
@@ -88,8 +93,10 @@
             font-weight: bold;
             text-align: center;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+            padding: 0 10px; /* Added padding for smaller screens */
         }
         
+        /* Central Quote Container */
         .center-quote {
             position: absolute;
             top: 50%;
@@ -102,6 +109,8 @@
             border-radius: 15px;
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255,255,255,0.2);
+            width: 90%; /* Fluid width for mobile */
+            max-width: 600px;
         }
         
         .main-quote {
@@ -142,6 +151,7 @@
             box-shadow: 0 20px 40px rgba(231, 76, 60, 0.6);
         }
         
+        /* Navbar */
         .nav-bar {
             position: fixed;
             top: 0;
@@ -177,6 +187,7 @@
             color: #f39c12;
         }
         
+        /* Info Section */
         .info-section {
             padding: 100px 50px;
             background: rgba(0,0,0,0.9);
@@ -211,6 +222,7 @@
             margin-bottom: 20px;
         }
         
+        /* Reward Section */
         .reward-section {
             background: linear-gradient(135deg, #667eea, #764ba2);
             padding: 80px 50px;
@@ -251,6 +263,7 @@
             font-weight: bold;
         }
         
+        /* Keyframe Animations */
         @keyframes glow-light {
             from { text-shadow: 2px 2px 10px rgba(255,215,0,0.5); }
             to { text-shadow: 2px 2px 20px rgba(255,215,0,0.8); }
@@ -289,35 +302,105 @@
             100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
         
+        /* --- Mobile-Specific Styles (max-width: 768px) --- */
         @media (max-width: 768px) {
-            .main-quote { font-size: 32px; }
-            .center-quote { padding: 30px 40px; }
-            .duality-container { height: 400px; }
-            .god-side, .devil-side { clip-path: none; width: 100%; }
-            .god-side { height: 50%; }
-            .devil-side { height: 50%; top: 50%; }
-            .nav-bar { padding: 15px 20px; }
-            .info-section { padding: 60px 20px; }
+            /* General adjustments */
+            body {
+                font-size: 14px;
+            }
+            .nav-bar {
+                padding: 15px 20px;
+                flex-direction: column;
+                gap: 10px;
+            }
+            .nav-links {
+                gap: 15px;
+            }
 
+            /* Duality section stacking */
+            .duality-container {
+                height: 80vh; /* Use viewport height for better vertical stacking */
+                border-radius: 10px;
+                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            }
+            
+            .god-side, .devil-side {
+                position: relative; /* Change from absolute to relative to stack naturally */
+                width: 100%; /* Full width for stacking */
+                height: 50%;
+                clip-path: none; /* Remove the angled clip-path */
+            }
+            
+            .god-side {
+                order: 1; /* Ensure God side is on top */
+            }
+
+            .devil-side {
+                order: 2; /* Ensure Devil side is on bottom */
+            }
+
+            .god-icon, .devil-icon {
+                font-size: 50px; /* Reduce icon size */
+            }
+
+            .god-text, .devil-text {
+                font-size: 16px; /* Reduce text size */
+            }
+
+            /* Quote section - responsive centering and smaller text */
             .center-quote {
-              position: absolute;
-              top: 50%;
-              left: 50%;
-              transform: translate(-50%, -50%);
-              padding: 40px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                padding: 20px;
+                border: 1px solid rgba(255,255,255,0.2);
             }
-
+            
             .main-quote {
-              font-size: 2.5rem;
-              margin-bottom: 10px;
+                font-size: 32px;
+                margin-bottom: 15px;
+            }
+            
+            .sub-quote {
+                font-size: 16px;
+                margin-bottom: 20px;
             }
 
-            .sub-quote {
-              font-size: 1.2rem;
-              margin-bottom: 20px;
+            .cta-button {
+                padding: 12px 25px;
+                font-size: 16px;
+                letter-spacing: 1px;
+            }
+
+            /* Info and Reward sections */
+            .info-section {
+                padding: 60px 20px;
+            }
+
+            .info-card {
+                padding: 25px;
+                border-radius: 10px;
+            }
+
+            .info-card h3 {
+                font-size: 20px;
+                margin-bottom: 10px;
+            }
+            
+            .reward-section {
+                padding: 50px 20px;
+            }
+
+            .reward-title {
+                font-size: 28px;
+            }
+
+            .prize-text {
+                font-size: 1rem;
             }
         }
 
+        /* Close Button - Responsive and easy to tap */
         .close-btn {
             position: absolute;
             top: 10px;
@@ -327,6 +410,7 @@
             color: white;
             cursor: pointer;
             transition: color 0.3s ease;
+            z-index: 101; /* Ensure it's above other elements */
         }
         
         .close-btn:hover {

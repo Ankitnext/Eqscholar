@@ -307,6 +307,25 @@
                 flex-direction: column;
                 gap: 20px;
             }
+            /* More specific mobile styles for text size */
+            .rank, .player-score {
+                font-size: 1rem;
+            }
+            .player-name, .player-league-icon {
+                font-size: 0.9rem;
+            }
+            .prize-item h4 {
+                font-size: 1.2rem;
+            }
+            .prize-item p {
+                font-size: 1rem;
+            }
+            .league-name {
+                font-size: 1rem;
+            }
+            .league-score-needed {
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -315,8 +334,10 @@
     <!-- Navigation Bar -->
     <nav class="nav-bar">
         <div class="logo">🧠 EQ Quiz Dashboard</div>
+        <div>
+            <a href="index.html" style="font-size: large; color: #ecf0f1; text-decoration: none;">Home</a>
+        </div>
         <div class="nav-links">
-            <a href="index.html">Home</a>
             <a href="leaderboard.html"> Leaderboard</a>
             <a href="index3.html"> Profile</a>
             <a href="index5.html">Take Quiz</a>

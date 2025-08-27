@@ -421,6 +421,226 @@
             }
             .container { padding: 15px; }
         }
+        @media (max-width: 768px) {
+    /* Header */
+    .header { 
+        flex-direction: column; 
+        gap: 12px; 
+        padding: 15px;
+    }
+
+    .logo {
+        font-size: 18px;
+        gap: 8px;
+    }
+
+    .nav-links { 
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .nav-links a {
+        font-size: 14px;
+        padding: 6px 10px;
+    }
+
+    /* Hero section */
+    .hero-banner { 
+        padding: 20px; 
+        margin-bottom: 20px; 
+    }
+
+    .hero-title { 
+        font-size: 26px; 
+        line-height: 1.2; 
+    }
+
+    .hero-subtitle { 
+        font-size: 14px; 
+    }
+
+    .search-bar {
+        max-width: 100%;
+        padding: 10px 15px;
+        font-size: 14px;
+    }
+
+    /* Category headers */
+    .category-header { 
+        padding: 12px; 
+        gap: 10px; 
+    }
+
+    .category-icon { 
+        font-size: 28px; 
+        width: 45px; 
+        height: 45px; 
+    }
+
+    .category-info h3 { 
+        font-size: 18px; 
+    }
+
+    .category-info p { 
+        font-size: 12px; 
+    }
+
+    .quiz-count { 
+        font-size: 12px; 
+        padding: 5px 10px; 
+    }
+
+    /* Subcategory grid */
+    .subcategory-grid { 
+        grid-template-columns: 1fr;
+        padding-left: 0;
+        gap: 12px;
+    }
+
+    .subcategory-card {
+        padding: 15px;
+    }
+
+    .subcategory-title { 
+        font-size: 16px; 
+    }
+
+    .subcategory-desc { 
+        font-size: 12px; 
+    }
+
+    .subcategory-icon { 
+        font-size: 24px; 
+    }
+
+    /* Quiz and results */
+    .quiz-section,
+    .result-section {
+        padding: 20px;
+    }
+
+    .question-text { 
+        font-size: 16px; 
+    }
+
+    .answers { 
+        grid-template-columns: 1fr; 
+    }
+
+    .answer-option { 
+        font-size: 14px;
+        padding: 10px; 
+    }
+
+    .score-display { 
+        font-size: 36px; 
+    }
+
+    .back-btn { 
+        padding: 10px 20px; 
+        font-size: 14px; 
+    }
+
+    /* Container */
+    .container { 
+        padding: 10px; 
+    }
+}
+/* Header main styling */
+.header {
+  background: rgba(0,0,0,0.9);
+  padding: 12px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+/* Flex row for logo + toggle */
+.header-container {
+  display: flex;
+  justify-content: space-between; /* logo left, toggle right */
+  align-items: center;
+  padding: 0 10px; /* small horizontal padding */
+}
+
+.menu-toggle {
+  font-size: 28px;
+  cursor: pointer;
+  color: white;
+  display: none;
+  margin-left: 15px; /* <-- adds space between logo and toggle */
+}
+
+
+
+.logo {
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffd700;
+}
+
+/* Toggle button */
+.menu-toggle {
+  font-size: 28px;
+  cursor: pointer;
+  color: white;
+  display: none; /* hidden on desktop */
+}
+
+/* Nav links desktop */
+.nav-links {
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.nav-links a {
+  color: white;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 8px 14px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+
+.nav-links a:hover {
+  background: rgba(255,215,0,0.1);
+  color: #ffd700;
+}
+
+/* Mobile version */
+@media (max-width: 768px) {
+  .menu-toggle {
+    display: block; /* show toggle on mobile */
+  }
+
+  .nav-links {
+    display: none; /* hidden by default */
+    flex-direction: column;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    background: rgba(0,0,0,0.95);
+    border-top: 1px solid rgba(255,255,255,0.1);
+    padding: 15px 0;
+    gap: 15px;
+    text-align: center;
+  }
+
+  .nav-links.active {
+    display: flex; /* show when active */
+    animation: slideDown 0.3s ease forwards;
+  }
+
+  @keyframes slideDown {
+    from { opacity: 0; transform: translateY(-15px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+}
+
     </style>
 </head>
 <body>
@@ -428,17 +648,23 @@
     
     <!-- Header -->
     <header class="header">
-        <div class="logo">
-            🧠 EQ Quiz Platform
-        </div>
-        <nav class="nav-links">
-            <a href="index.html">🏠 Home</a>
-            <a href="#dashboard">📊 Community</a>
-            <a href="leaderboard.html">🏆 Leaderboard</a>
-            <a href="#rewards">💰 Rewards</a>
-            <a href="Index3.html">👤 Profile</a>
-        </nav>
-    </header>
+  <div class="header-container">
+    <div class="logo">
+      🧠 EQ Quiz Platform
+    </div>
+
+    <!-- Hamburger / Close icon -->
+    <div class="menu-toggle" id="menu-toggle">☰</div>
+  </div>
+
+  <nav class="nav-links" id="nav-links">
+    <a href="index.html">🏠 Home</a>
+    <a href="#dashboard">📊 Community</a>
+    <a href="leaderboard.html">🏆 Leaderboard</a>
+    <a href="#rewards">💰 Rewards</a>
+    <a href="Index3.html">👤 Profile</a>
+  </nav>
+</header>
 
     <div class="container">
         <!-- Hero Banner -->
@@ -874,6 +1100,22 @@
 
         if (!foundResults) console.log('No quiz categories found');
     }
+
+   const menuToggle = document.getElementById("menu-toggle");
+const navLinks = document.getElementById("nav-links");
+
+menuToggle.addEventListener("click", () => {
+  navLinks.classList.toggle("active");
+  menuToggle.textContent = navLinks.classList.contains("active") ? "✖" : "☰";
+});
+
+// Close menu when clicking a link (mobile UX)
+document.querySelectorAll(".nav-links a").forEach(link => {
+  link.addEventListener("click", () => {
+    navLinks.classList.remove("active");
+    menuToggle.textContent = "☰";
+  });
+});
 </script>
 
 </body>

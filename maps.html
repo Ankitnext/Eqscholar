@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EQ Journey — Map with Checkpoints</title>
+  <style>
+    :root{ --accent:#f39c12; --muted:#cbd5e1; }
+    *{box-sizing:border-box}
+    body{ margin:0; font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial; background:#07121a; color:#e6eef8 }
+
+    /* Header */
+    header.site-header{
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+      padding:14px 18px; background:linear-gradient(180deg,#0d1722,#07121a); border-bottom:1px solid rgba(255,255,255,0.03);
+    }
+    .site-left{ display:flex; align-items:center; gap:12px }
+    .site-logo{ display:flex; align-items:center; gap:10px; text-decoration:none; color:var(--accent); font-weight:800 }
+    .site-logo .emoji{ font-size:20px }
+    nav.site-nav{ display:flex; gap:12px }
+    nav.site-nav a{ color:var(--muted); text-decoration:none; padding:8px 10px; border-radius:8px }
+    nav.site-nav a:hover, nav.site-nav a.active{ color:#fff; background: rgba(243,156,18,0.06) }
+
+    /* Page title (clickable) */
+    .page-title-wrap{ padding:10px 18px 6px 18px }
+    .page-title{ margin:0; font-size:20px; font-weight:700 }
+    .page-title a{ color:#fff; text-decoration:none }
+    .page-title a:hover{ color:var(--accent) }
+
+    /* Canvas */
+    .canvas-holder{ padding:18px; display:flex; justify-content:center; align-items:center }
+    canvas{ display:block; border-radius:8px; box-shadow:0 8px 30px rgba(0,0,0,0.6); width:100%; max-width:1200px }
+
+    /* Modal */
+    #puzzleBox{ position:fixed; left:50%; top:50%; transform:translate(-50%,-50%); background:#0f1418; color:#e6eef8; padding:18px; border-radius:10px; box-shadow:0 12px 40px rgba(0,0,0,0.7); width:320px; display:none; z-index:9999 }
+    #puzzleBox h3{ margin:4px 0 8px; color:var(--accent) }
+    #puzzleBox p{ margin:0 0 10px; color:var(--muted) }
+    #puzzleBox input{ width:100%; padding:10px; border-radius:8px; border:1px solid rgba(255,255,255,0.04); background:#071218; color:#fff }
+    #puzzleBox .row{ margin-top:12px; display:flex; gap:8px }
+    .btn{ padding:8px 10px; border-radius:8px; border:0; cursor:pointer; font-weight:700 }
+    .btn.primary{ background:linear-gradient(45deg,#27ae60,#2ecc71); color:#05240f }
+    .btn.ghost{ background:transparent; color:var(--muted); border:1px solid rgba(255,255,255,0.04) }
+    #closeBtn{ position:absolute; top:8px; right:10px; background:transparent; border:0; color:var(--muted); font-size:18px; cursor:pointer }
+
+    /* HUD */
+    .hud{ position:fixed; left:18px; bottom:18px; background:rgba(0,0,0,0.45); padding:8px 12px; border-radius:8px; color:var(--muted); font-size:13px }
+
+    @media (max-width:720px){ .page-title{ font-size:16px } }
+  </style>
+</head>
+<body>
+  <!-- Header with clickable logo and Home nav -->
+  <header class="site-header">
+    <div class="site-left">
+      <a class="site-logo" href="index.html" title="Go to Home (index.html)">
+        <span class="emoji">🧭</span>
+        <span>EQ Journey</span>
+      </a>
+      <nav class="site-nav" aria-label="Main">
+        <a href="index.html" class="active">Home</a>
+        <a href="#">Map</a>
+        <a href="#">Events</a>
+      </nav>
+    </div>
+    <div class="site-right">
+      <!-- optional right side (kept empty for now) -->
+    </div>
+  </header>
+
+  <!-- Page heading that also links to home -->
+  <div class="page-title-wrap">
+    <h1 class="page-title"><a href="index.html">Adventure Map — Checkpoints & Puzzles</a></h1>
+  </div>
+
+  <!-- Canvas holder -->
+  <div class="canvas-holder">
+    <canvas id="gameCanvas" width="1100" height="640" aria-label="Game map canvas"></canvas>
+  </div>
+
+  <div class="hud" id="hud">Pos: 0,0 &nbsp; • &nbsp; Unlocked: 0 / 3</div>
+
+  <!-- Puzzle modal -->
+  <div id="puzzleBox" role="dialog" aria-modal="true" aria-hidden="true">
+    <button id="closeBtn" title="Close">✖</button>
+    <h3 id="puzzleTitle">Puzzle</h3>
+    <p id="puzzleText">Enter the key to unlock this checkpoint</p>
+    <input id="puzzleInput" type="text" placeholder="Type the key and press Submit" />
+    <div class="row">
+      <button class="btn primary" id="submitBtn">Submit</button>
+      <button class="btn ghost" id="cancelBtn">Cancel</button>
+    </div>
+  </div>
+
+  <script>
+    /* -------------------------
+       Map + player + checkpoints
+       ------------------------- */
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    const MAP_W = 2000, MAP_H = 1600;
+    const player = { x:120, y:120, size:30, speed:4 };
+    let camX = 0, camY = 0;
+
+    const checkpoints = [
+      { id:'A', x:400, y:420, r:36, unlocked:false, prompt:'Enter key for A', answer:'1234' },
+      { id:'B', x:1000, y:800, r:36, unlocked:false, prompt:'Secret code for B?', answer:'5678' },
+      { id:'C', x:1600, y:1400, r:36, unlocked:false, prompt:'Final key to proceed!', answer:'9999' }
+    ];
+
+    const CANCEL_COOLDOWN_MS = 900;
+
+    let activeCheckpoint = null;
+    let modalOpen = false;
+    const keys = {};
+
+    window.addEventListener('keydown', (e) => {
+      keys[e.key] = true;
+      if (e.key === 'Escape' && modalOpen) closePuzzle();
+      if ((e.key === 'Enter' || e.key === 'NumpadEnter') && modalOpen) submitPuzzle();
+    });
+    window.addEventListener('keyup', (e) => { keys[e.key] = false; });
+
+    function update() {
+      if (!modalOpen) {
+        let vx = 0, vy = 0;
+        if (keys['ArrowUp'] || keys['w']) vy -= 1;
+        if (keys['ArrowDown'] || keys['s']) vy += 1;
+        if (keys['ArrowLeft'] || keys['a']) vx -= 1;
+        if (keys['ArrowRight'] || keys['d']) vx += 1;
+        if (vx !== 0 && vy !== 0) { vx *= Math.SQRT1_2; vy *= Math.SQRT1_2; }
+        player.x += vx * player.speed;
+        player.y += vy * player.speed;
+        player.x = Math.max(0, Math.min(MAP_W, player.x));
+        player.y = Math.max(0, Math.min(MAP_H, player.y));
+      }
+
+      // collision checks
+      const now = Date.now();
+      for (let cp of checkpoints) {
+        if (cp.unlocked) continue;
+        if (cp._tempLockUntil && now < cp._tempLockUntil) continue;
+        const dx = player.x - cp.x, dy = player.y - cp.y;
+        const dist = Math.hypot(dx, dy);
+        if (dist < cp.r + player.size/2) { showPuzzle(cp); break; }
+      }
+
+      // camera center
+      const screenW = canvas.width, screenH = canvas.height;
+      camX = player.x - screenW / 2;
+      camY = player.y - screenH / 2;
+      camX = Math.max(0, Math.min(MAP_W - screenW, camX));
+      camY = Math.max(0, Math.min(MAP_H - screenH, camY));
+    }
+
+    function draw() {
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      ctx.fillStyle = '#08101a'; ctx.fillRect(0,0,canvas.width,canvas.height);
+
+      // grid
+      ctx.strokeStyle = 'rgba(255,255,255,0.03)'; ctx.lineWidth = 1;
+      for (let gx = - (camX % 100); gx < canvas.width; gx += 100) { ctx.beginPath(); ctx.moveTo(gx,0); ctx.lineTo(gx,canvas.height); ctx.stroke(); }
+      for (let gy = - (camY % 100); gy < canvas.height; gy += 100) { ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(canvas.width,gy); ctx.stroke(); }
+
+      // map area
+      ctx.save(); ctx.translate(-camX, -camY); ctx.fillStyle = '#07121a'; ctx.fillRect(0,0,MAP_W,MAP_H); ctx.restore();
+
+      // checkpoints
+      for (let cp of checkpoints) {
+        const sx = cp.x - camX, sy = cp.y - camY;
+        ctx.beginPath(); ctx.arc(sx, sy, cp.r + 8, 0, Math.PI*2); ctx.fillStyle = cp.unlocked ? 'rgba(46,204,113,0.08)' : 'rgba(243,156,18,0.06)'; ctx.fill();
+        ctx.beginPath(); ctx.arc(sx, sy, cp.r, 0, Math.PI*2); ctx.fillStyle = cp.unlocked ? '#2ecc71' : '#f39c12'; ctx.fill();
+        ctx.font = '12px bold sans-serif'; ctx.fillStyle = '#fff'; ctx.textAlign = 'center'; ctx.fillText(cp.id, sx, sy + 4);
+      }
+
+      // player
+      const px = player.x - camX, py = player.y - camY;
+      ctx.fillStyle = '#ffd166'; ctx.fillRect(px - player.size/2, py - player.size/2, player.size, player.size);
+
+      // HUD
+      const hud = document.getElementById('hud');
+      hud.innerText = `Pos: ${Math.round(player.x)},${Math.round(player.y)}  •  Unlocked: ${checkpoints.filter(c=>c.unlocked).length} / ${checkpoints.length}`;
+    }
+
+    function loop() { update(); draw(); requestAnimationFrame(loop); }
+    loop();
+
+    /* ---------------------
+       Puzzle modal handling
+       --------------------- */
+    const puzzleBox = document.getElementById('puzzleBox');
+    const puzzleTitle = document.getElementById('puzzleTitle');
+    const puzzleText = document.getElementById('puzzleText');
+    const puzzleInput = document.getElementById('puzzleInput');
+    const btnClose = document.getElementById('closeBtn');
+    const btnCancel = document.getElementById('cancelBtn');
+    const btnSubmit = document.getElementById('submitBtn');
+
+    btnClose.addEventListener('click', closePuzzle);
+    btnCancel.addEventListener('click', closePuzzle);
+    btnSubmit.addEventListener('click', submitPuzzle);
+
+    function showPuzzle(cp) {
+      if (!cp || modalOpen) return;
+      const now = Date.now();
+      if (cp._tempLockUntil && now < cp._tempLockUntil) return;
+      activeCheckpoint = cp;
+      modalOpen = true;
+      puzzleTitle.textContent = 'Checkpoint: ' + (cp.id || '');
+      puzzleText.textContent = cp.prompt || 'Enter the key';
+      puzzleInput.value = '';
+      puzzleBox.style.display = 'block';
+      puzzleBox.setAttribute('aria-hidden','false');
+      puzzleInput.focus();
+    }
+
+    function closePuzzle() {
+      puzzleBox.style.display = 'none';
+      puzzleBox.setAttribute('aria-hidden','true');
+      if (activeCheckpoint && !activeCheckpoint.unlocked) {
+        activeCheckpoint._tempLockUntil = Date.now() + CANCEL_COOLDOWN_MS;
+      }
+      activeCheckpoint = null;
+      modalOpen = false;
+    }
+
+    function submitPuzzle() {
+      if (!activeCheckpoint) return;
+      const val = puzzleInput.value.trim();
+      if (!val) { alert('Please enter a key'); puzzleInput.focus(); return; }
+      if (val === activeCheckpoint.answer) {
+        activeCheckpoint.unlocked = true;
+        delete activeCheckpoint._tempLockUntil;
+        alert('Correct! Checkpoint unlocked ✅');
+        closePuzzle();
+      } else {
+        alert('Wrong key — try again ❌');
+        puzzleInput.focus();
+      }
+    }
+
+    /* responsive canvas sizing that accounts for header height */
+    function resizeCanvas() {
+      const headerH = document.querySelector('header.site-header').offsetHeight || 64;
+      const availableW = Math.max(600, window.innerWidth - 40);
+      const availableH = Math.max(360, window.innerHeight - headerH - 80);
+      canvas.width = Math.floor(availableW);
+      canvas.height = Math.floor(availableH);
+      // keep css width responsive
+      canvas.style.width = Math.min(availableW, 1200) + 'px';
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+  </script>
+</body>
+</html>

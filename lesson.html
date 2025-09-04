@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Journey - Lesson</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #ecf0f1;
+            padding: 20px;
+        }
+
+        .lesson-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 40px;
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+
+        .lesson-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .lesson-title {
+            font-size: 2.5rem;
+            color: #f39c12;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+        }
+
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .back-btn:hover {
+            background: linear-gradient(45deg, #2980b9, #1f618d);
+            transform: scale(1.05);
+        }
+
+        .lesson-content {
+            text-align: left;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .lesson-section {
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            color: #f39c12;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .content-box {
+            background: rgba(0,0,0,0.3);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            line-height: 1.8;
+        }
+
+        .content-box h4 {
+            color: #2ecc71;
+            margin-bottom: 15px;
+            font-size: 1.2rem;
+        }
+
+        .content-box ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .content-box li {
+            margin-bottom: 8px;
+        }
+
+        .key-takeaways {
+            background: rgba(46,204,113,0.2);
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+        }
+
+        .key-takeaways ul {
+            margin-left: 20px;
+        }
+
+        .key-takeaways li {
+            margin-bottom: 10px;
+        }
+
+        .complete-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .complete-btn:hover {
+            background: linear-gradient(45deg, #2ecc71, #27ae60);
+            transform: scale(1.02);
+        }
+
+        .loading {
+            text-align: center;
+            padding: 100px 20px;
+        }
+
+        .spinner {
+            border: 4px solid rgba(243,156,18,0.3);
+            border-top: 4px solid #f39c12;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .lesson-container {
+                padding: 20px;
+                margin: 10px;
+            }
+            
+            .lesson-title {
+                font-size: 2rem;
+            }
+            
+            .back-btn {
+                position: relative;
+                top: 0;
+                left: 0;
+                margin-bottom: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <button class="back-btn" onclick="goBack()">← Back to Map</button>
+    
+    <div class="lesson-container">
+        <div id="lessonContent" class="loading">
+            <div class="spinner"></div>
+            <h3>Loading Lesson...</h3>
+        </div>
+    </div>
+
+    <script>
+        // Get lesson ID from URL parameters
+        function getLessonIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get('lesson');
+        }
+
+        // Lesson content data
+        const lessonContents = {
+            'lost-mode': {
+                title: '📚 Lost Mode: "What are Emotions?"',
+                content: {
+                    objectives: [
+                        "Understand that emotions are normal and universal",
+                        "Learn to identify basic emotions in yourself and others",
+                        "Build emotional vocabulary beyond 'good' and 'bad'",
+                        "Recognize that emotions provide important information"
+                    ],
+                    mainContent: {
+                        "What Are Emotions?": "Emotions are your body's way of communicating important information about your experiences. They're like an internal GPS system that helps you navigate life.",
+                        "The Basic Emotions": {
+                            "Happy": "Feeling good about something",
+                            "Sad": "Feeling loss or disappointment", 
+                            "Angry": "Feeling frustrated or threatened",
+                            "Afraid": "Feeling danger or uncertainty",
+                            "Surprised": "Feeling unexpected events",
+                            "Disgusted": "Feeling repulsion or rejection"
+                        },
+                        "Key Insight": "There are no 'bad' emotions - only emotions that feel uncomfortable. All emotions serve a purpose and provide valuable information about our needs and experiences."
+                    },
+                    keyTakeaways: [
+                        "Emotions are information, not instructions",
+                        "Everyone experiences all emotions - you're not alone",
+                        "Naming emotions helps you understand them better",
+                        "Emotional awareness is the first step to emotional intelligence"
+                    ]
+                }
+            },
+            'chaotic-mode': {
+                title: '📚 Chaotic Mode: "Triggers & Reactions"',
+                content: {
+                    objectives: [
+                        "Identify your personal emotional triggers",
+                        "Understand the difference between triggers and responses",
+                        "Learn the pause-and-breathe technique",
+                        "Develop awareness of automatic reactions"
+                    ],
+                    mainContent: {
+                        "Understanding Triggers": "A trigger is any situation, person, or event that automatically causes a strong emotional reaction. Common triggers include feeling ignored or dismissed, being criticized or judged, running late or feeling rushed, unexpected changes to plans, and feeling misunderstood.",
+                        "The Trigger-Response Cycle": "1. Trigger Event → 2. Emotional Reaction → 3. Automatic Response → 4. Consequences",
+                        "The Goal": "Insert a pause between the trigger and your response to choose a better reaction.",
+                        "The STOP Technique": {
+                            "S": "Stop what you're doing",
+                            "T": "Take a deep breath", 
+                            "O": "Observe what you're feeling",
+                            "P": "Proceed with intention"
+                        }
+                    },
+                    keyTakeaways: [
+                        "Triggers are normal - everyone has them",
+                        "You can't control triggers, but you can control responses",
+                        "The pause between trigger and response is where growth happens",
+                        "Practice makes emotional reactions more manageable"
+                    ]
+                }
+            },
+            'addiction-loop': {
+                title: '📚 Addiction Loop: "Healthy vs. Unhealthy Coping"',
+                content: {
+                    objectives: [
+                        "Recognize unhealthy coping mechanisms",
+                        "Understand how addiction loops form",
+                        "Learn healthy alternatives to common escapes",
+                        "Break automatic pilot responses to stress"
+                    ],
+                    mainContent: {
+                        "The Addiction Loop": "The addiction loop happens when we use quick fixes to avoid difficult emotions: Stress/Pain → Escape Behavior → Temporary Relief → Return to Stress + Guilt → Repeat",
+                        "Common Unhealthy Coping": [
+                            "Excessive social media scrolling",
+                            "Emotional eating or restrictive eating",
+                            "Binge-watching TV shows",
+                            "Shopping to feel better",
+                            "Avoiding responsibilities",
+                            "Substance use to numb feelings"
+                        ],
+                        "Healthy Alternatives": {
+                            "Instead of scrolling": "Call a friend or go for a walk",
+                            "Instead of emotional eating": "Journal or do breathing exercises",
+                            "Instead of avoidance": "Break tasks into small steps",
+                            "Instead of shopping": "Create something or exercise"
+                        }
+                    },
+                    keyTakeaways: [
+                        "Unhealthy coping creates more problems than it solves",
+                        "Healthy coping addresses the root cause, not just symptoms",
+                        "Breaking loops requires conscious choice and practice",
+                        "It's okay to have relapses - progress isn't always linear"
+                    ]
+                }
+            },
+            'storm-mode': {
+                title: '📚 Storm Mode: "Handling Anger & Jealousy"',
+                content: {
+                    objectives: [
+                        "Understand that anger and jealousy are normal emotions",
+                        "Learn cooling-down techniques for intense emotions",
+                        "Practice de-escalation strategies",
+                        "Transform destructive emotions into constructive action"
+                    ],
+                    mainContent: {
+                        "Understanding Anger & Jealousy": "Anger often signals that a boundary has been crossed or a need isn't being met. Jealousy usually indicates fear of loss or feelings of inadequacy.",
+                        "The COOL Method": {
+                            "C": "Count to 10 (or 100 if needed)",
+                            "O": "Observe your body sensations",
+                            "O": "Options - what are your choices?",
+                            "L": "Listen to your values before acting"
+                        },
+                        "Physical Cooling Techniques": [
+                            "Deep breathing (4 counts in, 6 counts out)",
+                            "Progressive muscle relaxation",
+                            "Cold water on wrists or face",
+                            "Physical exercise or movement",
+                            "Time-out in a calm environment"
+                        ]
+                    },
+                    keyTakeaways: [
+                        "Intense emotions are temporary - they will pass",
+                        "You can feel angry without acting aggressively",
+                        "Cooling down first leads to better decisions",
+                        "Channel emotional energy into positive change"
+                    ]
+                }
+            },
+            'shadow-walker': {
+                title: '📚 Shadow Walker: "Awareness without Control"',
+                content: {
+                    objectives: [
+                        "Understand the gap between awareness and control",
+                        "Recognize this as a normal stage of development",
+                        "Learn patience with your emotional growth process",
+                        "Build self-compassion during difficult moments"
+                    ],
+                    mainContent: {
+                        "The Awareness-Control Gap": "You're now aware of your emotions and patterns, but you can't always control them yet. This is like learning to drive - you know what to do, but your reactions aren't automatic yet.",
+                        "Common Shadow Walker Experiences": [
+                            "I know I shouldn't react this way, but I still do",
+                            "I can see my patterns but feel stuck in them",
+                            "I understand what's healthy but choose unhealthy anyway",
+                            "I want to change but don't know how"
+                        ],
+                        "Why This Stage Matters": "Awareness without control is still massive progress! You can't change what you can't see. This stage builds the foundation for future emotional mastery.",
+                        "Self-Compassion Practice": [
+                            "Treat yourself like you'd treat a good friend",
+                            "Remember: you're learning, not failing",
+                            "Acknowledge your progress, however small",
+                            "Be patient with your growth timeline"
+                        ]
+                    },
+                    keyTakeaways: [
+                        "The gap between knowing and doing is normal",
+                        "Awareness is the first step, not the last",
+                        "Progress happens gradually, not all at once",
+                        "Self-compassion accelerates growth"
+                    ]
+                }
+            }
+        };
+
+        // Load and display lesson content
+        function loadLesson() {
+            const lessonId = getLessonIdFromURL();
+            const contentDiv = document.getElementById('lessonContent');
+            
+            if (!lessonId || !lessonContents[lessonId]) {
+                contentDiv.innerHTML = `
+                    <div class="lesson-header">
+                        <h2 class="lesson-title">Lesson Not Found</h2>
+                        <p>The requested lesson could not be found.</p>
+                        <button class="complete-btn" onclick="goBack()">Return to Map</button>
+                    </div>
+                `;
+                return;
+            }
+
+            const lesson = lessonContents[lessonId];
+            contentDiv.innerHTML = generateLessonHTML(lesson);
+        }
+
+        function generateLessonHTML(lesson) {
+            let html = `
+                <div class="lesson-header">
+                    <h1 class="lesson-title">${lesson.title}</h1>
+                </div>
+                <div class="lesson-content">
+            `;
+
+            // Learning Objectives
+            html += `
+                <div class="lesson-section">
+                    <h3 class="section-title">🎯 Learning Objectives</h3>
+                    <div class="content-box">
+                        <ul>
+                            ${lesson.content.objectives.map(obj => `<li>${obj}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Main Content
+            html += `
+                <div class="lesson-section">
+                    <h3 class="section-title">📖 Lesson Content</h3>
+            `;
+
+            for (const [title, content] of Object.entries(lesson.content.mainContent)) {
+                html += `<div class="content-box">`;
+                html += `<h4>${title}</h4>`;
+                
+                if (typeof content === 'string') {
+                    html += `<p>${content}</p>`;
+                } else if (Array.isArray(content)) {
+                    html += `<ul>${content.map(item => `<li>${item}</li>`).join('')}</ul>`;
+                } else if (typeof content === 'object') {
+                    html += `<ul>`;
+                    for (const [key, value] of Object.entries(content)) {
+                        html += `<li><strong>${key}:</strong> ${value}</li>`;
+                    }
+                    html += `</ul>`;
+                }
+                html += `</div>`;
+            }
+
+            html += `</div>`;
+
+            // Key Takeaways
+            html += `
+                <div class="lesson-section">
+                    <h3 class="section-title">🔑 Key Takeaways</h3>
+                    <div class="key-takeaways">
+                        <ul>
+                            ${lesson.content.keyTakeaways.map(takeaway => `<li>${takeaway}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="complete-btn" onclick="completeLesson()">Complete Lesson</button>
+                </div>
+            `;
+
+            html += `</div>`;
+            return html;
+        }
+
+        function goBack() {
+            window.close();
+            // Fallback if window.close() doesn't work (some browsers block it)
+            if (!window.closed) {
+                history.back();
+            }
+        }
+
+        function completeLesson() {
+            const lessonId = getLessonIdFromURL();
+            
+            // Store completion in localStorage (if supported)
+            try {
+                const completedLessons = JSON.parse(localStorage.getItem('completedLessons') || '[]');
+                if (!completedLessons.includes(lessonId)) {
+                    completedLessons.push(lessonId);
+                    localStorage.setItem('completedLessons', JSON.stringify(completedLessons));
+                }
+            } catch (e) {
+                console.log('localStorage not available');
+            }
+
+            // Show completion message
+            document.getElementById('lessonContent').innerHTML = `
+                <div style="text-align: center; padding: 60px 20px;">
+                    <div style="font-size: 4rem; margin-bottom: 30px;">🎉</div>
+                    <h2 style="color: #2ecc71; margin-bottom: 20px;">Lesson Completed!</h2>
+                    <p style="font-size: 1.2rem; margin-bottom: 30px;">You've successfully completed this lesson. Well done!</p>
+                    <p style="margin-bottom: 40px;">Your progress has been saved. You can now return to the lesson map to continue your EQ journey.</p>
+                    <button class="complete-btn" onclick="goBack()">Return to Lesson Map</button>
+                </div>
+            `;
+        }
+
+        // Initialize the page when loaded
+        document.addEventListener('DOMContentLoaded', loadLesson);
+    </script>
+</body>
+</html>

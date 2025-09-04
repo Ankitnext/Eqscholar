@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Community Page</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+      margin: 0;
+      padding: 0;
+    }
+    header {
+      background: #333;
+      color: #fff;
+      padding: 15px;
+      text-align: center;
+    }
+    header a {
+      color: #fff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 15px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 { margin-top: 0; }
+    textarea {
+      width: 100%;
+      padding: 10px;
+      resize: none;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    input[type="file"] {
+      margin: 10px 0;
+    }
+    button {
+      background: #333;
+      color: #fff;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #555;
+    }
+    .post {
+      background: #fafafa;
+      border: 1px solid #ddd;
+      padding: 15px;
+      margin-top: 15px;
+      border-radius: 8px;
+    }
+    .post video {
+      max-width: 100%;
+      margin-top: 10px;
+      border-radius: 5px;
+    }
+    .comments {
+      margin-top: 10px;
+      padding-left: 20px;
+    }
+    .comment {
+      background: #eee;
+      padding: 5px 10px;
+      margin: 5px 0;
+      border-radius: 5px;
+    }
+    .comment-box {
+      margin-top: 10px;
+    }
+    .comment-box input {
+      width: 80%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .comment-box button {
+      padding: 5px 10px;
+      margin-left: 5px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html">🏠 Home</a> | Community
+  </header>
+
+  <div class="container">
+    <h2>Create a Post</h2>
+    <textarea id="postText" rows="4" placeholder="What's on your mind?"></textarea>
+    <br>
+    <input type="file" id="videoUpload" accept="video/*">
+    <br>
+    <button onclick="createPost()">Post</button>
+  </div>
+
+  <div class="container" id="postsContainer">
+    <h2>Community Feed</h2>
+  </div>
+
+<script>
+function createPost() {
+  const text = document.getElementById("postText").value.trim();
+  const videoInput = document.getElementById("videoUpload");
+  const videoFile = videoInput.files[0];
+
+  if (!text && !videoFile) {
+    alert("Please write something or upload a video!");
+    return;
+  }
+
+  const postDiv = document.createElement("div");
+  postDiv.className = "post";
+
+  if (text) {
+    const p = document.createElement("p");
+    p.textContent = text;
+    postDiv.appendChild(p);
+  }
+
+  if (videoFile) {
+    const video = document.createElement("video");
+    video.controls = true;
+    const src = document.createElement("source");
+    src.src = URL.createObjectURL(videoFile);
+    src.type = videoFile.type;
+    video.appendChild(src);
+    postDiv.appendChild(video);
+  }
+
+  // Comments Section
+  const commentsDiv = document.createElement("div");
+  commentsDiv.className = "comments";
+
+  const commentBox = document.createElement("div");
+  commentBox.className = "comment-box";
+  commentBox.innerHTML = `
+    <input type="text" placeholder="Write a comment..." />
+    <button>Comment</button>
+  `;
+
+  commentBox.querySelector("button").onclick = () => {
+    const input = commentBox.querySelector("input");
+    const commentText = input.value.trim();
+    if(commentText) {
+      const c = document.createElement("div");
+      c.className = "comment";
+      c.textContent = commentText;
+      commentsDiv.appendChild(c);
+      input.value = "";
+    }
+  };
+
+  postDiv.appendChild(commentBox);
+  postDiv.appendChild(commentsDiv);
+
+  document.getElementById("postsContainer").appendChild(postDiv);
+
+  // Reset form
+  document.getElementById("postText").value = "";
+  videoInput.value = "";
+}
+</script>
+</body>
+</html>

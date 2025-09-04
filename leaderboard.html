@@ -407,23 +407,35 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Data for the leagues
+            // Updated 14-league EQ system
             const leagueTiers = [
-                { name: 'Diamond', minScore: 3000, icon: '💎' },
-                { name: 'Platinum', minScore: 2000, icon: '✨' },
-                { name: 'Gold', minScore: 1500, icon: '🥇' },
-                { name: 'Silver', minScore: 1000, icon: '🥈' },
-                { name: 'Bronze', minScore: 500, icon: '🥉' },
-                { name: 'Iron', minScore: 200, icon: '⛓️' },
-                { name: 'Stone', minScore: 0, icon: '🗿' }
+                // Higher Leagues (🌕)
+                { name: 'God Mode', minScore: 1300, maxScore: 1400, icon: '🌟', description: 'Transcendent EQ, ultimate awareness' },
+                { name: 'Enlightened Mode', minScore: 1200, maxScore: 1299, icon: '✨', description: 'Deep mastery, emotional peace' },
+                { name: 'Healer Mode', minScore: 1100, maxScore: 1199, icon: '🌸', description: 'Uses EQ to uplift others' },
+                { name: 'Sage Mode', minScore: 1000, maxScore: 1099, icon: '🧙‍♂️', description: 'Wise, balanced leader' },
+                { name: 'Monk Mode', minScore: 900, maxScore: 999, icon: '🧘', description: 'Calm, mindful, steady' },
+                
+                // Transitional Leagues (🌗)
+                { name: 'Empath Mode', minScore: 800, maxScore: 899, icon: '💚', description: 'Good at understanding others' },
+                { name: 'Balanced Mode', minScore: 700, maxScore: 799, icon: '⚖️', description: 'Sometimes calm, sometimes reactive' },
+                { name: 'Awareness Mode', minScore: 600, maxScore: 699, icon: '👁️', description: 'Recognizes emotions in self and others' },
+                { name: 'Seeker Mode', minScore: 500, maxScore: 599, icon: '🔍', description: 'Beginning emotional awareness' },
+                
+                // Shadow/Struggle Leagues (🌑)
+                { name: 'Shadow Walker', minScore: 400, maxScore: 499, icon: '🌫️', description: 'Aware of struggles but can\'t manage them' },
+                { name: 'Storm Mode', minScore: 300, maxScore: 399, icon: '⛈️', description: 'Frequent anger, jealousy, negativity' },
+                { name: 'Addiction Loop', minScore: 200, maxScore: 299, icon: '🔄', description: 'Relies on habits/escapes to handle feelings' },
+                { name: 'Chaotic Mode', minScore: 100, maxScore: 199, icon: '🌪️', description: 'Overwhelmed, emotions dominate decisions' },
+                { name: 'Lost Mode', minScore: 0, maxScore: 99, icon: '🌚', description: 'No awareness of emotions, feels stuck' }
             ];
 
-            // Sample data for the leaderboards
+            // Sample data for the leaderboards with updated scores
             const weeklyData = [
-                { name: 'Alex Johnson', score: 987 },
-                { name: 'Maria Lopez', score: 954 },
-                { name: 'David Chen', score: 931 },
-                { name: 'Sarah Williams', score: 912 },
+                { name: 'Alex Johnson', score: 1387 },
+                { name: 'Maria Lopez', score: 1254 },
+                { name: 'David Chen', score: 1131 },
+                { name: 'Sarah Williams', score: 1012 },
                 { name: 'Chris Davis', score: 899 }
             ];
 
@@ -436,18 +448,18 @@
             ];
 
             const globalData = [
-                { name: 'Isabella Thomas', score: 3205 },
-                { name: 'James Rodriguez', score: 3150 },
-                { name: 'Chloe Harris', score: 3099 },
-                { name: 'Benjamin Clark', score: 3011 },
-                { name: 'Liam Lewis', score: 2987 }
+                { name: 'Isabella Thomas', score: 1405 },
+                { name: 'James Rodriguez', score: 1350 },
+                { name: 'Chloe Harris', score: 1299 },
+                { name: 'Benjamin Clark', score: 1211 },
+                { name: 'Liam Lewis', score: 1187 }
             ];
 
             // Helper function to get the league icon for a given score
             function getLeagueIcon(score) {
-                // Find the first league where the score is greater than or equal to the minScore
-                const league = leagueTiers.find(tier => score >= tier.minScore);
-                return league ? league.icon : ''; // Return the icon or an empty string if not found
+                // Find the first league where the score is within the range
+                const league = leagueTiers.find(tier => score >= tier.minScore && score <= tier.maxScore);
+                return league ? league.icon : '🌚'; // Return the icon or Lost Mode icon if not found
             }
 
             // Function to render the leaderboard list
@@ -494,7 +506,7 @@
                             <span class="league-icon">${league.icon}</span>
                             <span class="league-name">${league.name}</span>
                         </div>
-                        <span class="league-score-needed">${league.minScore} EQ</span>
+                        <span class="league-score-needed">${league.minScore}-${league.maxScore} EQ</span>
                     `;
                     leagueList.appendChild(listItem);
                 });

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Krishna Geeta — Journey</title>
+<style>
+  :root{
+    --bg1:#071026; --bg2:#08243a;
+    --glass: rgba(255,255,255,0.06);
+    --accent:#8a6bff; --accent-2:#b49bff;
+    --muted:#bfc7d6; --success:#2ecc71; --danger:#ff6b6b;
+    --card-border: rgba(255,255,255,0.06);
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; font-family:"Segoe UI", Roboto, Arial, sans-serif;
+    background: linear-gradient(135deg,var(--bg1),var(--bg2));
+    color:#eaf2ff; padding:18px; -webkit-font-smoothing:antialiased;
+  }
+
+  /* Header */
+  header{ max-width:1100px; margin:0 auto 18px; display:flex; align-items:center; justify-content:space-between; gap:12px }
+  .brand{ display:flex; gap:12px; align-items:center }
+  .brand h1{ margin:0; font-size:1.4rem; color:var(--accent) }
+  .sub { color:var(--muted); font-size:0.95rem }
+
+  /* Progress panel */
+  .panel{
+    max-width:1100px; margin:10px auto 24px; padding:16px; border-radius:14px;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid var(--card-border); backdrop-filter:blur(8px);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .progress-area{ flex:1; margin-right:18px }
+  .progress-bar{ height:12px; background: rgba(255,255,255,0.04); border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.02) }
+  .progress-fill{ height:100%; width:0%; background: linear-gradient(90deg,var(--accent),var(--accent-2)); transition:width .5s ease }
+
+  .eq-display{ min-width:140px; text-align:right }
+  .eq-display .label{ color:var(--muted); font-size:0.9rem }
+  .eq-display .value{ font-weight:800; font-size:1.25rem; color:#fff }
+
+  /* Journey grid */
+  .journey{ max-width:1100px; margin: 0 auto 60px; display:grid; gap:14px }
+  .chapter{
+    border-radius:14px; padding:16px; display:block; position:relative;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid var(--card-border); backdrop-filter: blur(8px);
+    transition: transform .22s ease, box-shadow .22s ease, border-color .22s ease;
+    overflow:visible;
+  }
+  .chapter.locked{ opacity:0.6; filter:grayscale(8%) }
+  .chapter .top{ display:flex; align-items:center; gap:12px }
+  .chap-icon{ font-size:1.8rem; width:54px; height:54px; border-radius:12px; display:flex; align-items:center; justify-content:center; background: linear-gradient(135deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); border:1px solid rgba(255,255,255,0.02) }
+  .chap-title{ font-weight:800; color:var(--accent) }
+  .chap-sub{ color:var(--muted); font-size:0.95rem }
+  .chap-meta{ margin-left:auto; text-align:right }
+  .xp-badge{ background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01)); padding:8px 10px; border-radius:10px; border:1px solid rgba(255,255,255,0.03); font-weight:700; color:var(--muted) }
+
+  .chapter:hover{ transform: translateY(-6px); box-shadow: 0 20px 60px rgba(0,0,0,0.6) ; border-color: rgba(138,107,255,0.4) }
+
+  /* expanded content area */
+  .expanded{ margin-top:14px; padding-top:12px; border-top:1px dashed rgba(255,255,255,0.03) }
+  .content p{ color:var(--muted); line-height:1.45; margin-bottom:12px }
+  .example{ background: rgba(255,255,255,0.02); border-radius:10px; padding:12px; color:var(--muted); margin-bottom:10px }
+  .activity{ background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.005)); border-radius:10px; padding:12px; margin-bottom:12px; color:var(--muted) }
+
+  .controls{ display:flex; gap:10px; align-items:center }
+  .btn{
+    padding:10px 14px; border-radius:12px; border:none; cursor:pointer; font-weight:700;
+    background: linear-gradient(90deg, var(--accent), var(--accent-2)); color:#081024;
+  }
+  .btn.ghost{ background: transparent; border:1px solid rgba(255,255,255,0.04); color:var(--muted) }
+  .status{ display:inline-flex; align-items:center; gap:8px; color:var(--muted) }
+
+  .completed-mark{ color:var(--success); font-weight:900; font-size:1.05rem }
+
+  /* small helper */
+  .small{ font-size:0.9rem; color:var(--muted) }
+
+  /* quiz modal */
+  .modal{ display:none; position:fixed; inset:0; background: rgba(0,0,0,0.7); z-index:9999; align-items:center; justify-content:center }
+  .modal-box{ width:94%; max-width:720px; background: linear-gradient(135deg,#162434,#1e2b3d); border-radius:14px; padding:18px; color:#eaf2ff; border:1px solid rgba(255,255,255,0.04) }
+  .modal .close{ float:right; cursor:pointer; font-weight:800; color:var(--muted) }
+
+  .quiz-question{ margin-bottom:12px }
+  .option{ display:block; padding:12px; margin:8px 0; border-radius:10px; background: rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.02); color:var(--muted); cursor:pointer }
+  .option:hover{ border-color: rgba(138,107,255,0.35) }
+  .option.selected{ background: linear-gradient(90deg,var(--accent),var(--accent-2)); color:#081024; font-weight:800; border-color: rgba(0,0,0,0.2) }
+
+  /* confetti / badge */
+  .badge{
+    position:fixed; right:22px; bottom:22px; background: linear-gradient(90deg,#2ecc71,#27ae60); color:#081024; padding:12px 18px; border-radius:14px; font-weight:800; box-shadow:0 10px 30px rgba(0,0,0,0.6); display:none; z-index:10010;
+  }
+
+  .xp-float{
+    position:fixed; left:50%; transform:translateX(-50%); top:24%; font-weight:900; color:#fff; background: linear-gradient(90deg,#ffd166,#ffb86b); padding:10px 14px; border-radius:12px; display:none; z-index:10009; box-shadow:0 10px 40px rgba(0,0,0,0.6)
+  }
+
+  /* confetti pieces */
+  .confetti-piece{ width:10px; height:14px; position:fixed; z-index:10011; opacity:0; transform: translateY(-10px) rotate(0deg); will-change: transform, opacity }
+
+  @media (max-width:760px){
+    .panel{ flex-direction:column; align-items:flex-start }
+    .eq-display{ text-align:left; margin-top:10px }
+  }
+</style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div style="font-size:1.9rem">🕉️</div>
+      <h1>Krishna Geeta — Journey</h1>
+    </div>
+    <div class="sub">5 Chapters • Earn up to <strong>+150 EQ</strong></div>
+  </header>
+
+  <div class="panel" aria-hidden="false">
+    <div class="progress-area">
+      <div class="small">Journey Progress</div>
+      <div class="progress-bar" style="margin-top:8px">
+        <div id="progressFill" class="progress-fill"></div>
+      </div>
+    </div>
+    <div class="eq-display">
+      <div class="label">Your EQ</div>
+      <div class="value" id="eqValue">0</div>
+    </div>
+  </div>
+
+  <main class="journey" id="journey">
+    <!-- Chapters will be injected by JS -->
+  </main>
+
+  <!-- Quiz modal -->
+  <div id="quizModal" class="modal" onclick="if(event.target===this) closeQuiz()">
+    <div class="modal-box" role="dialog" aria-modal="true">
+      <div class="close" onclick="closeQuiz()">✕</div>
+      <div id="quizBody"></div>
+    </div>
+  </div>
+
+  <div id="xpFloat" class="xp-float">+0 EQ</div>
+  <div id="doneBadge" class="badge">Journey Complete — Badge Unlocked 🎖️</div>
+
+  <script>
+  /*************************************************************************
+   * Journey Engine - Krishna Geeta (5 chapters)
+   * - Inline expand/collapse
+   * - Quizzes in modal
+   * - XP awarding (10,20,30,40,50)
+   * - localStorage persistence key: journey:krishna
+   ***************************************************************************/
+
+  const JOURNEY_KEY = 'journey:krishna';
+  const XP_VALUES = [10,20,30,40,50];
+  const TOTAL_XP = XP_VALUES.reduce((a,b)=>a+b,0); // 150
+  const chapters = [
+    {
+      id: 'c1', title: 'Chapter 1 — Foundation', icon:'🧘',
+      subtitle:'What are emotions & the self — basics',
+      content: `<p>Introduction to core concept: understanding emotions as signals. Short explanation and gentle reflection practices.</p>
+                <div class="example"><strong>Example:</strong> Notice your breath for 2 minutes and label emotions that arise.</div>
+                <div class="activity"><strong>Activity:</strong> Sit quietly for 3 minutes and write 2 things you noticed.</div>`,
+      quiz:[
+        {q:'Which idea emphasizes action without attachment?', opts:['Karma Yoga','Bhakti Yoga','Raja Yoga'], a:0}
+      ]
+    },
+    {
+      id: 'c2', title: 'Chapter 2 — Deep Understanding', icon:'⚖️',
+      subtitle:'Duty, action and equanimity',
+      content:`<p>Deeper look into Karma Yoga and equanimity — practice micro-choices without owning outcomes.</p>
+               <div class="example"><strong>Example:</strong> During a small task, notice outcomes vs effort distinction.</div>
+               <div class="activity"><strong>Activity:</strong> Do a 5-minute mindful task (washing cups) and note feelings.</div>`,
+      quiz:[
+        {q:'Karma Yoga primarily teaches?', opts:['Detached action','Complete withdrawal','Anger management'], a:0}
+      ]
+    },
+    {
+      id: 'c3', title: 'Chapter 3 — Practical Application', icon:'🌊',
+      subtitle:'Applying teachings in daily life',
+      content:`<p>Use real-life scenarios: relationships, work stress — apply breath, pause, and choose response.</p>
+               <div class="example"><strong>Example:</strong> When provoked, pause for three breaths before speaking.</div>
+               <div class="activity"><strong>Activity:</strong> Apply the pause technique during one interaction today.</div>`,
+      quiz:[
+        {q:'Best immediate response to provocation?', opts:['Pause & breathe','Retaliate','Ignore completely'], a:0}
+      ]
+    },
+    {
+      id: 'c4', title: 'Chapter 4 — Advanced Mastery', icon:'🌟',
+      subtitle:'Inner techniques & steady mind',
+      content:`<p>Advanced techniques: witness consciousness, sustained practice, integrating devotion (bhakti) and action.</p>
+               <div class="example"><strong>Example:</strong> Combine a 10-minute self-inquiry with service action.</div>
+               <div class="activity"><strong>Activity:</strong> Practice 10-minute self-inquiry and note changes.</div>`,
+      quiz:[
+        {q:'Which practice pairs inquiry with action?', opts:['Integrated Karma','Passive surrender','Avoidance'], a:0}
+      ]
+    },
+    {
+      id: 'c5', title: 'Chapter 5 — Integration & Transformation', icon:'🏁',
+      subtitle:'Synthesis and life integration',
+      content:`<p>Final integration: design daily rituals, commit to continued practice and teach one small thing to someone else.</p>
+               <div class="example"><strong>Example:</strong> Teach a friend a 2-minute breath practice.</div>
+               <div class="activity"><strong>Activity:</strong> Create your simple ritual and perform it for 3 days.</div>`,
+      quiz:[
+        {q:'Final step for integration?', opts:['Practice & teach','Stop practicing','Change nothing'], a:0}
+      ]
+    }
+  ];
+
+  // Load progress from localStorage or init
+  function loadProgress(){
+    const raw = localStorage.getItem(JOURNEY_KEY);
+    if(!raw) {
+      const state = { completed: {}, xp: 0 };
+      localStorage.setItem(JOURNEY_KEY, JSON.stringify(state));
+      return state;
+    }
+    try { return JSON.parse(raw); } catch(e) { localStorage.removeItem(JOURNEY_KEY); return loadProgress(); }
+  }
+  function saveProgress(state){ localStorage.setItem(JOURNEY_KEY, JSON.stringify(state)); }
+
+  // Render chapters
+  const state = loadProgress();
+  const journeyEl = document.getElementById('journey');
+  function render(){
+    journeyEl.innerHTML = '';
+    const completed = state.completed || {};
+    const currentXp = state.xp || 0;
+    document.getElementById('eqValue').textContent = currentXp;
+    const completedCount = Object.keys(completed).length;
+    const progressPct = Math.round((currentXp / TOTAL_XP) * 100);
+    document.getElementById('progressFill').style.width = progressPct + '%';
+
+    chapters.forEach((ch, idx) => {
+      const isUnlocked = (idx === 0) || chapters.slice(0, idx).every((p,i)=> state.completed[p.id]);
+      const isCompleted = !!state.completed[ch.id];
+      const lockClass = isUnlocked ? '' : 'locked';
+      const wrapper = document.createElement('section');
+      wrapper.className = `chapter ${lockClass}`;
+      wrapper.setAttribute('data-id', ch.id);
+      wrapper.innerHTML = `
+        <div class="top">
+          <div class="chap-icon">${ch.icon}</div>
+          <div>
+            <div class="chap-title">${ch.title}</div>
+            <div class="chap-sub">${ch.subtitle}</div>
+          </div>
+          <div class="chap-meta">
+            <div class="xp-badge">+${XP_VALUES[idx]} EQ</div>
+            <div class="status">${ isCompleted ? '<span class="completed-mark">✅ Completed</span>' : (isUnlocked ? '<span class="small">Locked: No</span>' : '<span class="small">🔒 Locked</span>') }</div>
+          </div>
+        </div>
+      `;
+      // Expandable content
+      const expanded = document.createElement('div');
+      expanded.className = 'expanded';
+      expanded.style.display = 'none';
+      expanded.innerHTML = `
+        <div class="content">${ch.content}</div>
+        <div class="controls">
+          <button class="btn start-quiz">Start Quiz</button>
+          <button class="btn ghost close-exp">Close</button>
+        </div>
+      `;
+      wrapper.appendChild(expanded);
+
+      // Click to toggle (only if unlocked)
+      wrapper.addEventListener('click', (e) => {
+        // ignore clicks on controls (they bubble)
+        if(e.target.closest('.controls')) return;
+        if(!isUnlocked){
+          // slight shake or tooltip
+          wrapper.animate([{transform:'translateX(0)'},{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}], {duration:300});
+          return;
+        }
+        const visible = expanded.style.display === 'block';
+        // collapse any other expanded
+        document.querySelectorAll('.chapter .expanded').forEach(el => el.style.display = 'none');
+        expanded.style.display = visible ? 'none' : 'block';
+        // scroll into view when opened (mobile friendly)
+        if(!visible) setTimeout(()=> wrapper.scrollIntoView({behavior:'smooth', block:'center'}), 120);
+      });
+
+      // Start quiz button
+      expanded.querySelector('.start-quiz').addEventListener('click', (ev) => {
+        ev.stopPropagation();
+        openQuizModal(idx);
+      });
+      // Close expanded
+      expanded.querySelector('.close-exp').addEventListener('click', (ev) => { ev.stopPropagation(); expanded.style.display='none' });
+
+      journeyEl.appendChild(wrapper);
+    });
+
+    // if all completed show badge
+    if(Object.keys(state.completed).length === chapters.length){
+      showBadge();
+    } else {
+      hideBadge();
+    }
+  }
+
+  // Quiz modal logic
+  const quizModal = document.getElementById('quizModal');
+  const quizBody = document.getElementById('quizBody');
+  let currentQuizIndex = null;
+  let selectedAnswer = null;
+
+  function openQuizModal(chIndex){
+    currentQuizIndex = chIndex;
+    selectedAnswer = null;
+    const quizData = chapters[chIndex].quiz;
+    // We'll present one question at a time (chapters currently have 1 question each)
+    const q = quizData[0];
+    quizBody.innerHTML = `
+      <h3 style="color:${'var(--accent)'}">${chapters[chIndex].title} — Quiz</h3>
+      <div class="quiz-question"><strong>${q.q}</strong></div>
+      <div id="opts">${ q.opts.map((opt,i)=>`<div class="option" data-i="${i}" onclick="chooseOption(this,${i})">${opt}</div>`).join('') }</div>
+      <div style="margin-top:14px; display:flex; justify-content:flex-end; gap:10px">
+        <button class="btn ghost" onclick="closeQuiz()">Cancel</button>
+        <button class="btn" onclick="submitQuiz()">Submit</button>
+      </div>
+    `;
+    quizModal.style.display = 'flex';
+  }
+
+  function closeQuiz(){ quizModal.style.display='none'; quizBody.innerHTML=''; selectedAnswer=null; currentQuizIndex=null }
+
+  function chooseOption(el, i){
+    selectedAnswer = i;
+    document.querySelectorAll('#opts .option').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  function submitQuiz(){
+    if(selectedAnswer === null){ alert('Select an option'); return; }
+    const quiz = chapters[currentQuizIndex].quiz[0];
+    const correct = quiz.a;
+    const isCorrect = (selectedAnswer === correct);
+    closeQuiz();
+    if(isCorrect){
+      awardXPForChapter(currentQuizIndex);
+      alert('Correct! You earned +' + XP_VALUES[currentQuizIndex] + ' EQ');
+    } else {
+      alert('Not quite — review the chapter and try again.');
+    }
+    render();
+  }
+
+  // Award XP, mark completed, unlock next
+  function awardXPForChapter(idx){
+    const ch = chapters[idx];
+    if(state.completed[ch.id]) return; // don't double credit
+    const xp = XP_VALUES[idx];
+    state.xp = (state.xp || 0) + xp;
+    state.completed[ch.id] = true;
+    saveProgress(state);
+    showXpFloat('+' + xp + ' EQ');
+    // small confetti for major chapters (e.g., every completion)
+    confettiBurst();
+    render();
+  }
+
+  // xp floating animation
+  function showXpFloat(text){
+    const el = document.getElementById('xpFloat');
+    el.textContent = text;
+    el.style.display = 'block';
+    el.animate([{opacity:0, transform:'translateY(-10px)'},{opacity:1, transform:'translateY(0)'},{opacity:0, transform:'translateY(-40px)'}], {duration:1800, easing:'ease-out'});
+    setTimeout(()=> el.style.display='none', 1800);
+  }
+
+  // Badge
+  function showBadge(){
+    const b = document.getElementById('doneBadge');
+    if(!b) return;
+    b.style.display='block';
+    b.animate([{transform:'translateY(20px)', opacity:0},{transform:'translateY(0)', opacity:1}], {duration:600, easing:'cubic-bezier(.2,.9,.3,1)'});
+  }
+  function hideBadge(){
+    const b = document.getElementById('doneBadge');
+    if(!b) return;
+    b.style.display='none';
+  }
+
+  // Simple confetti burst
+  function confettiBurst(){
+    const colors = ['#ffd166','#ff6b6b','#7b61ff','#2ecc71','#4ecdc4'];
+    for(let i=0;i<18;i++){
+      const el = document.createElement('div');
+      el.className = 'confetti-piece';
+      el.style.background = colors[i % colors.length];
+      el.style.left = (50 + (Math.random()*200 - 100)) + '%';
+      el.style.top = (30 + Math.random()*10) + '%';
+      el.style.opacity = '1';
+      document.body.appendChild(el);
+      const dx = (Math.random()*400 - 200);
+      const dy = (Math.random()*400 + 200);
+      const rot = (Math.random()*720 - 360);
+      el.animate([
+        { transform:`translateY(0px) rotate(0deg)`, opacity:1 },
+        { transform:`translate(${dx}px, ${dy}px) rotate(${rot}deg)`, opacity:0 }
+      ], { duration: 1400 + Math.random()*800, easing:'cubic-bezier(.2,.8,.2,1)'});
+      setTimeout(() => el.remove(), 2200);
+    }
+  }
+
+  // Initialize and render
+  render();
+
+  // Expose functions for onClick in inline HTML where needed
+  window.openQuizModal = openQuizModal;
+  window.closeQuiz = closeQuiz;
+
+  // Safety: listen for storage changes (optional multi-tab)
+  window.addEventListener('storage', (e) => {
+    if(e.key === JOURNEY_KEY) {
+      Object.assign(state, JSON.parse(e.newValue || '{}'));
+      render();
+    }
+  });
+  </script>
+</body>
+</html>

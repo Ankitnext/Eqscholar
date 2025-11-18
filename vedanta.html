@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Vedanta Teachings — EQ Academy</title>
+<style>
+:root{--bg1:#0e1724;--bg2:#122033;--accent:#9b59b6;--muted:#bdc3c7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,Arial;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#ecf0f1;padding:22px}
+.header{max-width:1200px;margin:0 auto 20px;display:flex;justify-content:space-between;align-items:center}
+.brand h1{color:var(--accent)}
+.container{max-width:1100px;margin:0 auto}
+.panel{background:rgba(255,255,255,0.03);padding:18px;border-radius:12px}
+.section-title{color:var(--accent);font-weight:700;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{padding:12px;border-radius:10px;background:rgba(0,0,0,0.32);border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+.card:hover{transform:translateY(-6px)}
+.kicker{color:var(--muted)}
+.btn{padding:10px 12px;border-radius:10px;border:none;background:linear-gradient(45deg,#9b59b6,#8e44ad);color:white;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);align-items:center;justify-content:center}
+.box{background:linear-gradient(135deg,#2a2a34,#2f2b3a);padding:18px;border-radius:12px;width:92%;max-width:720px}
+.close{cursor:pointer}
+</style>
+</head>
+<body>
+<header class="header"><div class="brand"><h1>Vedanta Teachings</h1></div><nav><a href="lesson3.html" style="color:#ecf0f1">Back</a></nav></header>
+<main class="container">
+<section class="panel">
+  <h2 class="section-title">Essence of Vedanta</h2>
+  <p class="kicker">Philosophy of non-duality, self-realization, and practical inquiry.</p>
+
+  <div style="margin-top:14px" class="grid">
+    <div class="card" onclick="open('Self Inquiry','Practice to investigate \"who am I\"')"><h4>Self Inquiry</h4><p class="kicker">Techniques to notice the observer.</p></div>
+    <div class="card" onclick="open('Neti Neti','Practice of negation & clarity')"><h4>Neti Neti</h4><p class="kicker">What you are not leads to who you are.</p></div>
+    <div class="card" onclick="open('Non-duality','Practical pointers for daily life')"><h4>Non-duality</h4><p class="kicker">Reduce suffering by dissolving rigid identities.</p></div>
+    <div class="card" onclick="open('Integration','Applying Vedanta to relationships')"><h4>Integration</h4><p class="kicker">Live wisdom with compassion.</p></div>
+  </div>
+
+  <div style="margin-top:16px"><button class="btn" onclick="open('Mini Quiz','Short 2-question quiz')">Take Quiz</button></div>
+</section>
+</main>
+
+<div id="m" class="modal" onclick="if(event.target===this) closeM()"><div class="box"><div style="display:flex;justify-content:space-between;align-items:center"><h3 id="mt"></h3><span class="close" onclick="closeM()">✕</span></div><div id="mb" style="margin-top:12px;color:#bdc3c7"></div></div></div>
+<script>
+const m=document.getElementById('m'),mt=document.getElementById('mt'),mb=document.getElementById('mb');
+function open(title,desc){mt.textContent=title;mb.innerHTML=`<p>${desc}</p><div style="margin-top:12px"><button class="btn" onclick="alert('Answer: reflect and practice')">Start</button></div>`;m.style.display='flex'}
+function closeM(){m.style.display='none';mt.textContent='';mb.innerHTML=''}
+</script>
+</body>
+</html>

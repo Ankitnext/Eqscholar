@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Krishna Geeta — EQ Academy</title>
+<style>
+/* Shared modern UI styles (kept compact) */
+:root{
+  --bg1:#1a1a2e; --bg2:#16213e; --accent:#f39c12; --muted:#bdc3c7;
+  --glass: rgba(255,255,255,0.06);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  font-family: "Segoe UI", Roboto, Arial, sans-serif;
+  background: linear-gradient(135deg,var(--bg1),var(--bg2));
+  color:#ecf0f1; min-height:100vh; padding:22px;
+}
+.header{
+  display:flex;align-items:center;justify-content:space-between;gap:20px;
+  max-width:1200px;margin:0 auto 28px;
+}
+.brand{display:flex;gap:12px;align-items:center}
+.brand h1{color:var(--accent);font-size:1.5rem}
+.nav a{color:#ecf0f1;text-decoration:none;margin-left:18px;font-weight:600}
+.container{max-width:1100px;margin:0 auto;padding:18px}
+.hero{
+  background: linear-gradient(135deg, rgba(0,0,0,0.45), rgba(255,255,255,0.02));
+  border-radius:14px;padding:28px;border:1px solid rgba(255,255,255,0.06);
+}
+.hero h2{color:var(--accent);font-size:2rem;margin-bottom:8px}
+.hero p{color:var(--muted);margin-bottom:16px}
+.row{display:grid;grid-template-columns:1fr 360px;gap:20px;margin-top:22px}
+@media(max-width:880px){ .row{grid-template-columns:1fr} }
+
+/* content panel */
+.panel{
+  background:var(--glass); padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.06);
+}
+.section-title{color:var(--accent);font-weight:700;margin-bottom:12px;font-size:1.1rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:rgba(0,0,0,0.35);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);cursor:pointer;transition:all .22s;}
+.card:hover{transform:translateY(-6px);box-shadow:0 14px 40px rgba(0,0,0,0.5)}
+.card .icon{font-size:1.6rem;margin-bottom:8px}
+.card h4{margin-bottom:6px;color:#f1c40f}
+.card p{color:var(--muted);font-size:0.95rem}
+
+/* right column */
+.aside .meta{background:rgba(0,0,0,0.28);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);margin-bottom:14px}
+.meta h5{color:var(--accent);margin-bottom:8px}
+.action-row{display:flex;gap:10px}
+.btn{padding:10px 14px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.btn.primary{background:linear-gradient(45deg,#3498db,#2980b9);color:white}
+.btn.ghost{background:transparent;border:1px solid rgba(255,255,255,0.06);color:#ecf0f1}
+
+/* modal */
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);z-index:9998;align-items:center;justify-content:center}
+.modal .box{background:linear-gradient(135deg,#2c3e50,#34495e);padding:22px;border-radius:12px;max-width:720px;width:94%;color:#ecf0f1}
+.close{position:absolute;right:18px;top:14px;cursor:pointer;font-size:1.4rem;color:#bdc3c7}
+
+/* quiz specific */
+.quiz-question{background:rgba(0,0,0,0.22);padding:14px;border-radius:8px;margin-bottom:12px}
+.option{display:block;padding:10px;border-radius:8px;margin:8px 0;background:rgba(255,255,255,0.03);border:1px solid transparent;cursor:pointer}
+.option:hover{border-color:rgba(255,255,255,0.06);background:rgba(255,255,255,0.04)}
+.option.selected{background:#3498db;border-color:#2980b9;color:white}
+
+/* small helpers */
+.kicker{color:var(--muted);font-size:0.95rem;margin-bottom:10px}
+.note{color:#bdc3c7;font-size:0.95rem;margin-top:10px}
+
+/* animations */
+@keyframes pop { from{transform:scale(.98);opacity:0}to{transform:scale(1);opacity:1}}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="brand">
+    <div style="font-size:1.9rem">🕉️</div>
+    <h1>Krishna Geeta</h1>
+  </div>
+  <nav class="nav">
+    <a href="lesson3.html">Back</a>
+    <a href="index.html">Home</a>
+    <a href="leaderboard.html">Progress</a>
+  </nav>
+</header>
+
+<main class="container">
+  <section class="hero panel">
+    <h2>Teachings from Bhagavad Gita</h2>
+    <p class="kicker">Select lessons or take short practice quizzes inspired by Krishna’s teachings — concise, practical, and focused on emotional mastery.</p>
+
+    <div class="row">
+      <div>
+        <div class="section-title">Core Lessons</div>
+        <div class="cards">
+          <div class="card" onclick="openLessonModal('Gita: Nature of Self','Short lesson about self (Atman) and identity.')">
+            <div class="icon">🧘‍♂️</div>
+            <h4>Nature of Self</h4>
+            <p>Understand Atman vs. ego — practice self-inquiry.</p>
+          </div>
+
+          <div class="card" onclick="openLessonModal('Gita: Duty & Action','Karma yoga — performing work without attachment.')">
+            <div class="icon">⚖️</div>
+            <h4>Duty & Action</h4>
+            <p>Learn action without attachment — reduce anxiety and guilt.</p>
+          </div>
+
+          <div class="card" onclick="openLessonModal('Gita: Equanimity','Maintaining balance through ups and downs.')">
+            <div class="icon">🌊</div>
+            <h4>Equanimity</h4>
+            <p>Build resilience: practice remaining steady in success and failure.</p>
+          </div>
+
+          <div class="card" onclick="openLessonModal('Gita: Devotion & Selfless Love','Bhakti and serving others skillfully')">
+            <div class="icon">❤️</div>
+            <h4>Devotion & Service</h4>
+            <p>Compassion practice and community focus to lift mood & motivation.</p>
+          </div>
+        </div>
+
+        <div style="margin-top:20px" class="section-title">Practice Exercises</div>
+        <div class="card" onclick="openLessonModal('Meditation: Self Inquiry','Guided practice to witness thoughts')">
+          <div class="icon">🔭</div>
+          <h4>Meditation — Self Inquiry</h4>
+          <p>Short guided sitting practice to notice the thinker, breath & sensations.</p>
+        </div>
+      </div>
+
+      <aside class="aside">
+        <div class="meta panel">
+          <h5>Quick Info</h5>
+          <p class="kicker">Difficulty: Intro — Intermediate</p>
+          <p class="note">Progress through lessons to unlock more guided practices and short quizzes.</p>
+        </div>
+
+        <div class="meta panel">
+          <h5>Actions</h5>
+          <div class="action-row">
+            <button class="btn primary" onclick="openQuiz()">Take Quick Quiz</button>
+            <button class="btn ghost" onclick="window.location.href='lesson3.html'">Back</button>
+          </div>
+        </div>
+
+        <div class="meta panel">
+          <h5>Related reading</h5>
+          <p class="note">Select suggested verses and modern commentary for deeper study.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<!-- Modal for lessons & quiz -->
+<div id="modal" class="modal" onclick="if(event.target===this) closeModal()">
+  <div class="box" role="dialog" aria-modal="true">
+    <div class="close" onclick="closeModal()">✕</div>
+    <div id="modalBody">
+      <!-- dynamic content inserted here -->
+    </div>
+  </div>
+</div>
+
+<script>
+const modal=document.getElementById('modal');
+const modalBody=document.getElementById('modalBody');
+
+function openLessonModal(title,desc){
+  modalBody.innerHTML = `
+    <h3 style="color:${'#f39c12'};margin-bottom:8px">${title}</h3>
+    <p style="color:#bdc3c7;margin-bottom:14px">${desc}</p>
+    <div style="margin-top:8px">
+      <p style="color:#ecf0f1">Short Lesson Content — (placeholder). Read: practice noticing breath for 5 minutes. Then journal 3 takeaways.</p>
+      <div style="margin-top:14px;display:flex;gap:10px">
+        <button class="btn primary" onclick="startMiniQuiz()">Start Quiz</button>
+        <button class="btn ghost" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+  `;
+  modal.style.display='flex';
+}
+
+function closeModal(){ modal.style.display='none'; modalBody.innerHTML=''; }
+
+function openQuiz(){
+  modalBody.innerHTML = `
+    <h3 style="color:#f39c12">Quick Quiz — Krishna Geeta</h3>
+    <div id="quizArea">
+      <div class="quiz-question">
+        <div style="font-weight:700;margin-bottom:8px">Q1. Which teaching suggests doing duty without attachment?</div>
+        <button class="option" onclick="selectOption(this,0)">Karma Yoga</button>
+        <button class="option" onclick="selectOption(this,1)">Jnana Yoga</button>
+        <button class="option" onclick="selectOption(this,2)">Bhakti Yoga</button>
+      </div>
+      <div style="margin-top:8px"><button class="btn primary" onclick="submitQuickQuiz()">Submit</button></div>
+    </div>
+  `;
+  modal.style.display='flex';
+}
+
+function startMiniQuiz(){ openQuiz(); }
+
+function selectOption(el,idx){
+  document.querySelectorAll('.option').forEach(b=>b.classList.remove('selected'));
+  el.classList.add('selected');
+  el.dataset.selected = idx;
+}
+
+function submitQuickQuiz(){
+  const chosen = document.querySelector('.option.selected');
+  if(!chosen){ alert('Select an option'); return; }
+  const correct = 0; // Karma Yoga
+  const result = chosen.dataset.selected==correct;
+  modalBody.innerHTML = `
+    <div style="text-align:center;padding:20px">
+      <div style="font-size:44px">${result? '✅':'❌'}</div>
+      <h4 style="color:${result? '#2ecc71':'#e74c3c'}">${result? 'Correct!':'Not quite'}</h4>
+      <p style="color:#bdc3c7">Answer: Karma Yoga — Acting without attachment.</p>
+      <div style="margin-top:12px"><button class="btn primary" onclick="closeModal()">Continue</button></div>
+    </div>
+  `;
+}
+</script>
+</body>
+</html>

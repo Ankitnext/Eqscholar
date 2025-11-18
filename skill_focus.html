@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Skill — How to Work with Focus</title>
+<style>
+:root{--bg1:#08121a;--bg2:#0f1b26;--accent:#3498db;--muted:#bdc3c7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,Arial;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#ecf0f1;padding:22px}
+.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.container{max-width:1000px;margin:0 auto}
+.panel{background:rgba(255,255,255,0.03);padding:18px;border-radius:12px}
+.how{display:grid;grid-template-columns:1fr 300px;gap:18px}
+.btn{padding:10px;border-radius:10px;border:none;background:linear-gradient(45deg,#3498db,#2980b9);cursor:pointer;color:#fff}
+@media(max-width:880px){ .how{grid-template-columns:1fr} }
+</style>
+</head>
+<body>
+<header class="header"><h1 style="color:#3498db">How to Work with Focus</h1><nav><a href="lesson3.html">Back</a></nav></header>
+<main class="container">
+  <section class="panel how">
+    <div>
+      <h3>Overview</h3>
+      <p style="color:#bdc3c7">Build routines that protect attention: anchors, scheduled deep work, and mini-rests.</p>
+      <div style="margin-top:12px">
+        <h4>Pomodoro + Rituals</h4>
+        <p class="kicker" style="color:#bdc3c7">Use 25/5 cycles and a pre-work ritual (breath or two). Reduce distractions: phone on Do Not Disturb.</p>
+        <h4 style="margin-top:8px">Anchoring</h4>
+        <p class="kicker" style="color:#bdc3c7">Have a single visual cue to begin work (lamp on, specific playlist).</p>
+        <button class="btn" onclick="startPomodoro()">Start 25-min Focus</button>
+      </div>
+    </div>
+    <aside>
+      <div class="panel">
+        <h4>Mini-Checklist</h4>
+        <ul style="color:#bdc3c7">
+          <li>Clear tasks</li><li>Timer set</li><li>Single window</li><li>Phone away</li>
+        </ul>
+        <button class="btn" style="margin-top:8px" onclick="alert('Checklist saved')">Save Checklist</button>
+      </div>
+    </aside>
+  </section>
+</main>
+
+<script>
+let timer=null;
+function startPomodoro(){
+  if(timer){ clearTimeout(timer); timer=null; alert('Stopped'); return; }
+  alert('Pomodoro started: 25 minutes');
+  timer = setTimeout(()=>alert('Pomodoro finished — take a 5 min break'), 25*60*1000);
+}
+</script>
+</body>
+</html>

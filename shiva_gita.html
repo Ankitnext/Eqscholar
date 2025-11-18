@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Shiva Geeta — EQ Academy</title>
+<style>
+/* Reuse same modern style but with new accent */
+:root{--bg1:#11121a;--bg2:#121827;--accent:#e74c3c;--muted:#bdc3c7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#ecf0f1;padding:22px}
+.header{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto 26px}
+.brand h1{color:var(--accent);font-size:1.5rem}
+.nav a{color:#ecf0f1;text-decoration:none;margin-left:16px}
+.container{max-width:1100px;margin:0 auto}
+.panel{background:rgba(255,255,255,0.03);padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.04)}
+.section-title{color:var(--accent);font-weight:700;margin-bottom:12px;font-size:1.1rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{background:rgba(0,0,0,0.35);padding:14px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);cursor:pointer}
+.card:hover{transform:translateY(-6px);box-shadow:0 12px 30px rgba(0,0,0,0.5)}
+.icon{font-size:1.6rem;margin-bottom:8px}
+.kicker{color:var(--muted)}
+.btn{padding:10px 12px;border-radius:10px;border:none;cursor:pointer;font-weight:700}
+.btn.primary{background:linear-gradient(45deg,#e74c3c,#c0392b);color:#fff}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center}
+.box{background:linear-gradient(135deg,#2c2f36,#2b2b30);padding:20px;border-radius:12px;width:92%;max-width:720px}
+.close{position:absolute;right:18px;top:14px;cursor:pointer}
+@media(max-width:880px){ .header{flex-direction:column;gap:10px} }
+</style>
+</head>
+<body>
+<header class="header">
+  <div class="brand"><div style="font-size:1.8rem">🔥</div><h1>Shiva Geeta</h1></div>
+  <nav class="nav"><a href="lesson3.html">Back</a><a href="index.html">Home</a></nav>
+</header>
+
+<main class="container">
+  <section class="panel">
+    <h2 class="section-title">Wisdom of Shiva — Stillness & Transformation</h2>
+    <p class="kicker">Explore practices centered on inner transformation, letting go, and powerful stillness.</p>
+
+    <div style="margin-top:16px" class="grid">
+      <div class="card" onclick="openModal('Shiva: Stillness','Learn short practices for stillness, surrender and inner fire.')">
+        <div class="icon">🕯️</div><h4>Stillness Practices</h4><p class="kicker">Short sit and release practices.</p>
+      </div>
+
+      <div class="card" onclick="openModal('Shiva: Letting Go','Rituals & exercises for releasing attachments.')">
+        <div class="icon">🍂</div><h4>Letting Go</h4><p class="kicker">Techniques to drop what no longer serves.</p>
+      </div>
+
+      <div class="card" onclick="openModal('Shiva: Fierce Compassion','Transformative compassion that includes boundary setting.')">
+        <div class="icon">🛡️</div><h4>Fierce Compassion</h4><p class="kicker">Protective compassion practice.</p>
+      </div>
+
+      <div class="card" onclick="openModal('Shiva: Breath of Power','Short pranayama for energy regulation')">
+        <div class="icon">🌬️</div><h4>Pranayama</h4><p class="kicker">Breathing practice to stabilize mood.</p>
+      </div>
+    </div>
+
+    <div style="margin-top:18px; display:flex;gap:10px;">
+      <button class="btn primary" onclick="openModal('Quiz: Shiva Wisdom','A short 3-question quiz to test grasp of teachings')">Take Quiz</button>
+      <button class="btn" onclick="window.location.href='lesson3.html'">Back</button>
+    </div>
+  </section>
+</main>
+
+<div id="modal" class="modal" onclick="if(event.target===this) closeModal()">
+  <div class="box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div id="mTitle" style="color:#e74c3c;font-weight:800;"></div>
+      <div class="close" onclick="closeModal()">✕</div>
+    </div>
+    <div id="mBody" style="color:#bdc3c7"></div>
+  </div>
+</div>
+
+<script>
+const modal=document.getElementById('modal'), mTitle=document.getElementById('mTitle'), mBody=document.getElementById('mBody');
+function openModal(title,desc){
+  mTitle.textContent=title; mBody.innerHTML=`<p>${desc}</p><p style="margin-top:10px;color:#ecf0f1">Practice: 5-minute breath & reflect.</p><div style="margin-top:12px"><button class="btn primary" onclick="startQuiz()">Start Quiz</button></div>`;
+  modal.style.display='flex';
+}
+function closeModal(){ modal.style.display='none'; mTitle.textContent=''; mBody.innerHTML='';}
+function startQuiz(){ mBody.innerHTML=`<p style="font-weight:700">Q: Which practice emphasizes surrender?</p><div style="margin-top:8px"><button class="btn primary" onclick="alert('Correct — surrender is central')">A: Surrender</button></div>` }
+</script>
+</body>
+</html>

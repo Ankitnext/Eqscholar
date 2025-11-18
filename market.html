@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Market - Store</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        /* Navbar (same as your index page) */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { color: white; font-size: 24px; font-weight: bold; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .nav-links a:hover { color: #f39c12; }
+
+        /* Page Header */
+        .market-title {
+            margin-top: 130px;
+            text-align: center;
+        }
+        .market-title h1 {
+            font-size: 42px;
+            color: #f39c12;
+        }
+        .market-title p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        /* CATEGORY SECTION TITLE */
+        .category-title {
+            font-size: 30px;
+            margin: 40px 0 15px 30px;
+            color: #ffd86b;
+            font-weight: bold;
+        }
+
+        /* Horizontal Product Row */
+        .product-row {
+            display: flex;
+            overflow-x: auto;
+            padding: 20px 30px;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .product-row::-webkit-scrollbar {
+            height: 8px;
+        }
+        .product-row::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.4);
+            border-radius: 10px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: rgba(255,255,255,0.1);
+            width: 260px;
+            min-width: 260px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+        }
+
+        .product-icon {
+            font-size: 55px;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .product-name {
+            font-size: 20px;
+            color: #f39c12;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .product-desc {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 12px;
+        }
+
+        .product-price {
+            font-size: 18px;
+            color: #00ffcc;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .buy-btn {
+            background: linear-gradient(45deg, #e74c3c, #f39c12);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .buy-btn:hover { transform: scale(1.1); }
+
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="nav-bar">
+        <div class="logo">🛒 EQ Market</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="index3.html">Profile</a>
+            <a href="market.html">Market</a>
+            <a href="comm.html">Community</a>
+            <a href="events.html">Events</a>
+            <a href="lesson2.html">Lessons</a>
+            <a href="index5.html">Take Quiz</a>
+            <a href="maps.html">Map</a>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <div class="market-title">
+        <h1>EQ Rewards Market</h1>
+        <p>Choose from digital goods or real physical items</p>
+    </div>
+
+    <!-- CATEGORY 1 -->
+    <div class="category-title">🎮 Digital Items (Buy with EQ Points)</div>
+    <div class="product-row">
+
+        <div class="product-card">
+            <div class="product-icon">🎮</div>
+            <div class="product-name">Gaming Points</div>
+            <div class="product-desc">Boost your gaming wallet</div>
+            <div class="product-price">300 Points</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-icon">🪙</div>
+            <div class="product-name">Amazon Tokens</div>
+            <div class="product-desc">Use for Amazon purchases</div>
+            <div class="product-price">400 Points</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-icon">💎</div>
+            <div class="product-name">Google Play Card</div>
+            <div class="product-desc">Redeem in Play Store</div>
+            <div class="product-price">500 Points</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-icon">🔥</div>
+            <div class="product-name">Boost Token</div>
+            <div class="product-desc">Increase next quiz score +5%</div>
+            <div class="product-price">150 Points</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-icon">🎧</div>
+            <div class="product-name">Music Premium</div>
+            <div class="product-desc">1 month music pass</div>
+            <div class="product-price">380 Points</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+    </div>
+
+    <!-- CATEGORY 2 -->
+    <div class="category-title">📦 Physical Items (Real Products)</div>
+
+    <div class="product-row">
+
+        <div class="product-card">
+            <div class="product-icon">📚</div>
+            <div class="product-name">Self Improvement Book</div>
+            <div class="product-desc">Grow your EQ mind</div>
+            <div class="product-price">₹250</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-icon">🎧</div>
+            <div class="product-name">Headphones</div>
+            <div class="product-desc">High quality bass</div>
+            <div class="product-price">₹599</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-icon">👕</div>
+            <div class="product-name">T-Shirt</div>
+            <div class="product-desc">Comfortable and stylish</div>
+            <div class="product-price">₹299</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-icon">💡</div>
+            <div class="product-name">Desk Lamp</div>
+            <div class="product-desc">Study with soft focus lighting</div>
+            <div class="product-price">₹450</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+        <div class="product-card">
+            <div class="product-icon">🎒</div>
+            <div class="product-name">Mini Backpack</div>
+            <div class="product-desc">Lightweight and durable</div>
+            <div class="product-price">₹399</div>
+            <button class="buy-btn">Buy</button>
+        </div>
+
+    </div>
+
+</body>
+</html>

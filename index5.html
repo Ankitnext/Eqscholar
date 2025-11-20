@@ -1024,98 +1024,327 @@
 
     <script>
     // Sample quiz data (shared across pages, keep it global)
-    const quizData = {
-        'Anger Management': {
-            questions: [
-                { q: "When someone cuts in front of you in line, your first reaction is:", a: ["Take a deep breath and stay calm", "Politely ask them to move", "Feel annoyed but say nothing", "Confront them aggressively"], correct: 0 },
-                { q: "How often do you raise your voice when frustrated?", a: ["Never", "Rarely", "Sometimes", "Frequently"], correct: 0 }
-                // ... rest of questions
-            ],
-            category: 'negative-emotions'
-        },
-        'Good Touch Bad Touch': {
-            questions: [
-                { q: "A safe touch is one that:", a: ["Makes you feel comfortable", "An adult tells you is okay", "Happens in private", "Adults always do"], correct: 0 }
-                // ... rest of questions
-            ],
-            category: 'safety-boundaries'
-        }
-    };
+    /************************************
+ ⭐ ADVANCED EQ QUIZ ENGINE – FULL JS
+ ************************************/
 
-    function toggleCategory(categoryId) {
-        const categoryDiv = document.getElementById(categoryId);
-        const arrow = document.getElementById(`arrow-${categoryId}`);
-        
-        if (categoryDiv.style.display === 'none' || !categoryDiv.style.display) {
-            categoryDiv.style.display = 'grid';
-            arrow.style.transform = 'rotate(180deg)';
-        } else {
-            categoryDiv.style.display = 'none';
-            arrow.style.transform = 'rotate(0deg)';
-        }
-    }
+// ==================================================
+// QUIZ DATABASE (New Structured Format)
+// ==================================================
+const quizData = {
 
-    // 🚀 Redirect instead of rendering quiz
-    function startQuiz(quizName, category) {
-        if (!quizData[quizName]) {
-            alert(`Quiz "${quizName}" is coming soon!`);
-            return;
-        }
-        window.location.href = "index6.html?quiz=" + encodeURIComponent(quizName);
-    }
+    "Anger Management": {
+        level: 1,
+        questions: [
+            {
+                q: "Someone insults you in public. What is your first reaction?",
+                options: [
+                    {
+                        text: "Stay calm and take a deep breath",
+                        score: 3,
+                        impact: {
+                            self: "You protect your mental peace and emotional clarity.",
+                            family: "Your calm nature brings harmony at home.",
+                            society: "You discourage aggressive behaviour.",
+                            country: "You behave responsibly as a citizen.",
+                            earth: "You increase human consciousness."
+                        },
+                        lesson: "Emotional Regulation Basics"
+                    },
+                    {
+                        text: "Walk away silently",
+                        score: 2,
+                        impact: {
+                            self: "Good control but emotions remain inside.",
+                            family: "You avoid sending negative energy home.",
+                            society: "You prevent conflict escalation.",
+                            country: "You contribute to non-violent society.",
+                            earth: "You promote peaceful coexistence."
+                        },
+                        lesson: "Understanding Emotional Triggers"
+                    },
+                    {
+                        text: "Insult them back",
+                        score: 0,
+                        impact: {
+                            self: "Stress increases and guilt appears.",
+                            family: "Negativity spreads into relationships.",
+                            society: "Aggression spreads in environment.",
+                            country: "Weak self-control harms social order.",
+                            earth: "Human emotional energy drops."
+                        },
+                        lesson: "Anger Control Techniques"
+                    },
+                    {
+                        text: "Start a physical fight",
+                        score: -2,
+                        impact: {
+                            self: "Leads to regret, harm, and instability.",
+                            family: "Your behaviour creates fear & trauma.",
+                            society: "Violence significantly increases.",
+                            country: "Crime rate increases.",
+                            earth: "Collective consciousness decreases."
+                        },
+                        lesson: "Impulse Control Mastery"
+                    }
+                ]
+            },
 
-    // Search still works
-    function searchQuizzes(searchTerm) {
-        if (!searchTerm) {
-            document.querySelectorAll('.category-section').forEach(section => section.style.display = 'block');
-            document.querySelectorAll('.subcategory-card').forEach(card => card.style.display = 'block');
-            return;
-        }
+            {
+                q: "When you feel angry, what happens inside you?",
+                options: [
+                    { text: "I pause & think before reacting", score: 3, impact:{}, lesson: "Mindfulness Growth" },
+                    { text: "I know I’m angry but can’t stop it", score: 1, impact:{}, lesson: "Self Awareness Training" },
+                    { text: "I don't realise until I explode", score: 0, impact:{}, lesson: "Emotional Awareness" },
+                    { text: "I instantly react aggressively", score: -1, impact:{}, lesson: "Anger Management 101" }
+                ]
+            }
+        ]
+    },
 
-        searchTerm = searchTerm.toLowerCase();
-        let foundResults = false;
+    // You can add more quizzes here...
+};
 
-        document.querySelectorAll('.category-section').forEach(section => {
-            let categoryHasMatch = false;
-            const categoryName = section.querySelector('.category-info h3').textContent.toLowerCase();
 
-            if (categoryName.includes(searchTerm)) categoryHasMatch = true;
 
-            section.querySelectorAll('.subcategory-card').forEach(card => {
-                const title = card.querySelector('.subcategory-title').textContent.toLowerCase();
-                const desc = card.querySelector('.subcategory-desc').textContent.toLowerCase();
+// ==================================================
+// RENDER QUIZ QUESTIONS
+// ==================================================
+function loadQuiz(quizName) {
+    const quiz = quizData[quizName];
+    const container = document.getElementById("question-container");
+    container.innerHTML = "";
 
-                if (title.includes(searchTerm) || desc.includes(searchTerm)) {
-                    card.style.display = 'block';
-                    categoryHasMatch = true;
-                    foundResults = true;
-                } else {
-                    card.style.display = 'none';
-                }
-            });
+    quiz.questions.forEach((item, index) => {
+        const card = document.createElement("div");
+        card.className = "question-card";
 
-            section.style.display = categoryHasMatch ? 'block' : 'none';
-            if (categoryHasMatch) foundResults = true;
+        let html = `
+            <div class="question-text">${index + 1}. ${item.q}</div>
+            <div class="answers" id="answers-${index}">
+        `;
+
+        item.options.forEach((opt, optIndex) => {
+            html += `
+                <div class="answer-option" onclick="selectAnswer(${index}, ${optIndex}, this)">
+                    ${opt.text}
+                </div>
+            `;
         });
 
-        if (!foundResults) console.log('No quiz categories found');
+        html += `</div>`;
+        card.innerHTML = html;
+        container.appendChild(card);
+    });
+}
+
+
+
+// ==================================================
+// HANDLE ANSWER SELECTION
+// ==================================================
+let userAnswers = [];
+
+function selectAnswer(qIndex, optIndex, element) {
+    userAnswers[qIndex] = optIndex;
+
+    const answersDiv = document.getElementById(`answers-${qIndex}`);
+    const options = answersDiv.querySelectorAll(".answer-option");
+    options.forEach(opt => opt.classList.remove("selected"));
+
+    element.classList.add("selected");
+}
+
+
+
+// ==================================================
+// IMPACT SUMMARY
+// ==================================================
+function getImpactSummary(totalScore) {
+    if (totalScore >= 20)
+        return "Your reactions uplift you, your family, your society, and the entire world.";
+
+    if (totalScore >= 10)
+        return "You maintain emotional balance but still have areas to improve.";
+
+    if (totalScore >= 5)
+        return "Your emotional reactions are affecting relationships and stability.";
+
+    return "Your current emotional reactions negatively impact all 5 levels — You → Family → Society → Country → Earth.";
+}
+
+
+
+// ==================================================
+// LESSON RECOMMENDATION ENGINE
+// ==================================================
+function getSuggestedLessons(quizName) {
+    const quiz = quizData[quizName];
+    const lessons = {};
+
+    quiz.questions.forEach((q, i) => {
+        const optIndex = userAnswers[i];
+        const lesson = q.options[optIndex]?.lesson;
+
+        if (lesson) {
+            if (!lessons[lesson]) lessons[lesson] = 0;
+            lessons[lesson]++;
+        }
+    });
+
+    return Object.entries(lessons)
+                 .sort((a,b)=>b[1]-a[1])
+                 .slice(0,3)
+                 .map(x => x[0]);
+}
+
+
+
+// ==================================================
+// SUBMIT QUIZ & SHOW RESULTS
+// ==================================================
+function submitQuiz() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const quizName = urlParams.get("quiz");
+    const quiz = quizData[quizName];
+
+    let totalScore = 0;
+
+    quiz.questions.forEach((q, i) => {
+        const selected = userAnswers[i];
+        if (selected !== undefined) {
+            totalScore += q.options[selected].score;
+        }
+    });
+
+    // Display final score
+    document.getElementById("final-score").innerText =
+        `${totalScore} / ${quiz.questions.length * 3}`;
+
+    // Impact report
+    const impactMsg = getImpactSummary(totalScore);
+    document.getElementById("impact-message").innerText = impactMsg;
+
+    // Impact points
+    document.getElementById("impact-points").innerText = "+" + (totalScore * 2);
+
+    // Recommended lessons
+    const lessons = getSuggestedLessons(quizName);
+    document.getElementById("performance-feedback").innerHTML = `
+        <strong>Recommended Lessons:</strong><br>
+        ${lessons.join("<br>")}
+    `;
+
+    // Switch to result view
+    document.getElementById("quiz-section").style.display = "none";
+    document.getElementById("result-section").style.display = "block";
+}
+
+
+
+// ==================================================
+// AUTO-LOAD QUIZ WHEN QUIZ PAGE OPENS
+// ==================================================
+window.onload = () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const quizName = urlParams.get("quiz");
+
+    if (quizName && quizData[quizName]) {
+        document.getElementById("quiz-title").innerText = quizName;
+        document.getElementById("categories-section").style.display = "none";
+        document.getElementById("quiz-section").style.display = "block";
+        loadQuiz(quizName);
+    }
+};
+
+
+
+// ==================================================
+// CATEGORY TOGGLE (unchanged)
+// ==================================================
+function toggleCategory(categoryId) {
+    const categoryDiv = document.getElementById(categoryId);
+    const arrow = document.getElementById(`arrow-${categoryId}`);
+
+    if (categoryDiv.style.display === 'none' || !categoryDiv.style.display) {
+        categoryDiv.style.display = 'grid';
+        arrow.style.transform = 'rotate(180deg)';
+    } else {
+        categoryDiv.style.display = 'none';
+        arrow.style.transform = 'rotate(0deg)';
+    }
+}
+
+
+
+// ==================================================
+// REDIRECT TO QUIZ PAGE
+// ==================================================
+function startQuiz(quizName, category) {
+    if (!quizData[quizName]) {
+        alert(`Quiz "${quizName}" is coming soon!`);
+        return;
+    }
+    window.location.href = "index6.html?quiz=" + encodeURIComponent(quizName);
+}
+
+
+
+// ==================================================
+// SEARCH SYSTEM
+// ==================================================
+function searchQuizzes(searchTerm) {
+    if (!searchTerm) {
+        document.querySelectorAll('.category-section').forEach(sec => sec.style.display = 'block');
+        document.querySelectorAll('.subcategory-card').forEach(card => card.style.display = 'block');
+        return;
     }
 
-   const menuToggle = document.getElementById("menu-toggle");
+    searchTerm = searchTerm.toLowerCase();
+    let found = false;
+
+    document.querySelectorAll('.category-section').forEach(section => {
+        let match = false;
+
+        const categoryName = section.querySelector('.category-info h3').textContent.toLowerCase();
+        if (categoryName.includes(searchTerm)) match = true;
+
+        section.querySelectorAll('.subcategory-card').forEach(card => {
+            const title = card.querySelector('.subcategory-title').textContent.toLowerCase();
+            const desc = card.querySelector('.subcategory-desc').textContent.toLowerCase();
+
+            if (title.includes(searchTerm) || desc.includes(searchTerm)) {
+                card.style.display = 'block';
+                match = true;
+                found = true;
+            } else {
+                card.style.display = 'none';
+            }
+        });
+
+        section.style.display = match ? 'block' : 'none';
+    });
+}
+
+// ==================================================
+// MOBILE MENU TOGGLE
+// ==================================================
+const menuToggle = document.getElementById("menu-toggle");
 const navLinks = document.getElementById("nav-links");
 
 menuToggle.addEventListener("click", () => {
-  navLinks.classList.toggle("active");
-  menuToggle.textContent = navLinks.classList.contains("active") ? "✖" : "☰";
+    navLinks.classList.toggle("active");
+    menuToggle.textContent = navLinks.classList.contains("active") ? "✖" : "☰";
 });
 
-// Close menu when clicking a link (mobile UX)
 document.querySelectorAll(".nav-links a").forEach(link => {
-  link.addEventListener("click", () => {
-    navLinks.classList.remove("active");
-    menuToggle.textContent = "☰";
-  });
+    link.addEventListener("click", () => {
+        navLinks.classList.remove("active");
+        menuToggle.textContent = "☰";
+    });
 });
+
+
 </script>
 
 </body>

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Scholar - Experts</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        /* NAVBAR */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { font-size: 24px; font-weight: bold; color: white; }
+
+        .nav-links { display: flex; gap: 30px; }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: #f39c12; }
+
+
+        /* PAGE TITLE */
+        .expert-title {
+            margin-top: 130px;
+            text-align: center;
+        }
+
+        .expert-title h1 {
+            font-size: 42px;
+            color: #00ffcc;
+            font-weight: bold;
+        }
+
+        .expert-title p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+
+        /* CATEGORY TITLE */
+        .category-title {
+            font-size: 30px;
+            margin: 40px 0 15px 30px;
+            color: #ffd86b;
+            font-weight: bold;
+        }
+
+
+        /* HORIZONTAL SCROLL ROW */
+        .expert-row {
+            display: flex;
+            overflow-x: auto;
+            padding: 20px 30px;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+
+        .expert-row::-webkit-scrollbar { height: 8px; }
+        .expert-row::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.4);
+            border-radius: 10px;
+        }
+
+
+        /* EXPERT CARD */
+        .expert-card {
+            background: rgba(255,255,255,0.1);
+            width: 260px;
+            min-width: 260px;
+            border-radius: 15px;
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+            padding: 20px;
+            text-align: center;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .expert-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+            border-color: #00ffcc;
+        }
+
+        /* ICON */
+        .expert-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .expert-name {
+            font-size: 20px;
+            color: #00ffcc;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .expert-type {
+            font-size: 16px;
+            color: #ffd86b;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .expert-desc {
+            font-size: 14px;
+            opacity: 0.85;
+            margin-bottom: 12px;
+        }
+
+        .view-btn {
+            background: linear-gradient(45deg, #e74c3c, #f39c12);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .view-btn:hover { transform: scale(1.10); }
+
+        /* ICON FLOAT */
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-6px); }
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="nav-bar">
+        <div class="logo">🧙 EQ Experts</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="index3.html">Profile</a>
+            <a href="market.html">Market</a>
+            <a href="comm.html">Community</a>
+            <a href="events.html">Events</a>
+            <a href="lesson2.html">Lessons</a>
+            <a href="index5.html">Take Quiz</a>
+            <a href="maps.html">Map</a>
+        </div>
+    </nav>
+
+    <!-- PAGE HEADER -->
+    <div class="expert-title">
+        <h1>Meet the EQ Expert Team</h1>
+        <p>Guidance from spiritual masters, scientists, life coaches, and mental experts</p>
+    </div>
+
+
+    <!-- CATEGORY 1 -->
+    <div class="category-title">🧘 Spiritual Experts</div>
+
+    <div class="expert-row">
+
+        <div class="expert-card" onclick="openExpert('yogi')">
+            <div class="expert-icon">🧘‍♂️</div>
+            <div class="expert-name">Yogi</div>
+            <div class="expert-type">Meditation Master</div>
+            <div class="expert-desc">Teaches breathwork, calm mind, and emotional balance.</div>
+            <button class="view-btn">View</button>
+        </div>
+
+        <div class="expert-card" onclick="openExpert('saint')">
+            <div class="expert-icon">🙏</div>
+            <div class="expert-name">Saint / Guru</div>
+            <div class="expert-type">Spiritual Guide</div>
+            <div class="expert-desc">Helps you achieve inner peace, compassion, and purpose.</div>
+            <button class="view-btn">View</button>
+        </div>
+
+    </div>
+
+    <!-- CATEGORY 2 -->
+    <div class="category-title">🧠 Science & Mind Experts</div>
+
+    <div class="expert-row">
+
+        <div class="expert-card" onclick="openExpert('neuro')">
+            <div class="expert-icon">🧠</div>
+            <div class="expert-name">Neurologist</div>
+            <div class="expert-type">Brain Specialist</div>
+            <div class="expert-desc">Explains emotional triggers and brain wiring.</div>
+            <button class="view-btn">View</button>
+        </div>
+
+        <div class="expert-card" onclick="openExpert('psych')">
+            <div class="expert-icon">🧑‍⚕️</div>
+            <div class="expert-name">Psychologist</div>
+            <div class="expert-type">Behavior Expert</div>
+            <div class="expert-desc">Teaches emotional healing and thinking correction.</div>
+            <button class="view-btn">View</button>
+        </div>
+
+    </div>
+
+
+    <!-- CATEGORY 3 -->
+    <div class="category-title">💼 Life & Career Experts</div>
+
+    <div class="expert-row">
+
+        <div class="expert-card" onclick="openExpert('career')">
+            <div class="expert-icon">💼</div>
+            <div class="expert-name">Career Coach</div>
+            <div class="expert-type">Growth Mentor</div>
+            <div class="expert-desc">Helps you choose career path & improve skills.</div>
+            <button class="view-btn">View</button>
+        </div>
+
+        <div class="expert-card" onclick="openExpert('fitness')">
+            <div class="expert-icon">🏋️‍♂️</div>
+            <div class="expert-name">Fitness Coach</div>
+            <div class="expert-type">Health Mentor</div>
+            <div class="expert-desc">Teaches discipline, confidence, and wellbeing.</div>
+            <button class="view-btn">View</button>
+        </div>
+
+    </div>
+
+
+    <script>
+        function openExpert(id) {
+            window.location.href = `expert-${id}.html`;
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Journey - Lesson Map</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #ecf0f1;
+            overflow-x: auto;
+            padding: 20px;
+        }
+
+        .map-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .map-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .map-title {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #f39c12;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
+        }
+
+        .map-subtitle {
+            font-size: 1.2rem;
+            color: #bdc3c7;
+            margin-bottom: 20px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #e74c3c, #f39c12, #2ecc71);
+            width: 35%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        /* Map Sections */
+        .map-section {
+            margin-bottom: 60px;
+            position: relative;
+            padding: 30px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            text-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+        }
+
+        .section-description {
+            font-size: 1rem;
+            color: #bdc3c7;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Shadow Section */
+        .shadow-section {
+            background: linear-gradient(45deg, rgba(44,44,84,0.3), rgba(76,61,61,0.3));
+            border: 2px solid rgba(231,76,60,0.3);
+        }
+        .shadow-section .section-title { color: #e74c3c; }
+
+        /* Transitional Section */
+        .transitional-section {
+            background: linear-gradient(45deg, rgba(84,44,84,0.3), rgba(61,76,61,0.3));
+            border: 2px solid rgba(155,89,182,0.3);
+        }
+        .transitional-section .section-title { color: #9b59b6; }
+
+        /* Higher Section */
+        .higher-section {
+            background: linear-gradient(45deg, rgba(44,84,44,0.3), rgba(61,61,76,0.3));
+            border: 2px solid rgba(46,204,113,0.3);
+        }
+        .higher-section .section-title { color: #2ecc71; }
+
+        /* Lessons Grid */
+        .lessons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .lesson-card {
+            background: rgba(0,0,0,0.4);
+            border-radius: 15px;
+            padding: 25px;
+            position: relative;
+            transition: all 0.3s ease;
+            cursor: default;
+            border: 2px solid transparent;
+            backdrop-filter: blur(5px);
+        }
+
+        .lesson-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .lesson-card.completed {
+            border-color: #2ecc71;
+            background: rgba(46,204,113,0.1);
+        }
+
+        .lesson-card.current {
+            border-color: #f39c12;
+            background: rgba(243,156,18,0.1);
+            box-shadow: 0 0 20px rgba(243,156,18,0.3);
+        }
+
+        .lesson-card.locked {
+            opacity: 0.5;
+            cursor: not-allowed;
+            filter: grayscale(50%);
+        }
+
+        .lesson-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .lesson-icon {
+            font-size: 2.5rem;
+            margin-right: 15px;
+        }
+
+        .lesson-info h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+            color: #f39c12;
+        }
+
+        .lesson-range {
+            font-size: 0.9rem;
+            color: #bdc3c7;
+            font-weight: bold;
+        }
+
+        .lesson-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #ecf0f1;
+            font-weight: bold;
+        }
+
+        .lesson-description {
+            font-size: 0.95rem;
+            color: #bdc3c7;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        .lesson-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .lesson-btn {
+            background: linear-gradient(45deg, #9b59b6, #8e44ad);
+            color: white;
+        }
+        .lesson-btn:hover {
+            background: linear-gradient(45deg, #8e44ad, #7d3c98);
+            transform: scale(1.05);
+        }
+
+        .explore-btn {
+            background: linear-gradient(45deg, #16a085, #27ae60);
+            color: white;
+        }
+        .explore-btn:hover {
+            background: linear-gradient(45deg, #27ae60, #16a085);
+            transform: scale(1.05);
+        }
+
+        .lesson-status {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 1.5rem;
+        }
+
+        /* Header Styles */
+        .main-header {
+            background: rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+            padding: 15px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            color: #f39c12;
+            margin: 0;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin: 0;
+        }
+
+        .nav-menu a {
+            color: #ecf0f1;
+            text-decoration: none;
+            font-weight: 500;
+            padding: 8px 16px;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+        .nav-menu a:hover {
+            color: #f39c12;
+            background: rgba(243,156,18,0.1);
+        }
+        .nav-menu a.active {
+            color: #f39c12;
+            background: rgba(243,156,18,0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .user-stats { text-align: right; }
+        .user-stats .eq-score {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #2ecc71;
+        }
+        .user-stats .level {
+            font-size: 0.9rem;
+            color: #bdc3c7;
+        }
+
+        .profile-btn {
+            background: linear-gradient(45deg, #3498db, #2980b9);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .profile-btn:hover {
+            background: linear-gradient(45deg, #2980b9, #1f618d);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .map-title { font-size: 2rem; }
+            .lessons-grid { grid-template-columns: 1fr; }
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            .nav-menu {
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            .logo h1 { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="main-header">
+        <div class="header-content">
+            <div class="logo">
+                <span style="font-size: 2rem;">🧠</span>
+                <h1>EQ Journey</h1>
+            </div>
+            
+            <nav>
+                <ul class="nav-menu">
+                    <li><a href="#" class="active">Lesson Map</a></li>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="leaderboard.html">Progress</a></li>
+                    <li><a href="#">Achievements</a></li>
+                    <li><a href="#">Community</a></li>
+                    <li><a href="#">Resources</a></li>
+                </ul>
+            </nav>
+            
+            <div class="user-info">
+                <div class="user-stats">
+                    <div class="eq-score">450 EQ</div>
+                    <div class="level">Shadow Walker</div>
+                </div>
+                <a href="index3.html"><button class="profile-btn">Profile</button></a>
+            </div>
+        </div>
+    </header>
+
+    <div class="map-container">
+        <div class="map-header">
+            <h1 class="map-title">🧠 EQ Journey Map</h1>
+            <p class="map-subtitle">Navigate through 14 leagues of emotional intelligence mastery</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <p>Progress: 5/14 Leagues Completed</p>
+        </div>
+
+        <!-- Shadow Section -->
+        <div class="map-section shadow-section">
+            <div class="section-header">
+                <h2 class="section-title">🌑 Shadow / Struggle Leagues</h2>
+                <p class="section-description">Build self-awareness and break negative emotional patterns</p>
+            </div>
+            <div class="lessons-grid">
+                <!-- Lost Mode -->
+                <div class="lesson-card completed">
+                    <div class="lesson-status">✅</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🌚</div>
+                        <div class="lesson-info">
+                            <h3>Lost Mode</h3>
+                            <div class="lesson-range">0-99 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"What are Emotions?"</div>
+                    <div class="lesson-description">
+                        Build awareness that emotions exist and can be named through simple identification exercises.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('lost-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('lost')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chaotic Mode -->
+                <div class="lesson-card completed">
+                    <div class="lesson-status">✅</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🌪️</div>
+                        <div class="lesson-info">
+                            <h3>Chaotic Mode</h3>
+                            <div class="lesson-range">100-199 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Triggers & Reactions"</div>
+                    <div class="lesson-description">
+                        Learn to notice emotional triggers in stressful scenarios and practice better responses.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('chaotic-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('chaotic')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Addiction Loop -->
+                <div class="lesson-card completed">
+                    <div class="lesson-status">✅</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🔄</div>
+                        <div class="lesson-info">
+                            <h3>Addiction Loop</h3>
+                            <div class="lesson-range">200-299 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Healthy vs. Unhealthy Coping"</div>
+                    <div class="lesson-description">
+                        Break auto-pilot coping mechanisms by choosing better alternatives to escape loops.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('addiction-loop')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('addiction')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Storm -->
+                <div class="lesson-card completed">
+                    <div class="lesson-status">✅</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">⛈️</div>
+                        <div class="lesson-info">
+                            <h3>Storm Mode</h3>
+                            <div class="lesson-range">300-399 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Handling Anger & Jealousy"</div>
+                    <div class="lesson-description">
+                        Learn cooling techniques through roleplay scenarios to de-escalate conflicts.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('storm-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('storm')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Shadow Walker -->
+                <div class="lesson-card current">
+                    <div class="lesson-status">🎯</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🌫️</div>
+                        <div class="lesson-info">
+                            <h3>Shadow Walker</h3>
+                            <div class="lesson-range">400-499 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Awareness without Control"</div>
+                    <div class="lesson-description">
+                        See the gap between awareness and mastery by spotting when characters lose control.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('shadow-walker')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('shadow')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transitional Section -->
+        <div class="map-section transitional-section">
+            <div class="section-header">
+                <h2 class="section-title">🌗 Transitional Leagues</h2>
+                <p class="section-description">Move from self to others, practicing balance & empathy</p>
+            </div>
+            <div class="lessons-grid">
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🔍</div>
+                        <div class="lesson-info">
+                            <h3>Seeker Mode</h3>
+                            <div class="lesson-range">500-599 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Why Self-Awareness Matters"</div>
+                    <div class="lesson-description">
+                        Start journaling & self-reflection through personal experience analysis.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('seeker-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('seeker')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Awareness -->
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">👁️</div>
+                        <div class="lesson-info">
+                            <h3>Awareness Mode</h3>
+                            <div class="lesson-range">600-699 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Naming Others' Emotions"</div>
+                    <div class="lesson-description">
+                        Improve emotional vocabulary by identifying emotions in dialogues and images.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('awareness-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('awareness')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Balanced -->
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">⚖️</div>
+                        <div class="lesson-info">
+                            <h3>Balanced Mode</h3>
+                            <div class="lesson-range">700-799 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Managing Emotional Energy"</div>
+                    <div class="lesson-description">
+                        Learn balance strategies by rating best choices for work, rest, and relationships.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('balanced-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('balanced')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Empath -->
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">💚</div>
+                        <div class="lesson-info">
+                            <h3>Empath Mode</h3>
+                            <div class="lesson-range">800-899 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Empathy in Action"</div>
+                    <div class="lesson-description">
+                        Train perspective-taking by picking compassionate responses in various situations.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('empath-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('empath')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Higher Section -->
+        <div class="map-section higher-section">
+            <div class="section-header">
+                <h2 class="section-title">🌕 Higher Leagues</h2>
+                <p class="section-description">Master leadership, healing, and transcendence</p>
+            </div>
+            <div class="lessons-grid">
+                <!-- Monk -->
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🧘</div>
+                        <div class="lesson-info">
+                            <h3>Monk Mode</h3>
+                            <div class="lesson-range">900-999 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Mindfulness & Calm"</div>
+                    <div class="lesson-description">
+                        Achieve emotional stability under stress through guided breathing and reflection.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('monk-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('monk')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sage -->
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🧙‍♂️</div>
+                        <div class="lesson-info">
+                            <h3>Sage Mode</h3>
+                            <div class="lesson-range">1000-1099 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Wise Decision-Making"</div>
+                    <div class="lesson-description">
+                        Learn EQ-based leadership through complex long-term vs. short-term dilemmas.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('sage-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('sage')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Healer -->
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🌸</div>
+                        <div class="lesson-info">
+                            <h3>Healer Mode</h3>
+                            <div class="lesson-range">1100-1199 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Helping Others Heal"</div>
+                    <div class="lesson-description">
+                        Develop emotional support skills through roleplay supportive conversations.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('healer-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('healer')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Enlightened -->
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">✨</div>
+                        <div class="lesson-info">
+                            <h3>Enlightened Mode</h3>
+                            <div class="lesson-range">1200-1299 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Emotional Mastery"</div>
+                    <div class="lesson-description">
+                        Stay centered despite complexity in situations where multiple emotions overlap.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('enlightened-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('enlightened')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+
+                <!-- God -->
+                <div class="lesson-card locked">
+                    <div class="lesson-status">🔒</div>
+                    <div class="lesson-header">
+                        <div class="lesson-icon">🌟</div>
+                        <div class="lesson-info">
+                            <h3>God Mode</h3>
+                            <div class="lesson-range">1300-1400 EQ</div>
+                        </div>
+                    </div>
+                    <div class="lesson-title">"Transcendence & Legacy"</div>
+                    <div class="lesson-description">
+                        Ultimate EQ application through reflection on life purpose and community impact.
+                    </div>
+                    <div class="lesson-actions">
+                        <button class="action-btn lesson-btn"
+                                onclick="startLesson('god-mode')">
+                            Intro
+                        </button>
+                        <button class="action-btn explore-btn"
+                                onclick="exploreLesson('god')">
+                            Explore Lesson
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Minimal JS -->
+    <script src="journey-games.js"></script>
+</body>
+</html>

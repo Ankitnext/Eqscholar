@@ -1,0 +1,897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Lost Mode – EQ Journey Hub</title>
+
+  <!-- Shared styles + core js -->
+  <link rel="stylesheet" href="../shared/game-ui.css" />
+  <script src="../../js/eq-core.js"></script>
+  <script src="../shared/modal.js" defer></script>
+  <script src="lost.js" defer></script>
+
+  <!-- Page–specific styling -->
+  <style>
+    :root {
+      --lost-accent: #f39c12;
+      --lost-bg: #05091a;
+      --lost-card: rgba(6, 15, 40, 0.9);
+      --lost-border: rgba(255, 255, 255, 0.06);
+      --pill-bg: rgba(255, 255, 255, 0.08);
+      --good-green: #2ecc71;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1b2147 0, #05091a 55%, #02030a 100%);
+      color: #ecf0f1;
+      min-height: 100vh;
+    }
+
+    .nav-bar {
+      background: rgba(3, 7, 30, 0.96);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mode-wrapper {
+      max-width: 1100px;
+      margin: 110px auto 60px;
+      padding: 0 18px 40px;
+    }
+
+    /* HERO */
+    .mode-hero {
+      background: linear-gradient(145deg, rgba(6, 13, 46, 0.95), rgba(9, 22, 68, 0.98));
+      border-radius: 24px;
+      padding: 26px 24px 26px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.75);
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 24px;
+    }
+
+    .mode-title {
+      font-size: 2.3rem;
+      line-height: 1.1;
+      color: var(--lost-accent);
+      margin-bottom: 4px;
+    }
+
+    .mode-subtitle {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+
+    .mode-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .pill-chip {
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--pill-bg);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .mode-hero-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      text-align: right;
+    }
+
+    .state-tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(192, 57, 43, 0.18);
+      border: 1px solid rgba(231, 76, 60, 0.55);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-stat-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      width: 100%;
+      max-width: 260px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+
+    .btn-soft,
+    .btn-primary {
+      border-radius: 999px;
+      padding: 9px 18px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .btn-soft {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ecf0f1;
+    }
+
+    .btn-soft:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #f39c12, #e67e22);
+      color: #111;
+      box-shadow: 0 10px 30px rgba(243, 156, 18, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 36px rgba(243, 156, 18, 0.6);
+    }
+
+    .back-link {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin-top: 12px;
+    }
+
+    .back-link a {
+      color: #bdc3c7;
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      color: #f39c12;
+      text-decoration: underline;
+    }
+
+    /* GENERIC SECTION */
+    .mode-section {
+      margin-top: 32px;
+      background: var(--lost-card);
+      border-radius: 20px;
+      padding: 22px 20px 18px;
+      border: 1px solid var(--lost-border);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+    }
+
+    .mode-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: var(--lost-accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-section p.section-lead {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 14px;
+    }
+
+    /* 1. WHERE YOU ARE */
+    .section-grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+      gap: 18px;
+    }
+
+    .bullet-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .bullet-card ul {
+      padding-left: 18px;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .note-box {
+      background: radial-gradient(circle at top left, rgba(46, 204, 113, 0.18), rgba(0, 0, 0, 0.3));
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(46, 204, 113, 0.5);
+    }
+
+    /* 2. LEARNING OBJECTIVES */
+    .objective-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .objective-item {
+      display: flex;
+      gap: 10px;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .objective-icon {
+      font-size: 1.1rem;
+      margin-top: 1px;
+    }
+
+    /* 3. SKILLS */
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .skill-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 12px 13px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .skill-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* 4. METHODS */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .method-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 12px 14px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .method-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .method-steps {
+      margin-left: 16px;
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+
+    /* 5. CHAIN REACTION SECTION */
+    .chain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .chain-column {
+      background: rgba(0, 0, 0, 0.23);
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .chain-heading-bad {
+      color: #e74c3c;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chain-heading-good {
+      color: var(--good-green);
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chain-step {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 8px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      margin-top: 8px;
+      position: relative;
+    }
+
+    .chain-step-header {
+      font-weight: 600;
+      font-size: 0.86rem;
+      margin-bottom: 3px;
+    }
+
+    .chain-step-body {
+      font-size: 0.83rem;
+      opacity: 0.9;
+    }
+
+    .chain-arrow {
+      text-align: center;
+      font-size: 1.1rem;
+      opacity: 0.65;
+      margin-top: 2px;
+    }
+
+    .chain-note {
+      font-size: 0.82rem;
+      opacity: 0.9;
+      margin-top: 8px;
+    }
+
+    .one-percent-box {
+      margin-top: 14px;
+      background: radial-gradient(circle at top left, rgba(243, 156, 18, 0.3), rgba(0, 0, 0, 0.3));
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(243, 156, 18, 0.6);
+      font-size: 0.9rem;
+    }
+
+    .one-percent-box strong {
+      color: var(--lost-accent);
+    }
+
+    /* 6. GAMES SECTION */
+    .games-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .game-card {
+      flex: 1 1 220px;
+      max-width: 260px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 18px;
+      padding: 16px 14px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .game-pill {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 0.7rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .game-icon {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .game-name {
+      font-weight: 700;
+      color: #f9c74f;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .game-desc {
+      font-size: 0.86rem;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+
+    .play-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(120deg, #e67e22, #f39c12);
+      color: #111;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* 7. NEXT STEPS */
+    .next-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .next-steps a {
+      text-decoration: none;
+    }
+
+    /* MODAL OVERRIDE (re-use modal.js structure) */
+    #game-modal.hidden {
+      display: none;
+    }
+
+    @media (max-width: 880px) {
+      .mode-hero {
+        grid-template-columns: 1fr;
+      }
+      .mode-hero-right {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Top Nav -->
+  <nav class="nav-bar">
+    <div class="logo">🧭 Lost Mode Hub</div>
+    <div class="nav-links">
+      <!-- Update href to your actual map file -->
+      <a href="../../journey-map.html">Journey Map</a>
+      <a href="../../index.html">Home</a>
+      <a href="../../games.html">Game Arcade</a>
+    </div>
+  </nav>
+
+  <main class="mode-wrapper">
+    <!-- HERO -->
+    <section class="mode-hero">
+      <div>
+        <div class="mode-title">Lost Mode – 0–99 EQ</div>
+        <div class="mode-subtitle">
+          Feeling confused, numb or directionless? This league helps you
+          find your inner North Star one micro-step at a time.
+        </div>
+
+        <div class="mode-pills">
+          <span class="pill-chip">Current League: Lost</span>
+          <span class="pill-chip">Main Feelings: Confused · Numb · Overwhelmed</span>
+          <span class="pill-chip">Goal: Clarity for the Next 1 Step</span>
+        </div>
+
+        <p class="back-link">
+          You unlocked this league from the <a href="../../lesson-map.html">EQ Journey Map</a>.
+        </p>
+      </div>
+
+      <div class="mode-hero-right">
+        <div class="state-tag">🧭 Direction Calibration</div>
+        <div class="hero-stat-box">
+          <strong>In this page you will:</strong>
+          <ul style="margin-top:6px; margin-left:18px; font-size:0.85rem;">
+            <li>Understand what Lost Mode really is</li>
+            <li>Learn core skills & methods</li>
+            <li>Play 5 mini-games to train your brain</li>
+          </ul>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-soft" onclick="startLesson('lost-mode')">
+            Read Intro Lesson
+          </button>
+          <button class="btn-primary" onclick="document.getElementById('games-section').scrollIntoView({behavior:'smooth'})">
+            Jump to Games
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. WHERE YOU ARE -->
+    <section class="mode-section">
+      <h2>🛰 Where You Are Right Now</h2>
+      <p class="section-lead">
+        Lost Mode is not “broken mode”. It simply means your inner GPS has
+        no clear destination yet, so every road looks confusing.
+      </p>
+
+      <div class="section-grid-2">
+        <div class="bullet-card">
+          <strong>Typical Lost Mode signals:</strong>
+          <ul>
+            <li>Hard to answer “What do I really want?”</li>
+            <li>Jumping between options but committing to none</li>
+            <li>Feeling blank, numb or low-energy for no clear reason</li>
+            <li>Mind keeps asking “What is the point?”</li>
+          </ul>
+        </div>
+
+        <div class="note-box">
+          <strong>Important:</strong>
+          <p style="margin-top:6px;">
+            Lost Mode is a <em>transition</em>, not a life sentence.
+            Shiva-style vairagya says: step back, watch the confusion like a
+            movie, then pick just <strong>one next action</strong>. That’s
+            what this league trains.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. WHAT YOU'LL LEARN -->
+    <section class="mode-section">
+      <h2>🎯 What You Will Learn in Lost Mode</h2>
+      <p class="section-lead">
+        This league is your foundation. Before big goals or discipline,
+        you first learn to see & name what’s happening inside.
+      </p>
+
+      <div class="objective-list">
+        <div class="objective-item">
+          <div class="objective-icon">📍</div>
+          <div>Understand that emotions are normal and universal, not “good/bad”.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🧩</div>
+          <div>Identify basic emotions in yourself and others using simple prompts.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🗣️</div>
+          <div>Build emotional vocabulary beyond “fine / ok / bad”.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🧭</div>
+          <div>Use emotions as an information system – your inner GPS for decisions.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SKILLS YOU UNLOCK -->
+    <section class="mode-section">
+      <h2>🧠 Skills You Unlock in This League</h2>
+      <p class="section-lead">
+        You don’t need to “fix your whole life”. Lost Mode only asks for
+        micro-skills that make the fog thinner each week.
+      </p>
+
+      <div class="skill-grid">
+        <div class="skill-card">
+          <div class="skill-title">🪞 Name-It Awareness</div>
+          <p>You learn to pause and say “Right now I feel ___” instead of staying numb.</p>
+          <span class="skill-tag">Micro habit: 3 check-ins / day</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🧊 Emotional Distance</div>
+          <p>See emotions as weather passing through you, not as your identity.</p>
+          <span class="skill-tag">Shiva lens: “I am the sky, not the cloud.”</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">📏 Micro-Step Planning</div>
+          <p>Instead of “fix my life”, you choose the next 10-minute step only.</p>
+          <span class="skill-tag">Tool: Next-1-Step list</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🌬 Breath Grounding</div>
+          <p>Use short breathing patterns to calm noise long enough to choose.</p>
+          <span class="skill-tag">Game-linked: Calm Breathing Path</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🎧 Signal Detection</div>
+          <p>Train attention to notice small signals (sounds, lights, feelings).</p>
+          <span class="skill-tag">Game-linked: Sound Direction & Reaction Trail</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. METHODS / PRACTICES -->
+    <section class="mode-section">
+      <h2>🕉 Daily Methods (Shiva-Style Micro Practices)</h2>
+      <p class="section-lead">
+        These are light, safe practices inspired by vairagya – step back,
+        observe, then act with one small move.
+      </p>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-title">🧘 60-Second “I Am Aware” Check</div>
+          <p>Use this when you feel blank or overloaded.</p>
+          <ul class="method-steps">
+            <li>Pause and say slowly: “Right now I notice…”</li>
+            <li>Name 1 body sensation, 1 thought, 1 emotion.</li>
+            <li>End with: “This is what I feel, not who I am.”</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-title">🌬 3-Breath Reset</div>
+          <p>Use between tasks or before starting a game.</p>
+          <ul class="method-steps">
+            <li>Inhale through nose for 4 counts.</li>
+            <li>Hold for 2 counts, exhale for 6 counts.</li>
+            <li>Repeat 3 times while letting shoulders drop.</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-title">🧭 Next-1-Step Script</div>
+          <p>Use when you don’t know “what to do with life”.</p>
+          <ul class="method-steps">
+            <li>Ask: “What is <strong>one</strong> 10-minute action that makes life 1% better?”</li>
+            <li>Write it. Do only that.</li>
+            <li>Afterwards, write how you feel now vs. before.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CHAIN REACTIONS & 1% GAME -->
+    <section class="mode-section">
+      <h2>⚠ Chain Reactions in Lost Mode</h2>
+      <p class="section-lead">
+        Lost Mode is powerful because of <strong>chain reactions</strong>.
+        Tiny choices repeat and turn into body changes, thoughts and finally
+        your identity. Here’s how it stacks.
+      </p>
+
+      <div class="chain-grid">
+        <!-- NEGATIVE CHAIN -->
+        <div class="chain-column">
+          <div class="chain-heading-bad">❌ If you stay in auto-pilot</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">1. Ignore emotions</div>
+            <div class="chain-step-body">
+              You say “I’m fine” and keep scrolling or distracting.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">2. Body reaction</div>
+            <div class="chain-step-body">
+              Breath becomes shallow, shoulders tight, stomach uneasy. Nervous
+              system stays in <em>low-level alert</em>.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">3. Thought pattern</div>
+            <div class="chain-step-body">
+              Brain starts looping thoughts like “What’s the point?” and
+              “Nothing will change”.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">4. Behaviour</div>
+            <div class="chain-step-body">
+              You avoid decisions, procrastinate, sleep late, over-consume
+              content or junk.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">5. Identity story</div>
+            <div class="chain-step-body">
+              After weeks, brain concludes: “I am lazy / lost / useless”. This
+              story keeps you stuck in Lost Mode.
+            </div>
+          </div>
+
+          <p class="chain-note">
+            This whole chain can start from one simple habit: <em>not
+            looking inside</em>.
+          </p>
+        </div>
+
+        <!-- POSITIVE CHAIN -->
+        <div class="chain-column">
+          <div class="chain-heading-good">✅ If you use Lost Mode methods</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">1. 60-sec awareness check</div>
+            <div class="chain-step-body">
+              You pause, name 1 emotion + 1 body signal instead of escaping.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">2. Nervous system shift</div>
+            <div class="chain-step-body">
+              3-breath reset moves you slightly from fight/flight to
+              <em>rest & digest</em>. Heart rate drops a bit, muscles loosen.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">3. Clearer thinking</div>
+            <div class="chain-step-body">
+              With more oxygen & calmer body, prefrontal cortex turns back
+              on. You can plan the <strong>next 10 minutes</strong>.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">4. Micro-actions</div>
+            <div class="chain-step-body">
+              You take one small action: drink water, tidy desk, open study
+              tab, go for 5-min walk.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">5. New identity story</div>
+            <div class="chain-step-body">
+              After weeks of tiny actions, brain updates: “When I am lost, I
+              can still take one step.” This is the seed of Seeker / Monk
+              modes.
+            </div>
+          </div>
+
+          <p class="chain-note">
+            Same day, same problems – but now your body and story are moving
+            upward instead of downward.
+          </p>
+        </div>
+      </div>
+
+      <div class="one-percent-box">
+        <strong>🧮 1% Game:</strong>  
+        If you take one 10-minute helpful step every day for 100 days, that’s
+        <strong>~1,000 minutes</strong> of practice – almost a full working
+        week dedicated only to your emotional upgrade. Lost Mode is a
+        <em>compound-interest game</em>: small moves + consistency = new
+        nervous system.
+      </div>
+    </section>
+
+    <!-- 6. GAMES -->
+    <section class="mode-section" id="games-section">
+      <h2>🎮 Lost Mode – 5 Training Games</h2>
+      <p class="section-lead">
+        These mini-games translate all the above into muscle memory. Play
+        5–10 minutes a day instead of scrolling.
+      </p>
+
+      <div class="games-row">
+        <!-- 1 North Star -->
+        <div class="game-card">
+          <div class="game-pill">Micro-step clarity</div>
+          <div class="game-icon">🧭</div>
+          <div class="game-name">North Star Maze</div>
+          <div class="game-desc">
+            See only tiles near you. Move through the fog and reach the ⭐ using just the next step.
+          </div>
+          <button class="play-btn" data-game="northStar">Play</button>
+        </div>
+
+        <!-- 2 Calm Breathing -->
+        <div class="game-card">
+          <div class="game-pill">Breath grounding</div>
+          <div class="game-icon">🌬️</div>
+          <div class="game-name">Calm Breathing Path</div>
+          <div class="game-desc">
+            Follow inhale–hold–exhale rhythm to settle your nervous system before decisions.
+          </div>
+          <button class="play-btn" data-game="lostBreath">Play</button>
+        </div>
+
+        <!-- 3 Sound Direction -->
+        <div class="game-card">
+          <div class="game-pill">Attention training</div>
+          <div class="game-icon">🎧</div>
+          <div class="game-name">Sound Direction Finder</div>
+          <div class="game-desc">
+            Tap where the sound icon appears. Train your brain to notice subtle signals.
+          </div>
+          <button class="play-btn" data-game="lostSound">Play</button>
+        </div>
+
+        <!-- 4 Pattern Breaker -->
+        <div class="game-card">
+          <div class="game-pill">Break loops</div>
+          <div class="game-icon">🔁</div>
+          <div class="game-name">Pattern Breaker</div>
+          <div class="game-desc">
+            Your avatar keeps repeating. Choose new strategies to escape the loop.
+          </div>
+          <button class="play-btn" data-game="lostPattern">Play</button>
+        </div>
+
+        <!-- 5 Reaction Trail -->
+        <div class="game-card">
+          <div class="game-pill">Fast response</div>
+          <div class="game-icon">⚡</div>
+          <div class="game-name">Reaction Trail</div>
+          <div class="game-desc">
+            Tap fast-moving trail lights. Build sharp yet calm reaction speed.
+          </div>
+          <button class="play-btn" data-game="lostReact">Play</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. NEXT STEPS -->
+    <section class="mode-section">
+      <h2>🚀 After Lost Mode – What Next?</h2>
+      <p class="section-lead">
+        Once you can regularly name emotions and choose micro-steps, you’re
+        ready for the next leagues (Chaotic → Addiction Loop → Storm).
+      </p>
+      <div class="next-steps">
+        <a href="../../journey-map.html">
+          <button class="btn-soft">⬅ Back to EQ Journey Map</button>
+        </a>
+        <a href="../../games.html">
+          <button class="btn-soft">🎮 Explore All Games</button>
+        </a>
+        <a href="../../index5.html">
+          <button class="btn-primary">📝 Take Lost Mode Quiz</button>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- GAME MODAL (used by modal.js + lost.js) -->
+  <div id="game-modal" >
+    <div id="game-box">
+      <div id="game-header">
+        <div>
+          <div id="game-title">Game</div>
+          <div id="game-meta"></div>
+        </div>
+        <button id="game-close">&times;</button>
+      </div>
+      <div id="game-area"></div>
+    </div>
+  </div>
+</body>
+</html>

@@ -32,16 +32,16 @@
         /* Main Duality Container - Responsive with auto height */
         .duality-container {
             position: relative;
-            width: 90%; /* Use a percentage for fluid width */
+            width: 90%;
             max-width: 1200px;
-            height: 500px; /* Fixed height for desktop */
+            height: 500px;
             margin: 0 auto;
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 30px 60px rgba(0,0,0,0.3);
         }
         
-        /* God and Devil Sides - Default Desktop Layout */
+        /* God and Devil Sides - Desktop Layout */
         .god-side {
             position: absolute;
             left: 0;
@@ -70,7 +70,6 @@
             clip-path: polygon(25% 0, 100% 0, 100% 100%, 15% 100%);
         }
         
-        /* Icons and Text - Scalable */
         .god-icon {
             font-size: 80px;
             color: #fff;
@@ -93,7 +92,7 @@
             font-weight: bold;
             text-align: center;
             text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            padding: 0 10px; /* Added padding for smaller screens */
+            padding: 0 10px;
         }
         
         /* Central Quote Container */
@@ -109,7 +108,7 @@
             border-radius: 15px;
             backdrop-filter: blur(10px);
             border: 2px solid rgba(255,255,255,0.2);
-            width: 90%; /* Fluid width for mobile */
+            width: 90%;
             max-width: 600px;
         }
         
@@ -149,6 +148,24 @@
         .cta-button:hover {
             transform: translateY(-5px);
             box-shadow: 0 20px 40px rgba(231, 76, 60, 0.6);
+        }
+
+        /* secondary style for choice buttons */
+        .cta-button.secondary {
+            background: transparent;
+            border: 2px solid #f39c12;
+            box-shadow: none;
+        }
+        .cta-button.secondary:hover {
+            background: rgba(243,156,18,0.15);
+        }
+
+        .choice-buttons {
+            display: none;            /* shown after first click */
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            margin-top: 10px;
         }
         
         /* Navbar */
@@ -266,17 +283,17 @@
         /* Keyframe Animations */
         @keyframes glow-light {
             from { text-shadow: 2px 2px 10px rgba(255,215,0,0.5); }
-            to { text-shadow: 2px 2px 20px rgba(255,215,0,0.8); }
+            to   { text-shadow: 2px 2px 20px rgba(255,215,0,0.8); }
         }
         
         @keyframes glow-dark {
             from { text-shadow: 2px 2px 10px rgba(231,76,60,0.5); }
-            to { text-shadow: 2px 2px 20px rgba(231,76,60,0.8); }
+            to   { text-shadow: 2px 2px 20px rgba(231,76,60,0.8); }
         }
         
         @keyframes pulse {
             0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
+            50%      { transform: scale(1.05); }
         }
         
         .particles {
@@ -298,13 +315,12 @@
         
         @keyframes float {
             0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
+            50%      { opacity: 1; }
+            100%     { transform: translateY(-100px) rotate(360deg); opacity: 0; }
         }
         
         /* --- Mobile-Specific Styles (max-width: 768px) --- */
         @media (max-width: 768px) {
-            /* General adjustments */
             body {
                 font-size: 14px;
             }
@@ -317,41 +333,30 @@
                 gap: 15px;
             }
 
-            /* Duality section stacking */
             .duality-container {
-                height: 80vh; /* Use viewport height for better vertical stacking */
+                height: 80vh;
                 border-radius: 10px;
                 box-shadow: 0 15px 30px rgba(0,0,0,0.3);
             }
             
             .god-side, .devil-side {
-                position: relative; /* Change from absolute to relative to stack naturally */
-                width: 100%; /* Full width for stacking */
+                position: relative;
+                width: 100%;
                 height: 50%;
-                clip-path: none; /* Remove the angled clip-path */
+                clip-path: none;
             }
-            
-            .god-side {
-                order: 1; /* Ensure God side is on top */
-            }
-
-            .devil-side {
-                order: 2; /* Ensure Devil side is on bottom */
-            }
+            .god-side { order: 1; }
+            .devil-side { order: 2; }
 
             .god-icon, .devil-icon {
-                font-size: 50px; /* Reduce icon size */
+                font-size: 50px;
             }
 
             .god-text, .devil-text {
-                font-size: 16px; /* Reduce text size */
+                font-size: 16px;
             }
 
-            /* Quote section - responsive centering and smaller text */
             .center-quote {
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%);
                 padding: 20px;
                 border: 1px solid rgba(255,255,255,0.2);
             }
@@ -372,7 +377,6 @@
                 letter-spacing: 1px;
             }
 
-            /* Info and Reward sections */
             .info-section {
                 padding: 60px 20px;
             }
@@ -400,7 +404,7 @@
             }
         }
 
-        /* Close Button - Responsive and easy to tap */
+        /* Close Button */
         .close-btn {
             position: absolute;
             top: 10px;
@@ -410,11 +414,43 @@
             color: white;
             cursor: pointer;
             transition: color 0.3s ease;
-            z-index: 101; /* Ensure it's above other elements */
+            z-index: 101;
         }
         
         .close-btn:hover {
             color: #f39c12;
+        }
+
+        /* Dropdown in navbar (unchanged from your code) */
+        .dropdown-parent {
+            display: inline-block; 
+            position: relative;
+            padding: 0 10px;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            min-width: 150px;
+            background-color: #1a1a2e;
+            border-radius: 4px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 100;
+            padding: 5px 0;
+        }
+        .dropdown-menu a {
+            color: #fff;
+            padding: 10px 15px;
+            text-decoration: none;
+            display: block;
+            text-align: left;
+        }
+        .dropdown-menu a:hover {
+            background-color: #3f3f5a;
+        }
+        .dropdown-parent:hover .dropdown-menu {
+            display: block;
         }
     </style>
 </head>
@@ -423,19 +459,23 @@
         <div class="logo">🧠 EQ Quiz Initiative</div>
         <div class="nav-links">
             <a href="index.html">Home</a>
-            <a href="leaderboard.html"> Leaderboard</a>
-            <a href="market.html"> Market</a>
-            <a href="comm.html"> Community</a>
-            <a href="games.html">Games</a>
-            <a href="events.html"> Events</a>
-            <a href="lesson3.html"> Lessons</a>
-            <a href="lesson2.html"> Journey</a>
-            <a href="expert.html"> Experts</a>
-            <a href="index5.html">Take Quiz</a>
-            <a href="index3.html"> Profile</a>
-            <!-- <a href="maps.html">Map</a>
-            <a href="#rewards">Rewards</a>
-            <a href="#impact">Impact</a> -->
+            <a href="leaderboard.html">Leaderboard</a>
+
+            <div class="dropdown-parent">
+                <a href="#" class="dropdown-link">Activity</a> 
+                <div class="dropdown-menu">
+                    <a href="market.html">Market</a>
+                    <a href="comm.html">Community</a>
+                    <a href="games.html">Games</a>
+                    <a href="events.html">Events</a>
+                    <a href="index5.html">Take Quiz</a>
+                </div>
+            </div>
+
+            <a href="mental-check.html">Mental Health</a>
+            <a href="journey-map.html">Journey</a>
+            <a href="expert.html">Experts</a>
+            <a href="index3.html">Profile</a>
         </div>
     </nav>
 
@@ -458,17 +498,37 @@
                     destructive emotions
                 </div>
             </div>
+
+            <!-- Center quote with 2-step CTA -->
             <div class="center-quote" id="centerQuote">
                 <span class="close-btn" onclick="closeCenterQuote()">×</span>
                 <div class="main-quote">UNLOCK YOUR POWER</div>
-                <div class="sub-quote">Master your emotions. Transform society.</div>
-                <button class="cta-button" onclick="startQuiz()">START YOUR JOURNEY</button>
+                <div class="sub-quote" id="subQuote">
+                    Master your emotions. Transform society.
+                </div>
+
+                <!-- Step 1 button -->
+                <button id="primaryCTA" class="cta-button" onclick="startChoice()">
+                    START YOUR JOURNEY
+                </button>
+
+                <!-- Step 2 choices (hidden initially) -->
+                <div id="choiceButtons" class="choice-buttons">
+                    <button class="cta-button secondary" onclick="goMental()">
+                        🧪 Check My Mental Health
+                    </button>
+                    <button class="cta-button" onclick="goJourney()">
+                        🧭 Start EQ Journey
+                    </button>
+                </div>
             </div>
         </div>
     </section>
 
     <section class="info-section" id="impact">
-        <h2 style="font-size: 42px; margin-bottom: 60px; color: #f39c12;">Transform Society Through Emotional Intelligence</h2>
+        <h2 style="font-size: 42px; margin-bottom: 60px; color: #f39c12;">
+            Transform Society Through Emotional Intelligence
+        </h2>
         <div class="info-grid">
             <div class="info-card">
                 <h3>🎯 Our Mission</h3>
@@ -487,14 +547,16 @@
 
     <section class="reward-section" id="rewards">
         <div class="reward-title">🏆 Yearly Prizes - Total: ₹24,000</div>
-        <p style="font-size: 20px; margin-bottom: 40px;">Excellence in emotional intelligence deserves recognition</p>
+        <p style="font-size: 20px; margin-bottom: 40px;">
+            Excellence in emotional intelligence deserves recognition
+        </p>
         <div class="reward-grid">
             <div class="reward-item">
                 <h4>🥇 1st Place</h4>
                 <p class="prize-text">₹2,000</p>
             </div>
             <div class="reward-item">
-                <h4>� 2nd Place</h4>
+                <h4>🥈 2nd Place</h4>
                 <p class="prize-text">₹1,000</p>
             </div>
             <div class="reward-item">
@@ -510,13 +572,34 @@
                 <p class="prize-text">₹50</p>
             </div>
         </div>
-        <button class="cta-button" style="margin-top: 40px;" onclick="startQuiz()">COMPETE NOW</button>
+        <!-- keep this button going straight to quiz if you want -->
+        <button class="cta-button" style="margin-top: 40px;" onclick="window.location.href='index5.html'">
+            COMPETE NOW
+        </button>
     </section>
 
     <script>
-        function startQuiz() {
-            // Directly navigate to the quiz page without a message box
-            window.location.href = 'index5.html';
+        // Step 1: show choice buttons instead of direct redirect
+        function startChoice() {
+            const primary = document.getElementById('primaryCTA');
+            const choice = document.getElementById('choiceButtons');
+            const sub = document.getElementById('subQuote');
+
+            if (!primary || !choice) return;
+
+            primary.style.display = 'none';
+            choice.style.display = 'flex';
+            if (sub) {
+                sub.textContent = 'Where do you want to start?';
+            }
+        }
+
+        // Destination functions
+        function goMental() {
+            window.location.href = 'mental-check.html';
+        }
+        function goJourney() {
+            window.location.href = 'journey-map.html';
         }
 
         function closeCenterQuote() {
@@ -541,33 +624,27 @@
             }
         }
 
-        // Smooth scrolling for navigation
+        // Smooth scrolling for in-page links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
                 e.preventDefault();
                 const targetId = this.getAttribute('href').substring(1);
                 const targetElement = document.getElementById(targetId);
                 if (targetElement) {
-                    targetElement.scrollIntoView({
-                        behavior: 'smooth'
-                    });
+                    targetElement.scrollIntoView({ behavior: 'smooth' });
                 }
             });
         });
 
-        // Initialize particles when page loads
         window.addEventListener('load', createParticles);
 
-        // Add scroll effect to navigation
+        // Nav background on scroll
         window.addEventListener('scroll', () => {
             const nav = document.querySelector('.nav-bar');
-            if (nav) {
-                if (window.scrollY > 100) {
-                    nav.style.background = 'rgba(0,0,0,0.95)';
-                } else {
-                    nav.style.background = 'rgba(0,0,0,0.9)';
-                }
-            }
+            if (!nav) return;
+            nav.style.background = window.scrollY > 100
+                ? 'rgba(0,0,0,0.95)'
+                : 'rgba(0,0,0,0.9)';
         });
     </script>
 </body>

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mental Check-Up | EQ Scholar</title>
+
+<link rel="stylesheet" href="checkup.css">
+<script src="checkup.js" defer></script>
+</head>
+
+<body>
+
+<div class="wrapper">
+
+  <header class="hero">
+    <h1>Your Mental State Check-Up</h1>
+    <p>Answer 12 quick questions to understand your emotional state.<br>
+    <strong>This is not a medical diagnosis — just guidance.</strong></p>
+  </header>
+
+  <form id="checkForm">
+
+    <section class="block">
+      <h2>⚠ Risk Indicators</h2>
+
+      <div class="q">1. Do you feel hopeless or worthless often?</div>
+      <div class="opt">
+        <label><input type="radio" name="q1" value="0"> Never</label>
+        <label><input type="radio" name="q1" value="1"> Sometimes</label>
+        <label><input type="radio" name="q1" value="2"> Often</label>
+        <label><input type="radio" name="q1" value="3"> Always</label>
+      </div>
+
+      <div class="q">2. Do you think about giving up or harming yourself?</div>
+      <div class="opt">
+        <label><input type="radio" name="q2" value="0"> Never</label>
+        <label><input type="radio" name="q2" value="1"> Sometimes</label>
+        <label><input type="radio" name="q2" value="2"> Often</label>
+        <label><input type="radio" name="q2" value="3"> Always</label>
+      </div>
+
+      <div class="q">3. Do you experience panic or extreme anger?</div>
+      <div class="opt">
+        <label><input type="radio" name="q3" value="0"> Never</label>
+        <label><input type="radio" name="q3" value="1"> Sometimes</label>
+        <label><input type="radio" name="q3" value="2"> Often</label>
+        <label><input type="radio" name="q3" value="3"> Always</label>
+      </div>
+
+      <div class="q">4. Do you struggle to get out of bed or function?</div>
+      <div class="opt">
+        <label><input type="radio" name="q4" value="0"> Never</label>
+        <label><input type="radio" name="q4" value="1"> Sometimes</label>
+        <label><input type="radio" name="q4" value="2"> Often</label>
+        <label><input type="radio" name="q4" value="3"> Always</label>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>🧭 Lost / Confusion</h2>
+
+      <div class="q">5. Do you find it hard to understand what you want?</div>
+      <div class="opt">
+        <label><input type="radio" name="q5" value="0"> Never</label>
+        <label><input type="radio" name="q5" value="1"> Sometimes</label>
+        <label><input type="radio" name="q5" value="2"> Often</label>
+        <label><input type="radio" name="q5" value="3"> Always</label>
+      </div>
+
+      <div class="q">6. Do you feel mentally foggy or blank?</div>
+      <div class="opt">
+        <label><input type="radio" name="q6" value="0"> Never</label>
+        <label><input type="radio" name="q6" value="1"> Sometimes</label>
+        <label><input type="radio" name="q6" value="2"> Often</label>
+        <label><input type="radio" name="q6" value="3"> Always</label>
+      </div>
+
+      <div class="q">7. Do you jump between plans without finishing?</div>
+      <div class="opt">
+        <label><input type="radio" name="q7" value="0"> Never</label>
+        <label><input type="radio" name="q7" value="1"> Sometimes</label>
+        <label><input type="radio" name="q7" value="2"> Often</label>
+        <label><input type="radio" name="q7" value="3"> Always</label>
+      </div>
+
+      <div class="q">8. Do decisions overwhelm you?</div>
+      <div class="opt">
+        <label><input type="radio" name="q8" value="0"> Never</label>
+        <label><input type="radio" name="q8" value="1"> Sometimes</label>
+        <label><input type="radio" name="q8" value="2"> Often</label>
+        <label><input type="radio" name="q8" value="3"> Always</label>
+      </div>
+    </section>
+
+    <section class="block">
+      <h2>🌩 Stress & Overthinking</h2>
+
+      <div class="q">9. Do you overthink often?</div>
+      <div class="opt">
+        <label><input type="radio" name="q9" value="0"> Never</label>
+        <label><input type="radio" name="q9" value="1"> Sometimes</label>
+        <label><input type="radio" name="q9" value="2"> Often</label>
+        <label><input type="radio" name="q9" value="3"> Always</label>
+      </div>
+
+      <div class="q">10. Do you feel tired even after resting?</div>
+      <div class="opt">
+        <label><input type="radio" name="q10" value="0"> Never</label>
+        <label><input type="radio" name="q10" value="1"> Sometimes</label>
+        <label><input type="radio" name="q10" value="2"> Often</label>
+        <label><input type="radio" name="q10" value="3"> Always</label>
+      </div>
+
+      <div class="q">11. Do you struggle to focus for 10 minutes?</div>
+      <div class="opt">
+        <label><input type="radio" name="q11" value="0"> Never</label>
+        <label><input type="radio" name="q11" value="1"> Sometimes</label>
+        <label><input type="radio" name="q11" value="2"> Often</label>
+        <label><input type="radio" name="q11" value="3"> Always</label>
+      </div>
+
+      <div class="q">12. Do you feel anxious without reason?</div>
+      <div class="opt">
+        <label><input type="radio" name="q12" value="0"> Never</label>
+        <label><input type="radio" name="q12" value="1"> Sometimes</label>
+        <label><input type="radio" name="q12" value="2"> Often</label>
+        <label><input type="radio" name="q12" value="3"> Always</label>
+      </div>
+    </section>
+
+    <button class="submit-btn" type="button" onclick="calculateScore()">Check My State</button>
+
+  </form>
+
+  <div id="resultBox" class="result hidden"></div>
+
+</div>
+
+</body>
+</html>

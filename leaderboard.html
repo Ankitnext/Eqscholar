@@ -5,348 +5,197 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EQ Quiz Dashboard</title>
     <style>
-        /* General Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-        }
+        /* ---------- Reset & Base ---------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Arial', sans-serif; }
+        body { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; color: #ecf0f1; overflow-x: hidden; padding-top: 88px; }
 
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            color: #ecf0f1;
-            overflow-x: hidden;
-            padding-top: 80px;
-        }
-
-        /* Navigation Bar */
+        /* ---------- NAVBAR (enhanced header) ---------- */
         .nav-bar {
             position: fixed;
             top: 0;
             width: 100%;
             background: rgba(0,0,0,0.9);
             backdrop-filter: blur(10px);
-            padding: 20px 50px;
-            z-index: 100;
+            padding: 14px 20px;
+            z-index: 1600;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            gap: 12px;
         }
-        
-        .logo {
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: #f39c12;
-        }
+        .logo { color: white; font-size: 20px; font-weight: bold; display:flex; align-items:center; gap:8px; }
+        /* Off-canvas nav links container */
+        .nav-links { display:flex; gap:18px; align-items:center; }
+        .nav-links a, .nav-links .dropdown-link { color: white; text-decoration: none; font-weight:500; cursor: pointer; padding: 6px 8px; display:inline-block; }
+        .nav-links a:hover, .nav-links .dropdown-link:hover { color: #f39c12; }
 
-        /* Main Dashboard Container */
-        .dashboard-container {
-            display: flex;
-            flex-direction: column;
-            gap: 40px;
-            padding: 40px 20px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+        /* hamburger */
+        #menuToggle { display: none; width:28px; height:22px; justify-content:center; align-items:center; flex-direction:column; gap:6px; cursor:pointer; }
+        #menuToggle span { display:block; width:100%; height:3px; border-radius:999px; background:#fff; transition: transform .25s; }
+        #menuToggle.open span:first-child { transform: translateY(4px) rotate(35deg); }
+        #menuToggle.open span:last-child  { transform: translateY(-4px) rotate(-35deg); }
 
-        .section-title {
-            font-size: 3rem;
-            font-weight: bold;
-            text-align: center;
-            color: #f39c12;
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
+        /* Desktop dropdown */
+        .dropdown-parent { display:inline-block; position:relative; padding:0 8px; }
+        .dropdown-parent .dropdown-link { cursor:pointer; display:inline-block; }
+        .dropdown-menu {
+            display:none;
+            position:absolute;
+            top:100%;
+            left:0;
+            min-width:220px;
+            background-color:#1a1a2e;
+            border-radius:6px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.25);
+            z-index:200;
+            padding:6px 0;
         }
+        .dropdown-menu a { color:#fff; padding:10px 16px; text-decoration:none; display:block; }
+        .dropdown-parent:hover > .dropdown-menu { display:block; }
 
-        .dashboard-card {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 30px;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transition: transform 0.3s ease;
+        /* Desktop nested submenu */
+        .dropdown-menu .has-sub { position:relative; }
+        .dropdown-menu .has-sub > .sub-menu {
+            display:none;
+            position:absolute;
+            top:0;
+            left:100%;
+            margin-left:8px;
+            min-width:190px;
+            background:#1a1a2e;
+            padding:6px 0;
+            border-radius:6px;
+            box-shadow:0 8px 20px rgba(0,0,0,0.25);
         }
+        .dropdown-menu .has-sub:hover > .sub-menu { display:block; }
 
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-        }
+        /* ---------- DASHBOARD STYLES (kept from your file) ---------- */
+        .dashboard-container { display: flex; flex-direction: column; gap: 40px; padding: 40px 20px; max-width: 1200px; margin: 0 auto; }
+        .section-title { font-size: 3rem; font-weight: bold; text-align: center; color: #f39c12; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        .dashboard-card { background: rgba(255, 255, 255, 0.08); padding: 30px; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.08); box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); transition: transform 0.3s ease; }
+        .dashboard-card:hover { transform: translateY(-5px); }
 
-        /* Responsive Layout for Leagues and Prizes */
-        .bottom-sections-container {
-            display: flex;
-            flex-direction: row;
-            gap: 40px;
-        }
+        .bottom-sections-container { display: flex; flex-direction: row; gap: 40px; }
+        .league-section, .prizes-section { flex: 1; }
 
-        .league-section, .prizes-section {
-            flex: 1;
-        }
+        .leaderboard-section { display:flex; flex-direction:column; align-items:center; }
+        .leaderboard-tabs { display:flex; justify-content:center; gap:15px; margin-bottom:25px; }
+        .leaderboard-tab { background: rgba(0,0,0,0.4); color:white; padding:10px 25px; border:2px solid transparent; border-radius:50px; font-size:1rem; font-weight:bold; cursor:pointer; transition: all 0.3s ease; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .leaderboard-tab:hover { transform: translateY(-2px); background: rgba(0,0,0,0.6); }
+        .leaderboard-tab.active { background: linear-gradient(45deg,#e74c3c,#f39c12); border: 2px solid #fff; box-shadow: 0 5px 20px rgba(231,76,60,0.4); pointer-events: none; }
 
-        /* --- LEADERBOARD STYLES --- */
-        .leaderboard-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+        .leaderboard-list-container { width:100%; }
+        .leaderboard-list { list-style:none; padding:0; display:none; animation: fadeIn .5s ease-in-out; }
+        .leaderboard-list.active { display:block; }
+        .leaderboard-item { display:flex; justify-content:space-between; align-items:center; padding:15px 20px; margin-bottom:10px; background: rgba(0,0,0,0.18); border-radius:10px; transition: background .3s; }
+        .leaderboard-item:hover { background: rgba(0,0,0,0.28); }
+        .rank { font-size:1.5rem; font-weight:bold; color:#f39c12; width:40px; }
+        .player-info { display:flex; align-items:center; flex-grow:1; margin-left:20px; }
+        .player-name { font-size:1.1rem; font-weight:500; }
+        .player-league-icon { font-size:1.2rem; margin-left:10px; }
+        .player-score { font-size:1.2rem; font-weight:bold; color:#ecf0f1; }
 
-        .leaderboard-tabs {
-            display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin-bottom: 25px;
-        }
+        .league-list { list-style:none; padding:0; width:100%; }
+        .league-item { display:flex; align-items:center; justify-content:space-between; padding:15px 20px; margin-bottom:10px; background: rgba(0, 0, 0, 0.18); border-radius:10px; transition: background .3s; }
+        .league-item:hover { background: rgba(0, 0, 0, 0.28); }
+        .league-info { display:flex; align-items:center; gap:15px; }
+        .league-icon { font-size:2rem; }
+        .league-name { font-size:1.1rem; font-weight:bold; }
+        .league-score-needed { font-size:1rem; color:#f39c12; font-weight:bold; }
 
-        .leaderboard-tab {
-            background: rgba(0, 0, 0, 0.4);
-            color: white;
-            padding: 10px 25px;
-            border: 2px solid transparent;
-            border-radius: 50px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        }
+        .prizes-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:20px; width:100%; }
+        .prize-item { background: rgba(0,0,0,0.18); padding:20px; border-radius:15px; border:1px solid rgba(255,255,255,0.06); text-align:center; transition: transform .3s ease; }
+        .prize-item:hover { transform: scale(1.03); background: rgba(0,0,0,0.28); }
+        .prize-item h4 { font-size:1.5rem; color:#f39c12; margin-bottom:10px; }
+        .prize-item p { font-size:1.2rem; font-weight:bold; }
 
-        .leaderboard-tab:hover {
-            transform: translateY(-2px);
-            background: rgba(0, 0, 0, 0.6);
-        }
+        @keyframes fadeIn { from { opacity:0; transform: translateY(20px);} to { opacity:1; transform: translateY(0);} }
 
-        .leaderboard-tab.active {
-            background: linear-gradient(45deg, #e74c3c, #f39c12);
-            border: 2px solid #fff;
-            box-shadow: 0 5px 20px rgba(231, 76, 60, 0.4);
-            pointer-events: none;
-        }
-
-        .leaderboard-list-container {
-            width: 100%;
-        }
-
-        .leaderboard-list {
-            list-style: none;
-            padding: 0;
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
-
-        .leaderboard-list.active {
-            display: block;
-        }
-
-        .leaderboard-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            transition: background 0.3s ease;
-        }
-
-        .leaderboard-item:hover {
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .rank {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #f39c12;
-            width: 40px;
-        }
-
-        .player-info {
-            display: flex;
-            align-items: center;
-            flex-grow: 1;
-            margin-left: 20px;
-        }
-
-        .player-name {
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-        
-        .player-league-icon {
-            font-size: 1.2rem;
-            margin-left: 10px;
-        }
-        
-        .player-score {
-            font-size: 1.2rem;
-            font-weight: bold;
-            color: #ecf0f1;
-        }
-
-        /* --- LEAGUES STYLES --- */
-        .league-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .league-list {
-            list-style: none;
-            padding: 0;
-            width: 100%;
-        }
-
-        .league-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 15px 20px;
-            margin-bottom: 10px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            transition: background 0.3s ease;
-        }
-
-        .league-item:hover {
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .league-info {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .league-icon {
-            font-size: 2rem;
-        }
-
-        .league-name {
-            font-size: 1.1rem;
-            font-weight: bold;
-        }
-
-        .league-score-needed {
-            font-size: 1rem;
-            color: #f39c12;
-            font-weight: bold;
-        }
-        
-        /* --- PRIZES STYLES --- */
-        .prizes-section {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        
-        .prizes-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-            width: 100%;
-        }
-
-        .prize-item {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 20px;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            text-align: center;
-            transition: transform 0.3s ease;
-        }
-
-        .prize-item:hover {
-            transform: scale(1.03);
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .prize-item h4 {
-            font-size: 1.5rem;
-            color: #f39c12;
-            margin-bottom: 10px;
-        }
-
-        .prize-item p {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        /* Media Queries for Mobile */
+        /* ---------- Mobile adjustments (both header & dashboard) ---------- */
         @media (max-width: 768px) {
-            .nav-bar { padding: 15px 20px; }
-            .nav-links { display: none; }
-            .logo { font-size: 20px; }
-            .dashboard-container { padding: 20px 10px; }
-            .section-title { font-size: 2rem; }
-            .leaderboard-tab { padding: 8px 18px; font-size: 0.9rem; }
-            .leaderboard-item { padding: 12px 15px; font-size: 0.9rem; }
-            .bottom-sections-container {
+            .logo { font-size:18px; }
+            #menuToggle { display:flex; }
+            .nav-links {
+                position: fixed;
+                top: 56px;
+                right: 0;
                 flex-direction: column;
-                gap: 20px;
+                align-items: flex-start;
+                gap: 12px;
+                padding: 12px 14px;
+                width: 260px;
+                background: rgba(0,0,0,0.96);
+                border-left: 1px solid rgba(255,255,255,0.06);
+                transform: translateX(100%);
+                transition: transform .28s ease;
+                z-index: 1650;
+                max-height: calc(100vh - 56px);
+                overflow:auto;
             }
-            /* More specific mobile styles for text size */
-            .rank, .player-score {
-                font-size: 1rem;
-            }
-            .player-name, .player-league-icon {
-                font-size: 0.9rem;
-            }
-            .prize-item h4 {
-                font-size: 1.2rem;
-            }
-            .prize-item p {
-                font-size: 1rem;
-            }
-            .league-name {
-                font-size: 1rem;
-            }
-            .league-score-needed {
-                font-size: 0.9rem;
-            }
+            .nav-links.open { transform: translateX(0); }
+
+            /* mobile: dropdown inline inside nav-links */
+            .dropdown-parent { width:100%; display:block; position:relative; }
+            .dropdown-parent .dropdown-menu { position: static !important; display: none; width:100% !important; padding-left:12px; margin-top:6px; background: transparent !important; box-shadow:none !important; }
+            .dropdown-parent.open > .dropdown-menu { display:block; }
+            .dropdown-menu .has-sub { position: static !important; width:100% !important; }
+            .dropdown-menu .has-sub > .sub-menu { display:none; padding-left:12px; margin-top:6px; position:static !important; width:100% !important; background:transparent !important; box-shadow:none !important; }
+            .dropdown-menu .has-sub.open > .sub-menu { display:block; }
+
+            /* dashboard responsive */
+            .dashboard-container { padding: 20px 12px; }
+            .section-title { font-size: 2rem; }
+            .bottom-sections-container { flex-direction: column; gap: 20px; }
+            .leaderboard-tab { padding: 8px 18px; font-size: 0.9rem; }
+            .leaderboard-item { padding: 12px 15px; font-size: 0.95rem; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Navigation Bar -->
-    <nav class="nav-bar">
+    <!-- ---------- Header (enhanced) ---------- -->
+    <nav class="nav-bar" role="navigation" aria-label="Main navigation">
         <div class="logo">🧠 EQ Quiz Dashboard</div>
-        <div>
-            <a href="index.html" style="font-size: large; color: #ecf0f1; text-decoration: none;">Home</a>
+
+        <!-- Hamburger for mobile -->
+        <div id="menuToggle" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
+            <span></span><span></span>
         </div>
-        <div class="nav-links">
-            <a href="leaderboard.html"> Leaderboard</a>
-            <a href="index3.html"> Profile</a>
-            <a href="index5.html">Take Quiz</a>
-            <a href="#rewards">Rewards</a>
+
+        <div class="nav-links" id="navLinks" aria-hidden="true">
+            <a href="index.html">Home</a>
+            <a href="leaderboard.html">Leaderboard</a>
+
+            <!-- Activity dropdown -->
+            <div class="dropdown-parent" id="activityDropdown">
+                <a href="#" class="dropdown-link" id="activityLink" aria-haspopup="true" aria-expanded="false">Activity ▾</a>
+
+                <div class="dropdown-menu" id="activityMenu" aria-hidden="true" role="menu">
+                    <a href="market.html" role="menuitem">Market</a>
+                    <a href="comm.html" role="menuitem">Community</a>
+
+                    <div class="has-sub" id="gamesHasSub">
+                        <a href="#" class="sub-toggle" id="gamesToggle" aria-haspopup="true" aria-expanded="false">Games ▸</a>
+                        <div class="sub-menu" id="gamesSubMenu" role="menu">
+                            <a href="games.html" role="menuitem">All Games</a>
+                            <a href="events.html" role="menuitem">Events</a>
+                        </div>
+                    </div>
+
+                    <a href="index5.html" role="menuitem">Take Quiz</a>
+                </div>
+            </div>
+
+            <a href="mental-check.html">Mental Health</a>
+            <a href="journey-map.html">Journey</a>
+            <a href="expert.html">Experts</a>
+            <a href="index3.html">Profile</a>
             <a href="#impact">Impact</a>
+            <a href="#rewards">Rewards</a>
         </div>
     </nav>
 
-    <!-- Main Content Container -->
+    <!-- ---------- Main Dashboard Content (unchanged) ---------- -->
     <main class="dashboard-container">
         
         <!-- Leaderboard Section -->
@@ -405,24 +254,20 @@
         </div>
     </main>
 
+    <!-- ---------- Scripts: leaderboard + header behavior ---------- -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Updated 14-league EQ system
             const leagueTiers = [
-                // Higher Leagues (🌕)
                 { name: 'God Mode', minScore: 1300, maxScore: 1400, icon: '🌟', description: 'Transcendent EQ, ultimate awareness' },
                 { name: 'Enlightened Mode', minScore: 1200, maxScore: 1299, icon: '✨', description: 'Deep mastery, emotional peace' },
                 { name: 'Healer Mode', minScore: 1100, maxScore: 1199, icon: '🌸', description: 'Uses EQ to uplift others' },
                 { name: 'Sage Mode', minScore: 1000, maxScore: 1099, icon: '🧙‍♂️', description: 'Wise, balanced leader' },
                 { name: 'Monk Mode', minScore: 900, maxScore: 999, icon: '🧘', description: 'Calm, mindful, steady' },
-                
-                // Transitional Leagues (🌗)
                 { name: 'Empath Mode', minScore: 800, maxScore: 899, icon: '💚', description: 'Good at understanding others' },
                 { name: 'Balanced Mode', minScore: 700, maxScore: 799, icon: '⚖️', description: 'Sometimes calm, sometimes reactive' },
                 { name: 'Awareness Mode', minScore: 600, maxScore: 699, icon: '👁️', description: 'Recognizes emotions in self and others' },
                 { name: 'Seeker Mode', minScore: 500, maxScore: 599, icon: '🔍', description: 'Beginning emotional awareness' },
-                
-                // Shadow/Struggle Leagues (🌑)
                 { name: 'Shadow Walker', minScore: 400, maxScore: 499, icon: '🌫️', description: 'Aware of struggles but can\'t manage them' },
                 { name: 'Storm Mode', minScore: 300, maxScore: 399, icon: '⛈️', description: 'Frequent anger, jealousy, negativity' },
                 { name: 'Addiction Loop', minScore: 200, maxScore: 299, icon: '🔄', description: 'Relies on habits/escapes to handle feelings' },
@@ -457,26 +302,19 @@
 
             // Helper function to get the league icon for a given score
             function getLeagueIcon(score) {
-                // Find the first league where the score is within the range
                 const league = leagueTiers.find(tier => score >= tier.minScore && score <= tier.maxScore);
-                return league ? league.icon : '🌚'; // Return the icon or Lost Mode icon if not found
+                return league ? league.icon : '🌚';
             }
 
             // Function to render the leaderboard list
             function renderLeaderboard(listId, data) {
                 const list = document.getElementById(listId);
                 if (!list) return;
-
-                // Clear existing content
                 list.innerHTML = '';
-
-                // Loop through data and create list items
                 data.forEach((player, index) => {
                     const listItem = document.createElement('li');
                     listItem.className = 'leaderboard-item';
-
                     const leagueIcon = getLeagueIcon(player.score);
-
                     listItem.innerHTML = `
                         <span class="rank">${index + 1}</span>
                         <div class="player-info">
@@ -493,11 +331,7 @@
             function generateLeagueList() {
                 const leagueList = document.getElementById('league-list');
                 if (!leagueList) return;
-
-                // Clear existing content
                 leagueList.innerHTML = '';
-
-                // Loop through league data and create list items
                 leagueTiers.forEach(league => {
                     const listItem = document.createElement('li');
                     listItem.className = 'league-item';
@@ -512,30 +346,26 @@
                 });
             }
 
-            // Initial rendering of all leaderboards and league tiers
+            // Initial rendering
             renderLeaderboard('weekly-list', weeklyData);
             renderLeaderboard('monthly-list', monthlyData);
             renderLeaderboard('global-list', globalData);
             generateLeagueList();
 
-            // Tab functionality for leaderboard
+            // Tab functionality
             const tabs = document.querySelectorAll('.leaderboard-tab');
             const lists = document.querySelectorAll('.leaderboard-list');
-
             tabs.forEach(tab => {
                 tab.addEventListener('click', () => {
-                    // Deactivate all tabs and lists
                     tabs.forEach(t => t.classList.remove('active'));
                     lists.forEach(l => l.classList.remove('active'));
-
-                    // Activate the clicked tab and its corresponding list
                     tab.classList.add('active');
                     const targetTabId = tab.getAttribute('data-tab');
                     document.getElementById(targetTabId + '-list').classList.add('active');
                 });
             });
 
-            // Add scroll effect to navigation
+            // Scroll effect to navigation (small)
             window.addEventListener('scroll', () => {
                 const nav = document.querySelector('.nav-bar');
                 if (window.scrollY > 10) {
@@ -545,6 +375,144 @@
                 }
             });
         });
+
+        /* ---------- Header dropdown & mobile behavior JS (kept robust) ---------- */
+        (function(){
+            const menuToggle = document.getElementById('menuToggle');
+            const navLinks = document.getElementById('navLinks');
+            const activityParent = document.getElementById('activityDropdown');
+            const activityLink = document.getElementById('activityLink');
+            const activityMenu = document.getElementById('activityMenu');
+            const gamesHasSub = document.getElementById('gamesHasSub');
+
+            function isMobile() { return window.matchMedia('(max-width:768px)').matches; }
+
+            // mobile off-canvas nav open/close
+            if (menuToggle && navLinks) {
+                menuToggle.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const open = navLinks.classList.toggle('open');
+                    menuToggle.classList.toggle('open', open);
+                    menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                    navLinks.setAttribute('aria-hidden', open ? 'false' : 'true');
+                });
+            }
+
+            // Delegated click handler inside navLinks
+            if (navLinks) {
+                navLinks.addEventListener('click', function(e) {
+                    const clicked = e.target;
+                    const link = clicked.closest('a');
+                    if (!link) return;
+
+                    // Activity toggle clicked
+                    if (link.classList.contains('dropdown-link')) {
+                        if (isMobile()) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const open = activityParent.classList.toggle('open');
+                            activityLink.setAttribute('aria-expanded', open ? 'true' : 'false');
+                            activityMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
+
+                            // collapse games when activity is toggled open
+                            if (open && gamesHasSub && gamesHasSub.classList.contains('open')) {
+                                gamesHasSub.classList.remove('open');
+                                const gToggle = gamesHasSub.querySelector('.sub-toggle');
+                                if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
+                            }
+                        } else {
+                            e.preventDefault();
+                        }
+                        return;
+                    }
+
+                    // Games sub-toggle clicked
+                    if (link.classList.contains('sub-toggle')) {
+                        if (isMobile()) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const hasSub = link.closest('.has-sub');
+                            if (!hasSub) return;
+                            const nowOpen = hasSub.classList.toggle('open');
+                            link.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+                            // ensure activity menu open so submenu is visible inline
+                            if (!activityParent.classList.contains('open')) {
+                                activityParent.classList.add('open');
+                                activityLink.setAttribute('aria-expanded', 'true');
+                                activityMenu.setAttribute('aria-hidden', 'false');
+                            }
+                        } else {
+                            e.preventDefault();
+                        }
+                        return;
+                    }
+
+                    // Otherwise it's a real navigation link: close mobile nav if open
+                    const href = link.getAttribute('href');
+                    const isPlaceholder = !href || href === '#';
+                    if (!isPlaceholder) {
+                        if (navLinks.classList.contains('open')) {
+                            navLinks.classList.remove('open');
+                            if (menuToggle) menuToggle.classList.remove('open');
+                            if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+                            navLinks.setAttribute('aria-hidden', 'true');
+                        }
+                        // collapse activity/games
+                        if (activityParent && activityParent.classList.contains('open')) {
+                            activityParent.classList.remove('open');
+                            activityLink.setAttribute('aria-expanded', 'false');
+                            activityMenu.setAttribute('aria-hidden', 'true');
+                        }
+                        if (gamesHasSub && gamesHasSub.classList.contains('open')) {
+                            gamesHasSub.classList.remove('open');
+                            const gToggle = gamesHasSub.querySelector('.sub-toggle');
+                            if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
+                        }
+                    }
+                });
+            }
+
+            // Click outside to close nav & dropdowns
+            document.addEventListener('click', function(e) {
+                const t = e.target;
+                if (navLinks && navLinks.classList.contains('open')) {
+                    if (!navLinks.contains(t) && !(menuToggle && menuToggle.contains(t))) {
+                        navLinks.classList.remove('open');
+                        if (menuToggle) menuToggle.classList.remove('open');
+                        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+                        navLinks.setAttribute('aria-hidden', 'true');
+                    }
+                }
+                if (activityParent && activityParent.classList.contains('open') && !activityParent.contains(t)) {
+                    activityParent.classList.remove('open');
+                    if (activityLink) activityLink.setAttribute('aria-expanded','false');
+                    if (activityMenu) activityMenu.setAttribute('aria-hidden','true');
+                }
+                if (gamesHasSub && gamesHasSub.classList.contains('open') && !gamesHasSub.contains(t)) {
+                    gamesHasSub.classList.remove('open');
+                    const gToggle = gamesHasSub.querySelector('.sub-toggle');
+                    if (gToggle) gToggle.setAttribute('aria-expanded','false');
+                }
+            });
+
+            // Clear mobile-only open states on resize to desktop
+            window.addEventListener('resize', function() {
+                if (window.matchMedia('(min-width:769px)').matches) {
+                    if (navLinks && navLinks.classList.contains('open')) navLinks.classList.remove('open');
+                    if (menuToggle && menuToggle.classList.contains('open')) menuToggle.classList.remove('open');
+                    if (activityParent && activityParent.classList.contains('open')) {
+                        activityParent.classList.remove('open');
+                        if (activityLink) activityLink.setAttribute('aria-expanded','false');
+                        if (activityMenu) activityMenu.setAttribute('aria-hidden','true');
+                    }
+                    if (gamesHasSub && gamesHasSub.classList.contains('open')) {
+                        gamesHasSub.classList.remove('open');
+                        const gToggle = gamesHasSub.querySelector('.sub-toggle');
+                        if (gToggle) gToggle.setAttribute('aria-expanded','false');
+                    }
+                }
+            });
+        })();
     </script>
 </body>
 </html>

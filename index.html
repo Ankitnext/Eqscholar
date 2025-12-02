@@ -1,35 +1,93 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>EQ Quiz - Unlock Your Power</title>
     <style>
-        /* General Reset & Body Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+        /* ---------- Reset & Base ---------- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; color:#fff; overflow-x:hidden; }
 
-        /* Hero Section - Full Viewport Height */
+        /* ---------- NAVBAR ---------- */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+        .logo { color: white; font-size: 24px; font-weight: bold; display:flex; align-items:center; gap:8px; }
+        .nav-links { display:flex; gap:30px; align-items:center; }
+        .nav-links a, .nav-links .dropdown-link { color: white; text-decoration: none; font-weight:500; cursor: pointer; padding: 6px 4px; display:inline-block; }
+        .nav-links a:hover, .nav-links .dropdown-link:hover { color: #f39c12; }
+
+        /* hamburger */
+        #menuToggle {
+            display: none; /* only on mobile */
+            width: 28px;
+            height: 22px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+        #menuToggle span { display:block; width:100%; height:3px; border-radius:999px; background:#fff; transition: transform .3s, opacity .3s; }
+        #menuToggle.open span:first-child { transform: translateY(4px) rotate(35deg); }
+        #menuToggle.open span:last-child  { transform: translateY(-4px) rotate(-35deg); }
+
+        /* Desktop dropdown */
+        .dropdown-parent { display:inline-block; position:relative; padding:0 10px; }
+        .dropdown-parent .dropdown-link { cursor:pointer; display:inline-block; }
+        .dropdown-menu {
+            display:none;
+            position:absolute;
+            top:100%;
+            left:0;
+            min-width:220px;
+            background-color:#1a1a2e;
+            border-radius:6px;
+            box-shadow:0 10px 30px rgba(0,0,0,0.25);
+            z-index:200;
+            padding:6px 0;
+        }
+        .dropdown-menu a { color:#fff; padding:10px 16px; text-decoration:none; display:block; }
+        .dropdown-parent:hover > .dropdown-menu { display:block; }
+
+        /* Desktop nested submenu */
+        .dropdown-menu .has-sub { position:relative; }
+        .dropdown-menu .has-sub > .sub-menu {
+            display:none;
+            position:absolute;
+            top:0;
+            left:100%;
+            margin-left:8px;
+            min-width:190px;
+            background:#1a1a2e;
+            padding:6px 0;
+            border-radius:6px;
+            box-shadow:0 8px 20px rgba(0,0,0,0.25);
+        }
+        .dropdown-menu .has-sub:hover > .sub-menu { display:block; }
+
+        /* ---------- HERO / MAIN CONTENT ---------- */
         .hero-section {
             position: relative;
             height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(90deg, rgba(255,215,0,0.1) 0%, rgba(139,0,0,0.1) 100%);
+            display:flex;
+            align-items:center;
+            justify-content:center;
+            background: linear-gradient(90deg, rgba(255,215,0,0.05) 0%, rgba(139,0,0,0.05) 100%);
+            padding-top: 90px; /* space for fixed nav */
         }
-        
-        /* Main Duality Container - Responsive with auto height */
+
         .duality-container {
             position: relative;
             width: 90%;
@@ -39,99 +97,54 @@
             border-radius: 20px;
             overflow: hidden;
             box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
         }
-        
-        /* God and Devil Sides - Desktop Layout */
+
         .god-side {
             position: absolute;
-            left: 0;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(135deg, #ffeaa7, #fdcb6e, #e17055);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            left: 0; top: 0;
+            width: 50%; height: 100%;
+            background: linear-gradient(135deg,#ffeaa7,#fdcb6e,#e17055);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
             clip-path: polygon(0 0, 85% 0, 75% 100%, 0 100%);
         }
-        
         .devil-side {
             position: absolute;
-            right: 0;
-            top: 0;
-            width: 50%;
-            height: 100%;
-            background: linear-gradient(135deg, #2d3436, #636e72, #b2bec3);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
+            right: 0; top: 0;
+            width: 50%; height: 100%;
+            background: linear-gradient(135deg,#2d3436,#636e72,#b2bec3);
+            display:flex; flex-direction:column; align-items:center; justify-content:center;
             clip-path: polygon(25% 0, 100% 0, 100% 100%, 15% 100%);
         }
-        
-        .god-icon {
-            font-size: 80px;
-            color: #fff;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
-            margin-bottom: 20px;
-            animation: glow-light 2s ease-in-out infinite alternate;
-        }
-        
-        .devil-icon {
-            font-size: 80px;
-            color: #e74c3c;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.5);
-            margin-bottom: 20px;
-            animation: glow-dark 2s ease-in-out infinite alternate;
-        }
-        
-        .god-text, .devil-text {
-            color: white;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-            text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
-            padding: 0 10px;
-        }
-        
-        /* Central Quote Container */
+
+        .god-icon { font-size:80px; color:#fff; margin-bottom:20px; animation: glow-light 2s ease-in-out infinite alternate; }
+        .devil-icon { font-size:80px; color:#e74c3c; margin-bottom:20px; animation: glow-dark 2s ease-in-out infinite alternate; }
+        .god-text, .devil-text { color:white; font-size:18px; font-weight:bold; text-align:center; padding:0 10px; }
+
         .center-quote {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-            z-index: 10;
+            position:absolute;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            text-align:center;
+            z-index:10;
             background: rgba(0,0,0,0.8);
-            padding: 40px 60px;
-            border-radius: 15px;
+            padding:40px 60px;
+            border-radius:15px;
             backdrop-filter: blur(10px);
-            border: 2px solid rgba(255,255,255,0.2);
-            width: 90%;
-            max-width: 600px;
+            border: 2px solid rgba(255,255,255,0.12);
+            width:90%; max-width:600px;
         }
-        
         .main-quote {
-            font-size: 48px;
-            font-weight: bold;
-            background: linear-gradient(45deg, #f39c12, #e74c3c, #9b59b6, #3498db);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            text-shadow: none;
-            margin-bottom: 20px;
-            animation: pulse 3s ease-in-out infinite;
+            font-size:48px; font-weight:bold;
+            background: linear-gradient(45deg,#f39c12,#e74c3c,#9b59b6,#3498db);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            margin-bottom:20px; animation:pulse 3s ease-in-out infinite;
         }
-        
-        .sub-quote {
-            color: #ecf0f1;
-            font-size: 20px;
-            margin-bottom: 30px;
-        }
-        
+        .sub-quote { color:#ecf0f1; font-size:20px; margin-bottom:30px; }
+
         .cta-button {
-            background: linear-gradient(45deg, #e74c3c, #f39c12);
+            background: linear-gradient(45deg,#e74c3c,#f39c12);
             color: white;
             padding: 15px 40px;
             border: none;
@@ -144,404 +157,135 @@
             letter-spacing: 2px;
             box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
         }
-        
-        .cta-button:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 40px rgba(231, 76, 60, 0.6);
-        }
+        .cta-button.secondary { background: transparent; border: 2px solid #f39c12; box-shadow:none; }
 
-        /* secondary style for choice buttons */
-        .cta-button.secondary {
-            background: transparent;
-            border: 2px solid #f39c12;
-            box-shadow: none;
-        }
-        .cta-button.secondary:hover {
-            background: rgba(243,156,18,0.15);
-        }
+        .choice-buttons { display:none; justify-content:center; flex-wrap:wrap; gap:16px; margin-top:10px; }
 
-        .choice-buttons {
-            display: none;            /* shown after first click */
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 16px;
-            margin-top: 10px;
-        }
-        
-        /* Navbar */
-        .nav-bar {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            background: rgba(0,0,0,0.9);
-            backdrop-filter: blur(10px);
-            padding: 20px 50px;
-            z-index: 100;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .logo {
-            color: white;
-            font-size: 24px;
-            font-weight: bold;
-        }
-        
-        .nav-links {
-            display: flex;
-            gap: 30px;
-            align-items: center;
-        }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-        }
-        
-        .nav-links a:hover {
-            color: #f39c12;
-        }
+        /* Info & Reward sections */
+        .info-section { padding: 100px 50px; background: rgba(0,0,0,0.9); color:white; text-align:center; }
+        .info-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:40px; max-width:1200px; margin:0 auto; }
+        .info-card { background: linear-gradient(135deg, rgba(52,152,219,0.1), rgba(155,89,182,0.1)); padding:40px; border-radius:15px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); transition: transform .3s ease; }
+        .info-card h3 { color:#f39c12; font-size:24px; margin-bottom:20px; }
 
-        /* Mobile hamburger button (two lines) */
-        #menuToggle {
-            display: none; /* shown only on mobile */
-            width: 28px;
-            height: 22px;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 6px;
-            cursor: pointer;
-        }
-        #menuToggle span {
-            display: block;
-            width: 100%;
-            height: 3px;
-            border-radius: 999px;
-            background: #fff;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
-        /* Little animation for open state (turn into X-ish shape) */
-        #menuToggle.open span:first-child {
-            transform: translateY(4px) rotate(35deg);
-        }
-        #menuToggle.open span:last-child {
-            transform: translateY(-4px) rotate(-35deg);
-        }
-        
-        /* Info Section */
-        .info-section {
-            padding: 100px 50px;
-            background: rgba(0,0,0,0.9);
-            color: white;
-            text-align: center;
-        }
-        
-        .info-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 40px;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-        
-        .info-card {
-            background: linear-gradient(135deg, rgba(52,152,219,0.1), rgba(155,89,182,0.1));
-            padding: 40px;
-            border-radius: 15px;
-            border: 1px solid rgba(255,255,255,0.1);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease;
-        }
-        
-        .info-card:hover {
-            transform: translateY(-10px);
-        }
-        
-        .info-card h3 {
-            color: #f39c12;
-            font-size: 24px;
-            margin-bottom: 20px;
-        }
-        
-        /* Reward Section */
-        .reward-section {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            padding: 80px 50px;
-            text-align: center;
-            color: white;
-        }
-        
-        .reward-title {
-            font-size: 36px;
-            font-weight: bold;
-            margin-bottom: 30px;
-            color: #f39c12;
-        }
-        
-        .reward-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .reward-item {
-            background: rgba(255,255,255,0.1);
-            padding: 20px;
-            border-radius: 10px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            transition: transform 0.3s ease;
-        }
-        
-        .reward-item:hover {
-            transform: translateY(-5px);
-        }
+        .reward-section { background: linear-gradient(135deg,#667eea,#764ba2); padding:80px 50px; text-align:center; color:white; }
+        .reward-title { font-size:36px; font-weight:bold; margin-bottom:30px; color:#f39c12; }
+        .reward-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; max-width:800px; margin:0 auto; }
+        .reward-item { background: rgba(255,255,255,0.08); padding:20px; border-radius:10px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); transition: transform .3s ease; }
+        .reward-item h4 { margin-bottom:6px; }
+        .prize-text { font-size:1.2rem; font-weight:bold; }
 
-        .prize-text {
-            font-size: 1.2rem;
-            font-weight: bold;
-        }
-        
-        /* Keyframe Animations */
-        @keyframes glow-light {
-            from { text-shadow: 2px 2px 10px rgba(255,215,0,0.5); }
-            to   { text-shadow: 2px 2px 20px rgba(255,215,0,0.8); }
-        }
-        
-        @keyframes glow-dark {
-            from { text-shadow: 2px 2px 10px rgba(231,76,60,0.5); }
-            to   { text-shadow: 2px 2px 20px rgba(231,76,60,0.8); }
-        }
-        
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50%      { transform: scale(1.05); }
-        }
-        
-        .particles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-        
-        .particle {
-            position: absolute;
-            background: rgba(255,255,255,0.6);
-            border-radius: 50%;
-            animation: float 6s ease-in-out infinite;
-        }
-        
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 0; }
-            50%      { opacity: 1; }
-            100%     { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-        
-        /* --- Mobile-Specific Styles (max-width: 768px) --- */
+        /* Particles */
+        .particles { position:absolute; width:100%; height:100%; overflow:hidden; top:0; left:0; z-index:1; pointer-events:none; }
+        .particle { position:absolute; background: rgba(255,255,255,0.6); border-radius:50%; animation: float 6s ease-in-out infinite; }
+
+        @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); opacity:0; } 50% { opacity:1; } 100% { transform: translateY(-100px) rotate(360deg); opacity:0; } }
+        @keyframes glow-light { from { text-shadow: 2px 2px 10px rgba(255,215,0,0.5); } to { text-shadow: 2px 2px 20px rgba(255,215,0,0.8); } }
+        @keyframes glow-dark  { from { text-shadow: 2px 2px 10px rgba(231,76,60,0.5); } to { text-shadow: 2px 2px 20px rgba(231,76,60,0.8); } }
+        @keyframes pulse { 0%,100%{ transform: scale(1) } 50% { transform: scale(1.05) } }
+
+        /* Close button for center quote */
+        .close-btn { position:absolute; top:10px; right:15px; font-size:28px; font-weight:bold; color:white; cursor:pointer; z-index:101; }
+        .close-btn:hover { color:#f39c12; }
+
+        /* Dropdown hover disabled for mobile (mobile uses click toggles) */
         @media (max-width: 768px) {
-            body {
-                font-size: 14px;
-            }
-            .nav-bar {
-                padding: 12px 16px;
-            }
-
-            /* Show hamburger, hide links by default */
-            #menuToggle {
-                display: flex;
-            }
-
+            body { font-size: 14px; }
+            .nav-bar { padding:12px 16px; }
+            #menuToggle { display:flex; }
             .nav-links {
                 position: fixed;
-                top: 56px;              /* under navbar */
+                top: 56px;
                 right: 0;
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 16px;
                 padding: 16px 18px;
-                width: 230px;
+                width: 260px;
                 background: rgba(0,0,0,0.96);
-                border-left: 1px solid rgba(255,255,255,0.1);
+                border-left: 1px solid rgba(255,255,255,0.06);
                 transform: translateX(100%);
                 transition: transform 0.3s ease;
+                z-index: 1600; /* higher so nav panel is above main content */
+                max-height: calc(100vh - 56px);
+                overflow:auto;
             }
+            .nav-links.open { transform: translateX(0); }
 
-            .nav-links.open {
-                transform: translateX(0);
-            }
+            .nav-links a, .nav-links .dropdown-link { width: 100%; }
+            .dropdown-parent { display:block; width:100%; position:relative; }
 
-            .nav-links a,
-            .nav-links .dropdown-parent {
-                width: 100%;
-            }
-
-            .dropdown-menu {
-                position: static;
-                box-shadow: none;
+            /* Mobile: dropdown inline between Activity and next link.
+               Force static positioning and full width so it sits inside the nav panel. */
+            .dropdown-parent .dropdown-menu {
+                position: static !important;
+                box-shadow: none !important;
                 padding-left: 12px;
-                margin-top: 4px;
-            }
-
-            .duality-container {
-                height: 80vh;
-                border-radius: 10px;
-                box-shadow: 0 15px 30px rgba(0,0,0,0.3);
-            }
-            
-            .god-side, .devil-side {
-                position: relative;
-                width: 100%;
-                height: 50%;
-                clip-path: none;
-            }
-            .god-side { order: 1; }
-            .devil-side { order: 2; }
-
-            .god-icon, .devil-icon {
-                font-size: 50px;
-            }
-
-            .god-text, .devil-text {
-                font-size: 16px;
-            }
-
-            .center-quote {
-                padding: 20px;
-                border: 1px solid rgba(255,255,255,0.2);
-            }
-            
-            .main-quote {
-                font-size: 32px;
-                margin-bottom: 15px;
-            }
-            
-            .sub-quote {
-                font-size: 16px;
-                margin-bottom: 20px;
-            }
-
-            .cta-button {
-                padding: 12px 25px;
-                font-size: 16px;
-                letter-spacing: 1px;
-            }
-
-            .info-section {
-                padding: 60px 20px;
-            }
-
-            .info-card {
-                padding: 25px;
-                border-radius: 10px;
-            }
-
-            .info-card h3 {
-                font-size: 20px;
-                margin-bottom: 10px;
-            }
-            
-            .reward-section {
-                padding: 50px 20px;
-            }
-
-            .reward-title {
-                font-size: 28px;
-            }
-
-            .prize-text {
-                font-size: 1rem;
-            }
-        }
-
-        /* Close Button */
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 15px;
-            font-size: 28px;
-            font-weight: bold;
-            color: white;
-            cursor: pointer;
-            transition: color 0.3s ease;
-            z-index: 101;
-        }
-        
-        .close-btn:hover {
-            color: #f39c12;
-        }
-
-        /* Dropdown in navbar */
-        .dropdown-parent {
-            display: inline-block; 
-            position: relative;
-            padding: 0 10px;
-        }
-        .dropdown-menu {
-            display: none;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            min-width: 150px;
-            background-color: #1a1a2e;
-            border-radius: 4px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 100;
-            padding: 5px 0;
-        }
-        .dropdown-menu a {
-            color: #fff;
-            padding: 10px 15px;
-            text-decoration: none;
-            display: block;
-            text-align: left;
-        }
-        .dropdown-menu a:hover {
-            background-color: #3f3f5a;
-        }
-        .dropdown-parent:hover .dropdown-menu {
-            display: block;
-        }
-
-        /* Disable hover-open on mobile (handled by click) */
-        @media (max-width: 768px) {
-            .dropdown-parent:hover .dropdown-menu {
+                margin-top: 6px;
                 display: none;
+                background: transparent !important;
+                min-width: auto !important;
+                width: 100% !important;
             }
+            .dropdown-parent.open > .dropdown-menu { display: block; }
+
+            /* Submenus inline, more indented. Force static width so they do not float. */
+            .dropdown-menu .has-sub { position: static !important; width: 100% !important; }
+            .dropdown-menu .has-sub > .sub-menu {
+                display: none;
+                padding-left: 12px;
+                margin-top: 6px;
+                position: static !important;
+                width: 100% !important;
+                background: transparent !important;
+                box-shadow: none !important;
+            }
+            .dropdown-menu .has-sub.open > .sub-menu { display: block; }
+
+            /* small styling for links inside nav so they align well */
+            .dropdown-menu a { padding-left: 8px; padding-right: 8px; color: #fff; }
+
+            /* duality adjustments */
+            .duality-container { height: 80vh; border-radius: 10px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+            .god-side, .devil-side { position: relative; width: 100%; height: 50%; clip-path: none; }
+            .god-icon, .devil-icon { font-size: 50px; }
+            .main-quote { font-size: 32px; margin-bottom: 15px; }
+            .center-quote { padding: 20px; }
+            .info-section { padding: 60px 20px; }
+            .info-card { padding: 25px; border-radius: 10px; }
         }
     </style>
 </head>
 <body>
-    <nav class="nav-bar">
+    <nav class="nav-bar" role="navigation" aria-label="Main navigation">
         <div class="logo">🧠 EQ Quiz Initiative</div>
 
         <!-- Hamburger for mobile -->
-        <div id="menuToggle">
+        <div id="menuToggle" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
             <span></span>
             <span></span>
         </div>
 
-        <div class="nav-links" id="navLinks">
+        <div class="nav-links" id="navLinks" aria-hidden="true">
             <a href="index.html">Home</a>
             <a href="leaderboard.html">Leaderboard</a>
 
-            <div class="dropdown-parent">
-                <a href="#" class="dropdown-link">Activity</a> 
-                <div class="dropdown-menu">
-                    <a href="market.html">Market</a>
-                    <a href="comm.html">Community</a>
-                    <a href="games.html">Games</a>
-                    <a href="events.html">Events</a>
-                    <a href="index5.html">Take Quiz</a>
+            <!-- Activity dropdown -->
+            <div class="dropdown-parent" id="activityDropdown">
+                <a href="#" class="dropdown-link" id="activityLink" aria-haspopup="true" aria-expanded="false">Activity ▾</a>
+
+                <div class="dropdown-menu" id="activityMenu" aria-hidden="true" role="menu">
+                    <a href="market.html" role="menuitem">Market</a>
+                    <a href="comm.html" role="menuitem">Community</a>
+
+                    <div class="has-sub" id="gamesHasSub">
+                        <a href="#" class="sub-toggle" id="gamesToggle" aria-haspopup="true" aria-expanded="false">Games ▸</a>
+                        <div class="sub-menu" id="gamesSubMenu" role="menu">
+                            <a href="games.html" role="menuitem">All Games</a>
+                            <a href="events.html" role="menuitem">Events</a>
+                        </div>
+                    </div>
+
+                    <a href="index5.html" role="menuitem">Take Quiz</a>
                 </div>
             </div>
 
@@ -563,6 +307,7 @@
                     understanding and empathy
                 </div>
             </div>
+
             <div class="devil-side">
                 <div class="devil-icon">😈</div>
                 <div class="devil-text">
@@ -576,23 +321,15 @@
             <div class="center-quote" id="centerQuote">
                 <span class="close-btn" onclick="closeCenterQuote()">×</span>
                 <div class="main-quote">UNLOCK YOUR POWER</div>
-                <div class="sub-quote" id="subQuote">
-                    Master your emotions. Transform society.
-                </div>
+                <div class="sub-quote" id="subQuote">Master your emotions. Transform society.</div>
 
                 <!-- Step 1 button -->
-                <button id="primaryCTA" class="cta-button" onclick="startChoice()">
-                    START YOUR JOURNEY
-                </button>
+                <button id="primaryCTA" class="cta-button" onclick="startChoice()">START YOUR JOURNEY</button>
 
                 <!-- Step 2 choices (hidden initially) -->
                 <div id="choiceButtons" class="choice-buttons">
-                    <button class="cta-button secondary" onclick="goMental()">
-                        🧪 Check My Mental Health
-                    </button>
-                    <button class="cta-button" onclick="goJourney()">
-                        🧭 Start EQ Journey
-                    </button>
+                    <button class="cta-button secondary" onclick="goMental()">🧪 Check My Mental Health</button>
+                    <button class="cta-button" onclick="goJourney()">🧭 Start EQ Journey</button>
                 </div>
             </div>
         </div>
@@ -620,9 +357,7 @@
 
     <section class="reward-section" id="rewards">
         <div class="reward-title">🏆 Yearly Prizes - Total: ₹24,000</div>
-        <p style="font-size: 20px; margin-bottom: 40px;">
-            Excellence in emotional intelligence deserves recognition
-        </p>
+        <p style="font-size: 20px; margin-bottom: 40px;">Excellence in emotional intelligence deserves recognition</p>
         <div class="reward-grid">
             <div class="reward-item">
                 <h4>🥇 1st Place</h4>
@@ -645,100 +380,194 @@
                 <p class="prize-text">₹50</p>
             </div>
         </div>
-        <button class="cta-button" style="margin-top: 40px;" onclick="window.location.href='index5.html'">
-            COMPETE NOW
-        </button>
+        <button class="cta-button" style="margin-top: 40px;" onclick="window.location.href='index5.html'">COMPETE NOW</button>
     </section>
 
     <script>
-        // Step 1: show choice buttons instead of direct redirect
+        /* ---------- CTA & Small Page Functions ---------- */
         function startChoice() {
             const primary = document.getElementById('primaryCTA');
             const choice = document.getElementById('choiceButtons');
             const sub = document.getElementById('subQuote');
-
             if (!primary || !choice) return;
-
             primary.style.display = 'none';
             choice.style.display = 'flex';
-            if (sub) {
-                sub.textContent = 'Where do you want to start?';
-            }
+            if (sub) sub.textContent = 'Where do you want to start?';
         }
+        function goMental() { window.location.href = 'mental-check.html'; }
+        function goJourney() { window.location.href = 'journey-map.html'; }
+        function closeCenterQuote() { const centerQuote = document.getElementById("centerQuote"); if (centerQuote) centerQuote.style.display = "none"; }
 
-        // Destination functions
-        function goMental() {
-            window.location.href = 'mental-check.html';
-        }
-        function goJourney() {
-            window.location.href = 'journey-map.html';
-        }
-
-        function closeCenterQuote() {
-            const centerQuote = document.getElementById("centerQuote");
-            if (centerQuote) {
-                centerQuote.style.display = "none";
-            }
-        }
-
-        // Create floating particles
+        /* ---------- Particles ---------- */
         function createParticles() {
             const particlesContainer = document.querySelector('.particles');
             if (!particlesContainer) return;
-            for (let i = 0; i < 50; i++) {
+            for (let i = 0; i < 40; i++) {
                 const particle = document.createElement('div');
                 particle.className = 'particle';
                 particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
                 particle.style.animationDelay = Math.random() * 6 + 's';
                 particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                particle.style.width = particle.style.height = Math.random() * 4 + 2 + 'px';
+                particle.style.width = particle.style.height = (Math.random() * 6 + 4) + 'px';
                 particlesContainer.appendChild(particle);
             }
         }
+        window.addEventListener('load', createParticles);
+
+        /* ---------- Nav toggles & Dropdown logic (delegated, robust) ---------- */
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+        const activityParent = document.getElementById('activityDropdown');
+        const activityLink = document.getElementById('activityLink');
+        const activityMenu = document.getElementById('activityMenu');
+        const gamesHasSub = document.getElementById('gamesHasSub');
+
+        function isMobile() { return window.matchMedia('(max-width:768px)').matches; }
+
+        // mobile off-canvas nav open/close
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                const open = navLinks.classList.toggle('open');
+                menuToggle.classList.toggle('open', open);
+                menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+                navLinks.setAttribute('aria-hidden', open ? 'false' : 'true');
+            });
+        }
+
+        // Delegated click handler inside navLinks
+        if (navLinks) {
+            navLinks.addEventListener('click', function(e) {
+                const clicked = e.target;
+                const link = clicked.closest('a');
+
+                // If no <a> was clicked (e.g. tap on whitespace) do nothing
+                if (!link) return;
+
+                // Activity toggle clicked (first-level)
+                if (link.classList.contains('dropdown-link')) {
+                    if (isMobile()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const open = activityParent.classList.toggle('open');
+                        activityLink.setAttribute('aria-expanded', open ? 'true' : 'false');
+                        activityMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
+
+                        // when opening Activity ensure games submenu is collapsed initially
+                        if (open && gamesHasSub && gamesHasSub.classList.contains('open')) {
+                            gamesHasSub.classList.remove('open');
+                            const gToggle = gamesHasSub.querySelector('.sub-toggle');
+                            if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
+                        }
+                    } else {
+                        e.preventDefault(); // desktop: avoid # jump
+                    }
+                    return;
+                }
+
+                // Games sub-toggle clicked
+                if (link.classList.contains('sub-toggle')) {
+                    if (isMobile()) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const hasSub = link.closest('.has-sub');
+                        if (!hasSub) return;
+                        const nowOpen = hasSub.classList.toggle('open');
+                        link.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
+                        // ensure activity menu open
+                        if (!activityParent.classList.contains('open')) {
+                            activityParent.classList.add('open');
+                            activityLink.setAttribute('aria-expanded', 'true');
+                            activityMenu.setAttribute('aria-hidden', 'false');
+                        }
+                    } else {
+                        e.preventDefault(); // desktop uses hover
+                    }
+                    return;
+                }
+
+                // Otherwise it's a real navigation link (Market, Community, Take Quiz, etc.)
+                const href = link.getAttribute('href');
+                const isPlaceholder = !href || href === '#';
+                if (!isPlaceholder) {
+                    if (navLinks.classList.contains('open')) {
+                        navLinks.classList.remove('open');
+                        if (menuToggle) menuToggle.classList.remove('open');
+                        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+                        navLinks.setAttribute('aria-hidden', 'true');
+                    }
+                    // collapse activity/games
+                    if (activityParent && activityParent.classList.contains('open')) {
+                        activityParent.classList.remove('open');
+                        activityLink.setAttribute('aria-expanded', 'false');
+                        activityMenu.setAttribute('aria-hidden', 'true');
+                    }
+                    if (gamesHasSub && gamesHasSub.classList.contains('open')) {
+                        gamesHasSub.classList.remove('open');
+                        const gToggle = gamesHasSub.querySelector('.sub-toggle');
+                        if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
+                    }
+                    // let default navigation proceed
+                }
+            });
+        }
+
+        // Click outside to close nav & dropdowns
+        document.addEventListener('click', function(e) {
+            const t = e.target;
+            // close off-canvas nav if open and clicked outside
+            if (navLinks && navLinks.classList.contains('open')) {
+                if (!navLinks.contains(t) && !(menuToggle && menuToggle.contains(t))) {
+                    navLinks.classList.remove('open');
+                    if (menuToggle) menuToggle.classList.remove('open');
+                    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+                    navLinks.setAttribute('aria-hidden', 'true');
+                }
+            }
+            // close activity if open and clicked outside it
+            if (activityParent && activityParent.classList.contains('open') && !activityParent.contains(t)) {
+                activityParent.classList.remove('open');
+                if (activityLink) activityLink.setAttribute('aria-expanded','false');
+                if (activityMenu) activityMenu.setAttribute('aria-hidden','true');
+            }
+            // close games submenu if open and clicked outside it
+            if (gamesHasSub && gamesHasSub.classList.contains('open') && !gamesHasSub.contains(t)) {
+                gamesHasSub.classList.remove('open');
+                const gToggle = gamesHasSub.querySelector('.sub-toggle');
+                if (gToggle) gToggle.setAttribute('aria-expanded','false');
+            }
+        });
+
+        // Clear mobile-only open states on resize to desktop
+        window.addEventListener('resize', function() {
+            if (window.matchMedia('(min-width:769px)').matches) {
+                if (navLinks && navLinks.classList.contains('open')) navLinks.classList.remove('open');
+                if (menuToggle && menuToggle.classList.contains('open')) menuToggle.classList.remove('open');
+                if (activityParent && activityParent.classList.contains('open')) {
+                    activityParent.classList.remove('open');
+                    if (activityLink) activityLink.setAttribute('aria-expanded','false');
+                    if (activityMenu) activityMenu.setAttribute('aria-hidden','true');
+                }
+                if (gamesHasSub && gamesHasSub.classList.contains('open')) {
+                    gamesHasSub.classList.remove('open');
+                    const gToggle = gamesHasSub.querySelector('.sub-toggle');
+                    if (gToggle) gToggle.setAttribute('aria-expanded','false');
+                }
+            }
+        });
 
         // Smooth scrolling for in-page links
         document.querySelectorAll('a[href^="#"]').forEach(anchor => {
             anchor.addEventListener('click', function (e) {
+                const href = this.getAttribute('href');
+                if (!href || href === '#') { e.preventDefault(); return; }
                 e.preventDefault();
-                const targetId = this.getAttribute('href').substring(1);
+                const targetId = href.substring(1);
                 const targetElement = document.getElementById(targetId);
-                if (targetElement) {
-                    targetElement.scrollIntoView({ behavior: 'smooth' });
-                }
+                if (targetElement) targetElement.scrollIntoView({ behavior: 'smooth' });
             });
         });
-
-        window.addEventListener('load', createParticles);
-
-        // Nav background on scroll
-        window.addEventListener('scroll', () => {
-            const nav = document.querySelector('.nav-bar');
-            if (!nav) return;
-            nav.style.background = window.scrollY > 100
-                ? 'rgba(0,0,0,0.95)'
-                : 'rgba(0,0,0,0.9)';
-        });
-
-        // Mobile menu toggle logic
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-
-        if (menuToggle && navLinks) {
-            menuToggle.addEventListener('click', () => {
-                navLinks.classList.toggle('open');
-                menuToggle.classList.toggle('open');
-            });
-
-            // Close menu when clicking a link (mobile)
-            navLinks.querySelectorAll('a').forEach(link => {
-                link.addEventListener('click', () => {
-                    if (navLinks.classList.contains('open')) {
-                        navLinks.classList.remove('open');
-                        menuToggle.classList.remove('open');
-                    }
-                });
-            });
-        }
     </script>
 </body>
 </html>

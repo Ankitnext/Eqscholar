@@ -191,6 +191,7 @@
         .nav-links {
             display: flex;
             gap: 30px;
+            align-items: center;
         }
         
         .nav-links a {
@@ -202,6 +203,33 @@
         
         .nav-links a:hover {
             color: #f39c12;
+        }
+
+        /* Mobile hamburger button (two lines) */
+        #menuToggle {
+            display: none; /* shown only on mobile */
+            width: 28px;
+            height: 22px;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 6px;
+            cursor: pointer;
+        }
+        #menuToggle span {
+            display: block;
+            width: 100%;
+            height: 3px;
+            border-radius: 999px;
+            background: #fff;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+        /* Little animation for open state (turn into X-ish shape) */
+        #menuToggle.open span:first-child {
+            transform: translateY(4px) rotate(35deg);
+        }
+        #menuToggle.open span:last-child {
+            transform: translateY(-4px) rotate(-35deg);
         }
         
         /* Info Section */
@@ -325,12 +353,43 @@
                 font-size: 14px;
             }
             .nav-bar {
-                padding: 15px 20px;
-                flex-direction: column;
-                gap: 10px;
+                padding: 12px 16px;
             }
+
+            /* Show hamburger, hide links by default */
+            #menuToggle {
+                display: flex;
+            }
+
             .nav-links {
-                gap: 15px;
+                position: fixed;
+                top: 56px;              /* under navbar */
+                right: 0;
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 16px;
+                padding: 16px 18px;
+                width: 230px;
+                background: rgba(0,0,0,0.96);
+                border-left: 1px solid rgba(255,255,255,0.1);
+                transform: translateX(100%);
+                transition: transform 0.3s ease;
+            }
+
+            .nav-links.open {
+                transform: translateX(0);
+            }
+
+            .nav-links a,
+            .nav-links .dropdown-parent {
+                width: 100%;
+            }
+
+            .dropdown-menu {
+                position: static;
+                box-shadow: none;
+                padding-left: 12px;
+                margin-top: 4px;
             }
 
             .duality-container {
@@ -421,7 +480,7 @@
             color: #f39c12;
         }
 
-        /* Dropdown in navbar (unchanged from your code) */
+        /* Dropdown in navbar */
         .dropdown-parent {
             display: inline-block; 
             position: relative;
@@ -452,12 +511,26 @@
         .dropdown-parent:hover .dropdown-menu {
             display: block;
         }
+
+        /* Disable hover-open on mobile (handled by click) */
+        @media (max-width: 768px) {
+            .dropdown-parent:hover .dropdown-menu {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
     <nav class="nav-bar">
         <div class="logo">🧠 EQ Quiz Initiative</div>
-        <div class="nav-links">
+
+        <!-- Hamburger for mobile -->
+        <div id="menuToggle">
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks">
             <a href="index.html">Home</a>
             <a href="leaderboard.html">Leaderboard</a>
 
@@ -572,7 +645,6 @@
                 <p class="prize-text">₹50</p>
             </div>
         </div>
-        <!-- keep this button going straight to quiz if you want -->
         <button class="cta-button" style="margin-top: 40px;" onclick="window.location.href='index5.html'">
             COMPETE NOW
         </button>
@@ -646,6 +718,27 @@
                 ? 'rgba(0,0,0,0.95)'
                 : 'rgba(0,0,0,0.9)';
         });
+
+        // Mobile menu toggle logic
+        const menuToggle = document.getElementById('menuToggle');
+        const navLinks = document.getElementById('navLinks');
+
+        if (menuToggle && navLinks) {
+            menuToggle.addEventListener('click', () => {
+                navLinks.classList.toggle('open');
+                menuToggle.classList.toggle('open');
+            });
+
+            // Close menu when clicking a link (mobile)
+            navLinks.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (navLinks.classList.contains('open')) {
+                        navLinks.classList.remove('open');
+                        menuToggle.classList.remove('open');
+                    }
+                });
+            });
+        }
     </script>
 </body>
 </html>

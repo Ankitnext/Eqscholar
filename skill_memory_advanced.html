@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Advanced Memory Methods — Skill Suite</title>
+
+<!-- ===========================
+     ORIGINAL CSS (kept exactly)
+     (copied from your original post)
+     =========================== -->
+<style>
+    /* ---------- Reset & Base ---------- */
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial; background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); min-height:100vh; color:#fff; overflow-x:hidden; }
+
+    /* ---------- NAVBAR ---------- */
+    .nav-bar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: rgba(0,0,0,0.9);
+        backdrop-filter: blur(10px);
+        padding: 20px 50px;
+        z-index: 1000;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+    }
+    .logo { color: white; font-size: 24px; font-weight: bold; display:flex; align-items:center; gap:8px; }
+    .nav-links { display:flex; gap:30px; align-items:center; }
+    .nav-links a, .nav-links .dropdown-link { color: white; text-decoration: none; font-weight:500; cursor: pointer; padding: 6px 4px; display:inline-block; }
+    .nav-links a:hover, .nav-links .dropdown-link:hover { color: #f39c12; }
+
+    /* hamburger */
+    #menuToggle {
+        display: none; /* only on mobile */
+        width: 28px;
+        height: 22px;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        gap: 6px;
+        cursor: pointer;
+    }
+    #menuToggle span { display:block; width:100%; height:3px; border-radius:999px; background:#fff; transition: transform .3s, opacity .3s; }
+    #menuToggle.open span:first-child { transform: translateY(4px) rotate(35deg); }
+    #menuToggle.open span:last-child  { transform: translateY(-4px) rotate(-35deg); }
+
+    /* Desktop dropdown */
+    .dropdown-parent { display:inline-block; position:relative; padding:0 10px; }
+    .dropdown-parent .dropdown-link { cursor:pointer; display:inline-block; }
+    .dropdown-menu {
+        display:none;
+        position:absolute;
+        top:100%;
+        left:0;
+        min-width:220px;
+        background-color:#1a1a2e;
+        border-radius:6px;
+        box-shadow:0 10px 30px rgba(0,0,0,0.25);
+        z-index:200;
+        padding:6px 0;
+    }
+    .dropdown-menu a { color:#fff; padding:10px 16px; text-decoration:none; display:block; }
+    .dropdown-parent:hover > .dropdown-menu { display:block; }
+
+    /* Desktop nested submenu */
+    .dropdown-menu .has-sub { position:relative; }
+    .dropdown-menu .has-sub > .sub-menu {
+        display:none;
+        position:absolute;
+        top:0;
+        left:100%;
+        margin-left:8px;
+        min-width:190px;
+        background:#1a1a2e;
+        padding:6px 0;
+        border-radius:6px;
+        box-shadow:0 8px 20px rgba(0,0,0,0.25);
+    }
+    .dropdown-menu .has-sub:hover > .sub-menu { display:block; }
+
+    /* ---------- HERO / MAIN CONTENT ---------- */
+    .hero-section {
+        position: relative;
+        height: 100vh;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        background: linear-gradient(90deg, rgba(255,215,0,0.05) 0%, rgba(139,0,0,0.05) 100%);
+        padding-top: 90px; /* space for fixed nav */
+    }
+
+    .duality-container {
+        position: relative;
+        width: 90%;
+        max-width: 1200px;
+        height: 500px;
+        margin: 0 auto;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+        background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02));
+    }
+
+    .god-side {
+        position: absolute;
+        left: 0; top: 0;
+        width: 50%; height: 100%;
+        background: linear-gradient(135deg,#ffeaa7,#fdcb6e,#e17055);
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        clip-path: polygon(0 0, 85% 0, 75% 100%, 0 100%);
+    }
+    .devil-side {
+        position: absolute;
+        right: 0; top: 0;
+        width: 50%; height: 100%;
+        background: linear-gradient(135deg,#2d3436,#636e72,#b2bec3);
+        display:flex; flex-direction:column; align-items:center; justify-content:center;
+        clip-path: polygon(25% 0, 100% 0, 100% 100%, 15% 100%);
+    }
+
+    .god-icon { font-size:80px; color:#fff; margin-bottom:20px; animation: glow-light 2s ease-in-out infinite alternate; }
+    .devil-icon { font-size:80px; color:#e74c3c; margin-bottom:20px; animation: glow-dark 2s ease-in-out infinite alternate; }
+    .god-text, .devil-text { color:white; font-size:18px; font-weight:bold; text-align:center; padding:0 10px; }
+
+    .center-quote {
+        position:absolute;
+        top:50%;
+        left:50%;
+        transform:translate(-50%,-50%);
+        text-align:center;
+        z-index:10;
+        background: rgba(0,0,0,0.8);
+        padding:40px 60px;
+        border-radius:15px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255,255,255,0.12);
+        width:90%; max-width:600px;
+    }
+    .main-quote {
+        font-size:48px; font-weight:bold;
+        background: linear-gradient(45deg,#f39c12,#e74c3c,#9b59b6,#3498db);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        margin-bottom:20px; animation:pulse 3s ease-in-out infinite;
+    }
+    .sub-quote { color:#ecf0f1; font-size:20px; margin-bottom:30px; }
+
+    .cta-button {
+        background: linear-gradient(45deg,#e74c3c,#f39c12);
+        color: white;
+        padding: 15px 40px;
+        border: none;
+        border-radius: 50px;
+        font-size: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        box-shadow: 0 10px 30px rgba(231, 76, 60, 0.4);
+    }
+    .cta-button.secondary { background: transparent; border: 2px solid #f39c12; box-shadow:none; }
+
+    .choice-buttons { display:none; justify-content:center; flex-wrap:wrap; gap:16px; margin-top:10px; }
+
+    /* Info & Reward sections */
+    .info-section { padding: 100px 50px; background: rgba(0,0,0,0.9); color:white; text-align:center; }
+    .info-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:40px; max-width:1200px; margin:0 auto; }
+    .info-card { background: linear-gradient(135deg, rgba(52,152,219,0.1), rgba(155,89,182,0.1)); padding:40px; border-radius:15px; border: 1px solid rgba(255,255,255,0.1); backdrop-filter: blur(10px); transition: transform .3s ease; }
+    .info-card h3 { color:#f39c12; font-size:24px; margin-bottom:20px; }
+
+    .reward-section { background: linear-gradient(135deg,#667eea,#764ba2); padding:80px 50px; text-align:center; color:white; }
+    .reward-title { font-size:36px; font-weight:bold; margin-bottom:30px; color:#f39c12; }
+    .reward-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px; max-width:800px; margin:0 auto; }
+    .reward-item { background: rgba(255,255,255,0.08); padding:20px; border-radius:10px; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.12); transition: transform .3s ease; }
+    .reward-item h4 { margin-bottom:6px; }
+    .prize-text { font-size:1.2rem; font-weight:bold; }
+
+    /* Particles */
+    .particles { position:absolute; width:100%; height:100%; overflow:hidden; top:0; left:0; z-index:1; pointer-events:none; }
+    .particle { position:absolute; background: rgba(255,255,255,0.6); border-radius:50%; animation: float 6s ease-in-out infinite; }
+
+    @keyframes float { 0%, 100% { transform: translateY(0px) rotate(0deg); opacity:0; } 50% { opacity:1; } 100% { transform: translateY(-100px) rotate(360deg); opacity:0; } }
+    @keyframes glow-light { from { text-shadow: 2px 2px 10px rgba(255,215,0,0.5); } to { text-shadow: 2px 2px 20px rgba(255,215,0,0.8); } }
+    @keyframes glow-dark  { from { text-shadow: 2px 2px 10px rgba(231,76,60,0.5); } to { text-shadow: 2px 2px 20px rgba(231,76,60,0.8); } }
+    @keyframes pulse { 0%,100%{ transform: scale(1) } 50% { transform: scale(1.05) } }
+
+    /* Close button for center quote */
+    .close-btn { position:absolute; top:10px; right:15px; font-size:28px; font-weight:bold; color:white; cursor:pointer; z-index:101; }
+    .close-btn:hover { color:#f39c12; }
+
+    /* Dropdown hover disabled for mobile (mobile uses click toggles) */
+    @media (max-width: 768px) {
+        body { font-size: 14px; }
+        .nav-bar { padding:12px 16px; }
+        #menuToggle { display:flex; }
+        .nav-links {
+            position: fixed;
+            top: 56px;
+            right: 0;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 16px;
+            padding: 16px 18px;
+            width: 260px;
+            background: rgba(0,0,0,0.96);
+            border-left: 1px solid rgba(255,255,255,0.06);
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            z-index: 1600; /* higher so nav panel is above main content */
+            max-height: calc(100vh - 56px);
+            overflow:auto;
+        }
+        .nav-links.open { transform: translateX(0); }
+
+        .nav-links a, .nav-links .dropdown-link { width: 100%; }
+        .dropdown-parent { display:block; width:100%; position:relative; }
+
+        /* Mobile: dropdown inline between Activity and next link.
+           Force static positioning and full width so it sits inside the nav panel. */
+        .dropdown-parent .dropdown-menu {
+            position: static !important;
+            box-shadow: none !important;
+            padding-left: 12px;
+            margin-top: 6px;
+            display: none;
+            background: transparent !important;
+            min-width: auto !important;
+            width: 100% !important;
+        }
+        .dropdown-parent.open > .dropdown-menu { display: block; }
+
+        /* Submenus inline, more indented. Force static width so they do not float. */
+        .dropdown-menu .has-sub { position: static !important; width: 100% !important; }
+        .dropdown-menu .has-sub > .sub-menu {
+            display: none;
+            padding-left: 12px;
+            margin-top: 6px;
+            position: static !important;
+            width: 100% !important;
+            background: transparent !important;
+            box-shadow: none !important;
+        }
+        .dropdown-menu .has-sub.open > .sub-menu { display: block; }
+
+        /* small styling for links inside nav so they align well */
+        .dropdown-menu a { padding-left: 8px; padding-right: 8px; color: #fff; }
+
+        /* duality adjustments */
+        .duality-container { height: 80vh; border-radius: 10px; box-shadow: 0 15px 30px rgba(0,0,0,0.3); }
+        .god-side, .devil-side { position: relative; width: 100%; height: 50%; clip-path: none; }
+        .god-icon, .devil-icon { font-size: 50px; }
+        .main-quote { font-size: 32px; margin-bottom: 15px; }
+        .center-quote { padding: 20px; }
+        .info-section { padding: 60px 20px; }
+        .info-card { padding: 25px; border-radius: 10px; }
+    }
+</style>
+
+<!-- ===========================
+     Additional page-specific minor styles (kept minimal,
+     won't override the original large CSS layout)
+     =========================== -->
+<style>
+  /* small helpers for the memory page only (non-intrusive) */
+  .container { padding: 120px 40px 80px; max-width:1200px; margin:0 auto; }
+  h1.page-title { font-size:32px; color:#fff; margin-bottom:8px; text-align:center; }
+  p.page-sub { color:#f1f1f1b8; text-align:center; margin-bottom:28px; }
+  .grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap:18px; }
+  .module { background: rgba(0,0,0,0.55); border-radius:12px; padding:16px; border:1px solid rgba(255,255,255,0.06); min-height:220px; }
+  .controls { display:flex; gap:8px; margin-top:8px; flex-wrap:wrap; }
+  .ghost-btn { background:transparent; border:1px solid rgba(255,255,255,0.08); padding:8px 10px; color:#fff; border-radius:8px; cursor:pointer; }
+  .start-btn { background: linear-gradient(45deg,#e74c3c,#f39c12); border:none; padding:8px 12px; border-radius:8px; color:#fff; cursor:pointer; }
+  .small { font-size:13px; color:#fff8; margin-top:8px; }
+  .tile { display:inline-flex; align-items:center; justify-content:center; width:56px; height:56px; border-radius:10px; background:rgba(255,255,255,0.03); margin:6px; font-size:26px; }
+  .loci { display:flex; gap:10px; flex-wrap:wrap; margin-top:10px; }
+  .locus { width:110px; height:90px; border-radius:10px; background:rgba(255,255,255,0.02); display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; border:1px dashed rgba(255,255,255,0.04); }
+  .locus .label { font-size:12px; color:#fff8; margin-top:6px }
+  .input, textarea { width:100%; padding:8px; border-radius:8px; background:transparent; color:#fff; border:1px solid rgba(255,255,255,0.06); }
+  .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:24px; background:rgba(0,0,0,0.8); padding:10px 14px; border-radius:10px; color:#fff; z-index:9999; opacity:0; transition:opacity .2s, transform .2s; pointer-events:none; }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(-6px); }
+  .row { display:flex; gap:14px; flex-wrap:wrap; }
+  .full-width { grid-column: 1 / -1; }
+</style>
+</head>
+<body>
+    <!-- keep the original nav at top (simple version) -->
+    <nav class="nav-bar" role="navigation" aria-label="Main navigation">
+        <div class="logo">🧠 EQ Quiz — Memory Suite</div>
+
+        <!-- Hamburger for mobile -->
+        <div id="menuToggle" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
+            <span></span>
+            <span></span>
+        </div>
+
+        <div class="nav-links" id="navLinks" aria-hidden="true">
+            <a href="index.html">Home</a>
+            <a href="skill.html">Skills</a>
+            <a href="skill_memory_advanced.html">Advanced Memory</a>
+            <a href="leaderboard.html">Leaderboard</a>
+        </div>
+    </nav>
+
+  <div class="container">
+    <h1 class="page-title">Advanced Memory — Avadhān & Modern Techniques</h1>
+    <p class="page-sub">Memory Palace • Pegs • Major System • Story Chain • Library / Spaced Repetition • Avadhān multitaskers — all in sections, using your original look & feel.</p>
+
+    <div class="grid">
+
+      <!-- Memory Palace (Method of Loci) -->
+      <div class="module full-width" id="module-memory-palace">
+        <h2 style="color:#f39c12">Memory Palace (Method of Loci)</h2>
+        <p class="small">Create or choose a palace (room list). Place items on loci; later recall by clicking loci to reveal placed item.</p>
+
+        <div style="display:flex;gap:10px;align-items:center">
+          <select id="palaceSelect" class="input" style="max-width:320px;">
+            <option value="house">House (default)</option>
+            <option value="museum">Museum</option>
+            <option value="office">Office</option>
+            <option value="custom">Custom (edit below)</option>
+          </select>
+          <button class="start-btn" id="palaceNew">New Palace</button>
+          <button class="ghost-btn" id="palaceSave">Save Palace</button>
+          <button class="ghost-btn" id="palaceReset">Reset</button>
+        </div>
+
+        <div style="margin-top:10px; display:flex; gap:14px;">
+          <div style="flex:1;">
+            <div class="small">Loci (click to assign / reveal)</div>
+            <div class="loci" id="lociList" aria-live="polite"></div>
+            <div class="small">Select an item from the list and click a locus to place it there.</div>
+          </div>
+          <div style="flex:1;">
+            <div class="small">Items to place</div>
+            <textarea id="palaceItems" placeholder="Write items, one per line" style="min-height:120px;"></textarea>
+            <div style="margin-top:8px;">
+              <button class="start-btn" id="palaceLoadItems">Load Items</button>
+              <button class="ghost-btn" id="palaceClearItems">Clear</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="small" style="margin-top:10px">Actions: Place items → Practice recall by revealing loci → Save palace to library for spaced repetition.</div>
+      </div>
+
+      <!-- Loci practice & library -->
+      <div class="module" id="module-library">
+        <h3 style="color:#f39c12">Memory Library & Spaced Repetition</h3>
+        <p class="small">Save palace cards and review with a simple spaced-repetition scheduler.</p>
+        <div>
+          <input id="libTitle" class="input" placeholder="Card title (e.g., Grocery palace)" />
+          <textarea id="libContent" placeholder="JSON or notes for the card (auto-saved from palace)" style="min-height:90px;margin-top:8px"></textarea>
+          <div class="controls">
+            <button class="start-btn" id="libSave">Save Card</button>
+            <button class="ghost-btn" id="libReview">Start Review</button>
+            <button class="ghost-btn" id="libList">Show Library</button>
+          </div>
+          <div id="libListArea" style="margin-top:8px;max-height:160px;overflow:auto"></div>
+        </div>
+      </div>
+
+      <!-- Peg System Trainer -->
+      <div class="module" id="module-pegs">
+        <h3 style="color:#f39c12">Peg System Trainer</h3>
+        <p class="small">Practice standard peg words (1→bun, 2→shoe etc.) or customize your pegs. Match number → peg.</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="start-btn" id="pegStart">Start Practice</button>
+          <button class="ghost-btn" id="pegReset">Reset</button>
+        </div>
+        <div style="margin-top:8px" id="pegPromptArea"></div>
+        <div class="small" style="margin-top:8px">You will be shown a number; type the peg word or choose it from options.</div>
+      </div>
+
+      <!-- Major System trainer -->
+      <div class="module" id="module-major">
+        <h3 style="color:#f39c12">Major System Trainer</h3>
+        <p class="small">Number → consonant mapping (practice encoding and decoding small numbers).</p>
+        <div style="display:flex;gap:8px;align-items:center">
+          <button class="start-btn" id="majorStart">New Prompt</button>
+          <button class="ghost-btn" id="majorShow">Show Answer</button>
+        </div>
+        <div id="majorPrompt" style="margin-top:10px;font-weight:700;font-size:18px">—</div>
+        <div class="small" style="margin-top:8px">Tip: familiarize with the consonant table (0→s/z, 1→t/d, 2→n, 3→m ...)</div>
+      </div>
+
+      <!-- Story Chain Builder -->
+      <div class="module" id="module-chain">
+        <h3 style="color:#f39c12">Story Chain / Link Method</h3>
+        <p class="small">Type or generate items and build a vivid story linking them. Practice recall of sequence.</p>
+        <textarea id="chainItems" placeholder="item1, item2, item3, ..." style="min-height:90px"></textarea>
+        <div class="controls">
+          <button class="start-btn" id="chainBuild">Build Story</button>
+          <button class="ghost-btn" id="chainTest">Test Recall</button>
+          <button class="ghost-btn" id="chainClear">Clear</button>
+        </div>
+        <div id="chainStory" style="margin-top:8px; font-size:14px;"></div>
+      </div>
+
+      <!-- Avadhan Multi-Stream (compact) -->
+      <div class="module" id="module-avadhan-mini">
+        <h3 style="color:#f39c12">Avadhān Mini (multi-stream)</h3>
+        <p class="small">Quick three-stream practice: number sums, backward words, symbol pick. Press start and answer when prompts appear.</p>
+        <div class="controls">
+          <button class="start-btn" id="avadStart">Start</button>
+          <button class="ghost-btn" id="avadStop">Stop</button>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <div style="flex:1">
+            <div class="small">Numbers</div>
+            <div class="stream-box"><div id="avadNum">—</div></div>
+            <input id="avadNumInput" class="input" placeholder="sum" />
+          </div>
+          <div style="flex:1">
+            <div class="small">Words</div>
+            <div class="stream-box"><div id="avadWord">—</div></div>
+            <input id="avadWordInput" class="input" placeholder="backwards" />
+          </div>
+          <div style="flex:1">
+            <div class="small">Symbol</div>
+            <div class="stream-box"><div id="avadSym">—</div></div>
+            <div id="avadSymOpts" style="margin-top:8px"></div>
+          </div>
+        </div>
+        <div class="small" style="margin-top:8px">Score & performance shown in a toast and saved locally for progress tracking.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* ============================
+   Small sound + toast helpers
+   ============================ */
+const AudioMini = (function(){
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  function tone(f=440, d=0.12) {
+    const o = ctx.createOscillator(), g = ctx.createGain();
+    o.type = 'sine'; o.frequency.value = f;
+    g.gain.setValueAtTime(0.08, ctx.currentTime);
+    o.connect(g); g.connect(ctx.destination);
+    o.start(); o.stop(ctx.currentTime + d);
+  }
+  function ok(){ tone(880,0.08); }
+  function fail(){ tone(220,0.12); }
+  return {ctx, tone, ok, fail};
+})();
+
+function showToast(msg, time=1100){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  clearTimeout(t._tm);
+  t._tm = setTimeout(()=> t.classList.remove('show'), time);
+}
+
+/* convenience */
+function randInt(n){ return Math.floor(Math.random()*n); }
+async function unlockAudio(){ if(AudioMini.ctx.state === 'suspended') await AudioMini.ctx.resume(); }
+
+/* ============================
+   Memory Palace (method of loci)
+   ============================ */
+(function(){
+  const lociList = document.getElementById('lociList');
+  const palaceSelect = document.getElementById('palaceSelect');
+  const palaceItems = document.getElementById('palaceItems');
+  const palaceLoadItems = document.getElementById('palaceLoadItems');
+  const palaceNew = document.getElementById('palaceNew');
+  const palaceSave = document.getElementById('palaceSave');
+  const palaceReset = document.getElementById('palaceReset');
+
+  // default palaces (array of loci names)
+  const palaceTemplates = {
+    house: ['Front Door','Hallway','Sofa','TV','Kitchen Table','Fridge','Stairs','Bedroom Door'],
+    museum: ['Entrance','Ticket Desk','Exhibit A','Exhibit B','Hallway','Sculpture','Gallery 1','Gallery 2'],
+    office: ['Gate','Reception','Desk','Printer','Pantry','Meeting Room','Window','CEO Desk']
+  };
+
+  // current working palace
+  let currentLoci = [];     // array of {label, item: null|string}
+  let itemsToPlace = [];    // strings
+
+  function renderLoci(){
+    lociList.innerHTML = '';
+    currentLoci.forEach((loc, i) => {
+      const el = document.createElement('div');
+      el.className = 'locus';
+      el.dataset.idx = i;
+      el.innerHTML = `<div style="font-weight:700">${loc.label}</div><div class="label">${loc.item?loc.item:'(empty)'}</div>`;
+      el.onclick = () => onLocusClick(i);
+      lociList.appendChild(el);
+    });
+  }
+
+  function loadPalace(name){
+    const tmpl = palaceTemplates[name] || [];
+    currentLoci = tmpl.map(l=>({label:l,item:null}));
+    renderLoci();
+  }
+
+  function onLocusClick(index){
+    // if there are items loaded for placing, place the first
+    if(itemsToPlace.length > 0){
+      const item = itemsToPlace.shift().trim();
+      if(!item) { showToast('No item'); return; }
+      currentLoci[index].item = item;
+      renderLoci();
+      showToast(`Placed "${item}" at ${currentLoci[index].label}`);
+      return;
+    }
+    // otherwise this is recall mode: reveal the locus content
+    const val = currentLoci[index].item;
+    if(val){
+      showToast(`${currentLoci[index].label}: ${val}`, 1400);
+      AudioMini.ok();
+    } else {
+      showToast(`${currentLoci[index].label} is empty`);
+      AudioMini.fail();
+    }
+  }
+
+  palaceLoadItems.addEventListener('click', ()=>{
+    const text = palaceItems.value.trim();
+    if(!text){ showToast('Write items one per line'); return; }
+    itemsToPlace = text.split(/\n+/).map(s=>s.trim()).filter(Boolean);
+    showToast(`Loaded ${itemsToPlace.length} items. Click loci to place them.`);
+  });
+
+  palaceNew.addEventListener('click', ()=>{
+    const custom = prompt('Enter comma-separated loci labels for your custom palace (8 recommended):');
+    if(!custom) return;
+    const labels = custom.split(',').map(s=>s.trim()).filter(Boolean);
+    if(labels.length === 0) return;
+    currentLoci = labels.map(l=>({label:l,item:null}));
+    renderLoci();
+    palaceSelect.value = 'custom';
+    showToast('Custom palace created');
+  });
+
+  palaceSave.addEventListener('click', () => {
+    const title = prompt('Save palace as (title):', 'My Palace');
+    if(!title) return;
+    const card = {title, loci: currentLoci, created: Date.now()};
+    const arr = JSON.parse(localStorage.getItem('memory_library') || '[]');
+    arr.push(card);
+    localStorage.setItem('memory_library', JSON.stringify(arr));
+    showToast('Palace saved to library');
+  });
+
+  palaceReset.addEventListener('click', () => {
+    if(!confirm('Clear all locus assignments?')) return;
+    currentLoci.forEach(l=> l.item = null);
+    renderLoci();
+  });
+
+  palaceSelect.addEventListener('change', (e)=>{
+    const v = e.target.value;
+    if(v === 'custom'){ /* do nothing, wait for new */ return; }
+    loadPalace(v);
+  });
+
+  // initial
+  loadPalace('house');
+
+  // expose for saving to library by other modules if needed
+  window._palaceState = () => ({loci: currentLoci});
+})();
+
+/* ============================
+   Memory Library & Spaced Repetition
+   ============================ */
+(function(){
+  const libTitle = document.getElementById('libTitle');
+  const libContent = document.getElementById('libContent');
+  const libSave = document.getElementById('libSave');
+  const libReview = document.getElementById('libReview');
+  const libListBtn = document.getElementById('libList');
+  const libListArea = document.getElementById('libListArea');
+
+  function loadLibrary(){
+    return JSON.parse(localStorage.getItem('memory_library') || '[]');
+  }
+  function saveLibrary(arr){ localStorage.setItem('memory_library', JSON.stringify(arr)); }
+
+  libSave.addEventListener('click', ()=>{
+    const title = libTitle.value.trim() || 'Untitled';
+    const content = libContent.value.trim() || '';
+    const arr = loadLibrary();
+    arr.push({title, content, created: Date.now(), reviewAt: Date.now()});
+    saveLibrary(arr);
+    showToast('Saved to library');
+    libTitle.value=''; libContent.value='';
+  });
+
+  libListBtn.addEventListener('click', ()=>{
+    const arr = loadLibrary();
+    libListArea.innerHTML = '';
+    if(arr.length === 0){ libListArea.textContent = 'Library empty'; return; }
+    arr.forEach((c, i)=>{
+      const el = document.createElement('div');
+      el.style.padding='8px'; el.style.borderBottom='1px dashed rgba(255,255,255,0.03)';
+      el.innerHTML = `<div style="font-weight:700">${c.title}</div><div style="font-size:13px;color:#fff8">${c.content.slice(0,200)}</div>`;
+      const btn = document.createElement('button'); btn.className='ghost-btn'; btn.textContent='Review'; btn.style.marginLeft='8px';
+      btn.onclick = ()=> reviewCard(i);
+      el.appendChild(btn);
+      libListArea.appendChild(el);
+    });
+  });
+
+  function reviewCard(index){
+    const arr = loadLibrary();
+    const card = arr[index];
+    if(!card) return;
+    // simple review: show content and ask if remembered
+    const ok = confirm(`Review: ${card.title}\n\n${card.content}\n\nDid you recall it correctly? (OK = yes)`);
+    // scheduling: if ok push next review later (simple intervals), else sooner
+    const base = Date.now();
+    if(ok) card.reviewAt = base + 1000 * 60 * 60 * 24 * 2; // 2 days
+    else card.reviewAt = base + 1000 * 60 * 60; // 1 hour
+    arr[index] = card;
+    saveLibrary(arr);
+    showToast('Review recorded');
+  }
+
+  libReview.addEventListener('click', ()=>{
+    const arr = loadLibrary().sort((a,b)=> (a.reviewAt || 0) - (b.reviewAt || 0));
+    // pick first due
+    const now = Date.now();
+    const due = arr.findIndex(c => (c.reviewAt || 0) <= now);
+    if(due === -1){
+      showToast('No cards due now');
+      return;
+    }
+    reviewCard(due);
+  });
+})();
+
+/* ============================
+   Peg System Trainer
+   ============================ */
+(function(){
+  const pegStart = document.getElementById('pegStart');
+  const pegReset = document.getElementById('pegReset');
+  const pegPromptArea = document.getElementById('pegPromptArea');
+
+  // Common English peg words (1..10 example)
+  const defaultPegs = {
+    '0':'zero','1':'bun','2':'shoe','3':'tree','4':'door','5':'hive','6':'sticks','7':'heaven','8':'gate','9':'wine'
+  };
+
+  let session = {current:null, score:0, total:0};
+
+  function newPrompt(){
+    const n = String(Math.floor(Math.random()*100)); // 0..99
+    session.current = n;
+    session.total++;
+    pegPromptArea.innerHTML = `<div style="font-weight:700;font-size:20px">${n}</div>
+      <div style="margin-top:8px"><input id="pegAnswer" class="input" placeholder="type peg word"/></div>
+      <div style="margin-top:8px"><button class="start-btn" id="pegCheck">Check</button> <button class="ghost-btn" id="pegShow">Show Peg</button></div>`;
+    document.getElementById('pegCheck').onclick = () => {
+      const ans = document.getElementById('pegAnswer').value.trim().toLowerCase();
+      const left = n.split('').map(ch => defaultPegs[ch] || '?').join(' ');
+      if(ans.length === 0){ showToast('Type something'); return; }
+      if(left.includes(ans) || left === ans || Object.values(defaultPegs).includes(ans)){
+        session.score++;
+        AudioMini.ok(); showToast('Correct');
+      } else {
+        AudioMini.fail(); showToast(`Not matched. Pegs: ${left}`, 2200);
+      }
+      newPrompt();
+    };
+    document.getElementById('pegShow').onclick = ()=> {
+      const left = n.split('').map(ch => defaultPegs[ch] || '?').join(' ');
+      showToast(`Pegs for ${n}: ${left}`, 2200);
+    };
+  }
+
+  pegStart.addEventListener('click', async ()=> { await unlockAudio(); session={current:null,score:0,total:0}; newPrompt(); });
+  pegReset.addEventListener('click', ()=> { session={current:null,score:0,total:0}; pegPromptArea.innerHTML=''; showToast('Reset'); });
+
+})();
+
+/* ============================
+   Major System Trainer (simple)
+   ============================ */
+(function(){
+  const majorStart = document.getElementById('majorStart');
+  const majorShow = document.getElementById('majorShow');
+  const majorPrompt = document.getElementById('majorPrompt');
+
+  // major mapping (0..9) simplified
+  const table = {0:'s/z',1:'t/d',2:'n',3:'m',4:'r',5:'l',6:'j/sh/ch',7:'k/g',8:'f/v',9:'p/b'};
+
+  let cur = null;
+  majorStart.addEventListener('click', ()=>{
+    const n = String(Math.floor(Math.random()*1000)).padStart(2,'0');
+    cur = n;
+    majorPrompt.textContent = n;
+    showToast('Encode the number into a mnemonic word (mental)');
+  });
+  majorShow.addEventListener('click', ()=>{
+    if(!cur){ showToast('Press New Prompt first'); return; }
+    // show the consonant mapping as hint
+    const map = cur.split('').map(d => `${d}:${table[d]||'?'} `).join(' ');
+    showToast(map, 2400);
+  });
+})();
+
+/* ============================
+   Story Chain Builder
+   ============================ */
+(function(){
+  const chainItems = document.getElementById('chainItems');
+  const chainBuild = document.getElementById('chainBuild');
+  const chainTest = document.getElementById('chainTest');
+  const chainClear = document.getElementById('chainClear');
+  const chainStory = document.getElementById('chainStory');
+
+  let currentChain = [];
+
+  chainBuild.addEventListener('click', ()=>{
+    const raw = chainItems.value.trim();
+    if(!raw) { showToast('Enter comma-separated items'); return; }
+    currentChain = raw.split(',').map(s=>s.trim()).filter(Boolean);
+    // auto-build a simple story by concatenation with vivid verbs
+    const verbs = ['jumped on','hid behind','danced with','chased','found','brought','threw','kissed'];
+    const parts = [];
+    for(let i=0;i<currentChain.length;i++){
+      const item = currentChain[i];
+      const verb = verbs[i % verbs.length];
+      parts.push(`the ${item} ${verb} the ${currentChain[(i+1)%currentChain.length]}`);
+    }
+    chainStory.innerHTML = parts.join('. ');
+    showToast('Story created — rehearse it vividly');
+  });
+
+  chainTest.addEventListener('click', ()=>{
+    if(currentChain.length === 0){ showToast('No chain built'); return; }
+    const input = prompt('Type the sequence of items you remember separated by commas:');
+    if(input === null) return;
+    const arr = input.split(',').map(s=>s.trim()).filter(Boolean);
+    let correct=0;
+    for(let i=0;i<currentChain.length;i++) if(arr[i] && arr[i].toLowerCase() === currentChain[i].toLowerCase()) correct++;
+    showToast(`You recalled ${correct} / ${currentChain.length}`);
+  });
+
+  chainClear.addEventListener('click', ()=>{ chainItems.value=''; chainStory.innerHTML=''; currentChain=[]; showToast('Cleared'); });
+})();
+
+/* ============================
+   Avadhān mini-stream (numbers, words, symbols)
+   ============================ */
+(function(){
+  const btnStart = document.getElementById('avadStart');
+  const btnStop = document.getElementById('avadStop');
+  const numBox = document.getElementById('avadNum');
+  const wordBox = document.getElementById('avadWord');
+  const symBox = document.getElementById('avadSym');
+  const symOpts = document.getElementById('avadSymOpts');
+  const numInput = document.getElementById('avadNumInput');
+  const wordInput = document.getElementById('avadWordInput');
+
+  const symbols = ['★','✿','♫','●','▲','☯','◆','☼'];
+
+  let running=false, streams={};
+
+  function pickNumber(){
+    const n = String(Math.floor(Math.random()*900)+100);
+    const sum = n.split('').reduce((a,b)=>a+Number(b),0);
+    return {prompt:n, answer:String(sum)};
+  }
+  function pickWord(){
+    const pool = ['rama','sita','book','tree','ocean','light','storm','river','field','stone','mount','glass'];
+    const w = pool[randInt(pool.length)];
+    return {prompt:w, answer: w.split('').reverse().join('')};
+  }
+  function pickSymbol(){
+    const idx = randInt(symbols.length);
+    const opts = new Set([symbols[idx]]);
+    while(opts.size < 4) opts.add(symbols[randInt(symbols.length)]);
+    return {prompt: symbols[idx], options: Array.from(opts).sort(()=>Math.random()-0.5), answer:symbols[idx]};
+  }
+
+  function emitNum(){
+    const t = pickNumber();
+    numBox.textContent = t.prompt;
+    numBox.dataset.answer = t.answer;
+    numInput.focus();
+    setTimeout(()=> {
+      if(numBox.dataset.answer === t.answer) { // still waiting
+        numBox.textContent = '—'; delete numBox.dataset.answer;
+        showToast('Missed number'); AudioMini.fail();
+      }
+    }, 4200);
+  }
+  function emitWord(){
+    const t = pickWord();
+    wordBox.textContent = t.prompt;
+    wordBox.dataset.answer = t.answer;
+    wordInput.focus();
+    setTimeout(()=> {
+      if(wordBox.dataset.answer === t.answer) {
+        wordBox.textContent = '—'; delete wordBox.dataset.answer;
+        showToast('Missed word'); AudioMini.fail();
+      }
+    }, 4500);
+  }
+  function emitSym(){
+    const t = pickSymbol();
+    symBox.textContent = t.prompt;
+    symOpts.innerHTML = '';
+    t.options.forEach(o=>{
+      const b = document.createElement('button'); b.className='ghost-btn'; b.textContent=o;
+      b.onclick = ()=> {
+        symOpts.innerHTML = '';
+        symBox.textContent = '—';
+        if(o === t.answer){ showToast('Symbol correct'); AudioMini.ok(); } else { showToast('Wrong'); AudioMini.fail(); }
+      };
+      symOpts.appendChild(b);
+    });
+    setTimeout(()=> {
+      if(symBox.textContent === t.prompt) { symBox.textContent = '—'; symOpts.innerHTML=''; showToast('Missed symbol'); AudioMini.fail(); }
+    }, 4200);
+  }
+
+  btnStart.addEventListener('click', async ()=> {
+    if(running) return;
+    await unlockAudio();
+    running=true;
+    streams.num = setInterval(emitNum, 3200);
+    streams.word = setInterval(emitWord, 3800);
+    streams.sym = setInterval(emitSym, 3500);
+    // immediate emit
+    setTimeout(emitNum, 200);
+    setTimeout(emitWord, 400);
+    setTimeout(emitSym, 600);
+    showToast('Avadhān streams started');
+  });
+
+  btnStop.addEventListener('click', ()=> {
+    running=false;
+    Object.values(streams).forEach(t=>clearInterval(t));
+    streams={};
+    numBox.textContent='—'; wordBox.textContent='—'; symBox.textContent='—'; symOpts.innerHTML='';
+    showToast('Stopped');
+  });
+
+  // answer handlers
+  numInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      const val = (numInput.value||'').trim(); numInput.value='';
+      if(numBox.dataset.answer && val === numBox.dataset.answer){
+        showToast('Number correct'); AudioMini.ok();
+        numBox.textContent='—'; delete numBox.dataset.answer;
+      } else { showToast('Wrong or no prompt'); AudioMini.fail(); }
+    }
+  });
+  wordInput.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      const val = (wordInput.value||'').trim().toLowerCase(); wordInput.value='';
+      if(wordBox.dataset.answer && val === wordBox.dataset.answer){
+        showToast('Word correct'); AudioMini.ok();
+        wordBox.textContent='—'; delete wordBox.dataset.answer;
+      } else { showToast('Wrong or no prompt'); AudioMini.fail(); }
+    }
+  });
+
+})();
+
+/* ============================
+   Small persistence helpers + kickstart
+   ============================ */
+(function(){
+  // ensure audio context resumes on first user gesture
+  document.addEventListener('click', function initAudio(){
+    if(AudioMini.ctx && AudioMini.ctx.state === 'suspended'){ AudioMini.ctx.resume(); }
+    document.removeEventListener('click', initAudio);
+  }, {once:true});
+})();
+</script>
+</body>
+</html>

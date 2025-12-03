@@ -1,0 +1,926 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Mind Development Suite — EQ Quiz</title>
+<style>
+  /* ---------- base ---------- */
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg1:#0f172a; --bg2:#1e293b; --card:#0b1220;
+    --accent:#f39c12; --muted:#a8b3c7;
+    font-family:Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+  }
+  body{min-height:100vh;background:linear-gradient(135deg,#10203a 0%,#2b184a 100%);color:#fff;padding:22px}
+  header{display:flex;justify-content:space-between;align-items:center;margin-bottom:18px}
+  .logo{font-weight:700;font-size:18px}
+  main{max-width:1200px;margin:0 auto}
+  h1{color:var(--accent);margin-bottom:6px}
+  p.lead{color:var(--muted);margin-bottom:18px}
+
+  /* layout rows */
+  .section { margin-bottom:28px; }
+  .section h2 { color:#ffd27a; margin-bottom:10px; font-size:18px }
+  .row { display:flex; gap:16px; flex-wrap:wrap; }
+  .card { background: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.02)); border-radius:12px; padding:14px; min-width:260px; flex:1 1 300px; box-shadow:0 10px 30px rgba(0,0,0,0.35); border:1px solid rgba(255,255,255,0.04); }
+
+  .card h3 { margin-bottom:8px; color:#fff; font-size:16px }
+  .card p { color:var(--muted); font-size:13px; margin-bottom:10px }
+
+  .controls { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+  button.btn { background:linear-gradient(45deg,#e74c3c,#f39c12); border:none; padding:8px 12px; border-radius:8px; color:#fff; cursor:pointer; font-weight:700 }
+  button.ghost { background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:8px 10px; border-radius:8px; cursor:pointer }
+
+  .status { font-size:13px; color:#fff8; margin-bottom:8px }
+
+  .stream-box { background:rgba(255,255,255,0.02); padding:10px; border-radius:8px; text-align:center }
+  .prompt { font-size:22px; font-weight:700 }
+
+  /* small UI for games */
+  .sequence-area { display:flex; gap:8px; align-items:center; justify-content:center; flex-wrap:wrap; min-height:64px }
+  .tile { width:58px; height:58px; border-radius:10px; background:rgba(255,255,255,0.04); display:flex; align-items:center; justify-content:center; font-size:28px }
+  .muted { opacity:0.45; pointer-events:none }
+
+  /* pairs */
+  .pairs-grid { display:grid; grid-template-columns:repeat(4,56px); gap:8px; justify-content:center; margin-top:8px }
+  .card-tile { width:56px; height:56px; border-radius:8px; background:linear-gradient(180deg,#111,#0b0b0b); display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:22px; color:#fff; border:1px solid rgba(255,255,255,0.03); perspective:600px; }
+  .card-tile .inner { width:100%; height:100%; display:flex; align-items:center; justify-content:center; backface-visibility:hidden; transition: transform .36s ease; transform-style:preserve-3d; position:relative }
+  .card-tile .front { position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:linear-gradient(90deg,#222,#111); border-radius:6px }
+  .card-tile .back { position:absolute; width:100%; height:100%; display:flex; align-items:center; justify-content:center; background:#fff; color:#111; border-radius:6px; transform:rotateY(180deg) }
+  .card-tile.flipped .inner { transform:rotateY(180deg) }
+
+  /* pattern grid */
+  .pattern-grid { display:grid; grid-template-columns:repeat(4,44px); gap:8px; justify-content:center }
+  .pattern-cell { width:44px; height:44px; border-radius:6px; background:rgba(255,255,255,0.03); cursor:pointer; display:flex; align-items:center; justify-content:center; }
+  .pattern-cell.on { background:linear-gradient(45deg,#f39c12,#e74c3c); transform:scale(1.06) }
+
+  /* simon */
+  .simon-grid { display:grid; grid-template-columns:repeat(2,86px); gap:8px; justify-content:center }
+  .simon-btn { width:86px; height:86px; border-radius:10px; cursor:pointer; }
+
+  /* reaction */
+  .reaction-box { height:64px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:20px }
+
+  /* EQ */
+  .eq-options { display:flex; gap:8px; flex-wrap:wrap; margin-top:8px }
+
+  /* toast */
+  .toast { position:fixed; left:50%; transform:translateX(-50%); bottom:22px; background:rgba(0,0,0,0.8); color:#fff; padding:8px 12px; border-radius:8px; opacity:0; transition:opacity .18s, transform .18s; pointer-events:none; z-index:9999 }
+  .toast.show { opacity:1; transform:translateX(-50%) translateY(-6px) }
+
+  @media (max-width:780px){
+    .row { flex-direction:column }
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">🧠 Mind Development Suite</div>
+  <nav><a href="index.html" class="ghost" style="text-decoration:none;color:#fff;padding:8px 10px;border-radius:8px">Home</a></nav>
+</header>
+
+<main>
+  <h1>Train your mind — sections by function</h1>
+  <p class="lead">Rows are grouped: Memory (all senses), Left-brain (logical), Right-brain (creative), Reflex / Reaction, and EQ (emotional). Play any game inline.</p>
+
+  <!-- Toast -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <!-- Memory (All Senses) -->
+  <section class="section">
+    <h2>Memory — visual, auditory, verbal</h2>
+    <div class="row">
+      <!-- Image Prediction (visual) -->
+      <div class="card" id="g-image-pred">
+        <h3>Image Prediction (visual)</h3>
+        <p>Watch a sequence and answer which appeared at the asked position.</p>
+        <div class="controls">
+          <button class="btn" id="imgPredStart">Start</button>
+          <button class="ghost" id="imgPredReset">Reset</button>
+        </div>
+        <div class="status" id="imgPredStatus">Level: 0 — Score: 0</div>
+        <div class="sequence-area" id="imgPredSeq"></div>
+        <div style="display:flex;gap:8px;justify-content:center;margin-top:8px" id="imgPredOpts"></div>
+      </div>
+
+      <!-- Number Span (auditory) -->
+      <div class="card" id="g-number-span">
+        <h3>Number Span (auditory)</h3>
+        <p>Listen to numbers (tones) and repeat them back. Sequence increases on success.</p>
+        <div class="controls">
+          <button class="btn" id="numSpanStart">Start</button>
+          <button class="ghost" id="numSpanReset">Reset</button>
+        </div>
+        <div class="status" id="numSpanStatus">Length: 1 — Score: 0</div>
+        <div class="stream-box" id="numSpanDisplay">—</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="numSpanInput" placeholder="type digits" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff"/>
+          <button class="ghost" id="numSpanCheck">Submit</button>
+        </div>
+      </div>
+
+      <!-- Word Memory (verbal) -->
+      <div class="card" id="g-word-memory">
+        <h3>Word Memory (verbal)</h3>
+        <p>See a short list of words, then recall them.</p>
+        <div class="controls">
+          <button class="btn" id="wordMemShow">Show</button>
+          <button class="ghost" id="wordMemReset">Reset</button>
+        </div>
+        <div class="status" id="wordMemStatus">Round: 0 — Correct: 0</div>
+        <div class="sequence-area" id="wordMemList"></div>
+        <textarea id="wordMemInput" placeholder="type words you remember" style="width:100%;min-height:64px;margin-top:8px;border-radius:8px;padding:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff"></textarea>
+      </div>
+    </div>
+  </section>
+
+  <!-- Left Brain -->
+  <section class="section">
+    <h2>Left Brain — analytical & logical</h2>
+    <div class="row">
+      <!-- Math Rapid -->
+      <div class="card" id="g-math-rapid">
+        <h3>Gaṇita (Math Rapid)</h3>
+        <p>Quick arithmetic problems — increase speed and level.</p>
+        <div class="controls">
+          <button class="btn" id="mathStart">Start</button>
+          <button class="ghost" id="mathReset">Reset</button>
+        </div>
+        <div class="stream-box" id="mathPrompt"><div class="prompt">—</div></div>
+        <div style="display:flex;gap:8px;margin-top:8px;align-items:center">
+          <input id="mathAnswer" placeholder="answer" style="padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff" />
+          <button class="ghost" id="mathSubmit">Submit</button>
+        </div>
+        <div class="status" id="mathStatus">Correct: 0 — Wrong: 0 — Level: 1</div>
+      </div>
+
+      <!-- Matching Pairs -->
+      <div class="card" id="g-matching">
+        <h3>Matching Pairs</h3>
+        <p>Find emoji pairs — strategy and memory.</p>
+        <div class="controls">
+          <button class="btn" id="pairsStart2">Start</button>
+          <button class="ghost" id="pairsReset2">Reset</button>
+        </div>
+        <div class="status" id="pairsStatus2">Found: 0 / 8 — Moves: 0</div>
+        <div class="pairs-grid" id="pairsGrid2"></div>
+      </div>
+
+      <!-- Number Sequence (left brain working memory) reuse-->
+      <div class="card" id="g-numspan-left">
+        <h3>Number Span (numeric)</h3>
+        <p>Numeric working memory (keyboard friendly).</p>
+        <div class="controls">
+          <button class="btn" id="numLeftStart">Start</button>
+          <button class="ghost" id="numLeftReset">Reset</button>
+        </div>
+        <div class="stream-box" id="numLeftDisplay">—</div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="numLeftInput" placeholder="type digits" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff"/>
+          <button class="ghost" id="numLeftSubmit">Submit</button>
+        </div>
+        <div class="status" id="numLeftStatus">Len:1 — Score:0</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Right Brain -->
+  <section class="section">
+    <h2>Right Brain — creative & spatial</h2>
+    <div class="row">
+      <!-- Image Prediction (reuse) -->
+      <div class="card">
+        <h3>Image / Visual Sequence</h3>
+        <p>Visual sequence training for spatial memory and imagery.</p>
+        <div class="controls">
+          <button class="btn" id="imgVisStart">Start</button>
+        </div>
+        <div class="sequence-area" id="imgVisSeq"></div>
+      </div>
+
+      <!-- Pattern Grid -->
+      <div class="card">
+        <h3>Pattern Grid</h3>
+        <p>Memorize the highlighted pattern and reproduce it.</p>
+        <div class="controls">
+          <button class="btn" id="patStart">Show</button>
+          <button class="ghost" id="patReset">Reset</button>
+        </div>
+        <div class="pattern-grid" id="patGrid"></div>
+        <div class="status" id="patStatus">Round:0 — Correct:0</div>
+      </div>
+
+      <!-- Simon Colors -->
+      <div class="card">
+        <h3>Simon Colors</h3>
+        <p>Repeat the color sequence — rhythm + spatial memory.</p>
+        <div class="controls">
+          <button class="btn" id="simonStart2">Start</button>
+          <button class="ghost" id="simonReset2">Reset</button>
+        </div>
+        <div class="simon-grid" id="simonGrid2">
+          <div class="simon-btn" id="simon0" style="background:#27ae60"></div>
+          <div class="simon-btn" id="simon1" style="background:#2980b9"></div>
+          <div class="simon-btn" id="simon2" style="background:#f1c40f"></div>
+          <div class="simon-btn" id="simon3" style="background:#e74c3c"></div>
+        </div>
+        <div class="status" id="simonStatus2">Level:0 — Score:0</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Reflex / Back-Brain -->
+  <section class="section">
+    <h2>Reflex & Reaction</h2>
+    <div class="row">
+      <!-- Reaction Time -->
+      <div class="card">
+        <h3>Reaction Time</h3>
+        <p>Wait for the color to change, click as fast as possible.</p>
+        <div class="controls">
+          <button class="btn" id="reactStart">Start</button>
+          <button class="ghost" id="reactReset">Reset</button>
+        </div>
+        <div class="reaction-box stream-box" id="reactBox">Click Start</div>
+        <div class="status" id="reactStatus">Best: — ms — Last: — ms</div>
+      </div>
+
+      <!-- Stroop Test -->
+      <div class="card">
+        <h3>Stroop Test</h3>
+        <p>Type the color of the word (not the text). Faster & accurate wins.</p>
+        <div class="controls">
+          <button class="btn" id="stroopStart">Start</button>
+          <button class="ghost" id="stroopReset">Reset</button>
+        </div>
+        <div class="stream-box" id="stroopBox"><div class="prompt">—</div></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="stroopInput" placeholder="type color" style="flex:1;padding:8px;border-radius:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff"/>
+          <button class="ghost" id="stroopSubmit">Submit</button>
+        </div>
+        <div class="status" id="stroopStatus">Correct:0 — Wrong:0</div>
+      </div>
+
+      <!-- Tap Reflex -->
+      <div class="card">
+        <h3>Tap Reflex</h3>
+        <p>Tap the button as soon as it appears. Tests motor response.</p>
+        <div class="controls">
+          <button class="btn" id="tapStart">Start</button>
+          <button class="ghost" id="tapReset">Reset</button>
+        </div>
+        <div style="display:flex;justify-content:center;align-items:center;min-height:60px">
+          <button class="btn" id="tapButton" style="display:none">Tap!</button>
+        </div>
+        <div class="status" id="tapStatus">Best: — ms — Last: — ms</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EQ / Emotional Brain -->
+  <section class="section">
+    <h2>EQ — Emotional intelligence</h2>
+    <div class="row">
+      <!-- Emotion Recognition -->
+      <div class="card">
+        <h3>Emotion Recognition</h3>
+        <p>Pick the emotion shown. Builds emotion labeling.</p>
+        <div class="controls">
+          <button class="btn" id="emoStart">Start</button>
+          <button class="ghost" id="emoReset">Reset</button>
+        </div>
+        <div class="stream-box" id="emoBox"><div class="prompt">🙂</div></div>
+        <div class="eq-options" id="emoOptions"></div>
+        <div class="status" id="emoStatus">Correct:0 — Wrong:0</div>
+      </div>
+
+      <!-- EQ Scenario -->
+      <div class="card">
+        <h3>EQ Scenario Quiz</h3>
+        <p>Short situational questions. Pick your response — get feedback for empathy and regulation.</p>
+        <div class="controls">
+          <button class="btn" id="eqStart">Start</button>
+        </div>
+        <div class="stream-box" id="eqQBox"><div class="prompt">—</div></div>
+        <div class="eq-options" id="eqOptions"></div>
+        <div class="status" id="eqStatus">Score: 0</div>
+      </div>
+
+      <!-- Empathy prompt -->
+      <div class="card">
+        <h3>Empathy prompt</h3>
+        <p>Read a short scenario and write your empathetic reply (no judgement).</p>
+        <textarea id="empathyInput" placeholder="Type your empathetic response..." style="width:100%;min-height:120px;border-radius:8px;padding:8px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:#fff"></textarea>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <button class="btn" id="empathySubmit">Submit</button>
+          <button class="ghost" id="empathyClear">Clear</button>
+        </div>
+        <div class="status" id="empathyStatus">Responses stored locally (optional)</div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<script>
+/* --------------------------
+   Small sound helper (WebAudio)
+   --------------------------*/
+const SND = (function(){
+  const ctx = new (window.AudioContext || window.webkitAudioContext)();
+  function tone(freq=440,dur=0.12,g=0.08,type='sine',when=0){
+    const o = ctx.createOscillator(); const gain = ctx.createGain();
+    o.type = type; o.frequency.value = freq;
+    gain.gain.setValueAtTime(g, ctx.currentTime + when);
+    o.connect(gain); gain.connect(ctx.destination);
+    o.start(ctx.currentTime + when);
+    o.stop(ctx.currentTime + when + dur);
+  }
+  function ok(){ tone(880,0.08,0.08,'sine'); }
+  function bad(){ tone(220,0.12,0.12,'sawtooth'); }
+  return {ctx,tone,ok,bad};
+})();
+
+function showToast(msg, t=1000){
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(el._tm); el._tm = setTimeout(()=> el.classList.remove('show'), t);
+}
+
+/* --------------------------
+   Utilities
+   --------------------------*/
+function randInt(n){ return Math.floor(Math.random()*n); }
+function wait(ms){ return new Promise(r=>setTimeout(r, ms)); }
+async function userResumeAudio(){ if(SND.ctx.state === 'suspended') await SND.ctx.resume(); }
+
+/* --------------------------
+   Image Prediction (Memory)
+   --------------------------*/
+(function(){
+  const emojis = ['🐶','🐱','🦊','🐼','🐵','🐸','🦁','🐯','🐷','🐨','🦄','🐝'];
+  const start = document.getElementById('imgPredStart');
+  const reset = document.getElementById('imgPredReset');
+  const seqArea = document.getElementById('imgPredSeq');
+  const optsArea = document.getElementById('imgPredOpts');
+  const status = document.getElementById('imgPredStatus');
+  let level=0, score=0, playing=false;
+
+  function update(){ status.textContent = `Level: ${level} — Score: ${score}`; }
+
+  async function playOnce(){
+    playing=true; level++; update();
+    optsArea.innerHTML=''; seqArea.innerHTML='';
+    const len = Math.min(6, 3 + Math.floor(level/1));
+    const seq = [];
+    for(let i=0;i<len;i++) seq.push(emojis[randInt(emojis.length)]);
+    const speed = Math.max(420, 900 - level*60);
+    for(let i=0;i<seq.length;i++){
+      const d = document.createElement('div'); d.className='tile'; d.textContent=seq[i]; seqArea.appendChild(d);
+      SND.tone(500 + i*40, 0.08);
+      await wait(speed);
+      d.textContent='•'; d.style.opacity='0.25';
+      await wait(160);
+    }
+    const ask = randInt(seq.length);
+    seqArea.innerHTML='';
+    for(let i=0;i<seq.length;i++){
+      const d = document.createElement('div'); d.className='tile'; d.textContent = (i===ask ? '❓' : '•'); seqArea.appendChild(d);
+    }
+    // options
+    const correct = seq[ask];
+    const set = new Set([correct]);
+    while(set.size < 4) set.add(emojis[randInt(emojis.length)]);
+    Array.from(set).sort(()=>Math.random()-0.5).forEach(opt=>{
+      const b = document.createElement('button'); b.className='ghost'; b.textContent=opt;
+      b.onclick = ()=> {
+        if(!playing) return;
+        playing=false;
+        if(opt === correct){ score += 10; SND.ok(); showToast('Correct +10'); }
+        else { SND.bad(); showToast('Wrong'); }
+        update();
+      };
+      optsArea.appendChild(b);
+    });
+  }
+
+  start.addEventListener('click', async ()=>{ await userResumeAudio(); if(playing) return; playOnce(); });
+  reset.addEventListener('click', ()=>{ level=0; score=0; playing=false; seqArea.innerHTML=''; optsArea.innerHTML=''; update(); });
+
+  update();
+})();
+
+/* --------------------------
+   Number Span (auditory)
+   --------------------------*/
+(function(){
+  const start = document.getElementById('numSpanStart');
+  const reset = document.getElementById('numSpanReset');
+  const display = document.getElementById('numSpanDisplay');
+  const input = document.getElementById('numSpanInput');
+  const check = document.getElementById('numSpanCheck');
+  const status = document.getElementById('numSpanStatus');
+
+  let length=1,score=0,seq='',playing=false;
+
+  function setStatus(){ status.textContent=`Length: ${length} — Score: ${score}`; }
+
+  async function showSequence(){
+    await userResumeAudio();
+    seq='';
+    for(let i=0;i<length;i++) seq += String(randInt(10));
+    display.textContent='—';
+    input.value=''; input.disabled=true;
+    for(let i=0;i<seq.length;i++){
+      display.textContent = seq[i];
+      SND.tone(440 + seq.charCodeAt(i)%200, 0.12);
+      await wait(500);
+      display.textContent = '—';
+      await wait(150);
+    }
+    await wait(200);
+    input.disabled=false; input.focus();
+  }
+
+  start.addEventListener('click', async ()=>{ if(playing) return; playing=true; await showSequence(); });
+  check.addEventListener('click', ()=> {
+    if(!playing) return;
+    const val = input.value.replace(/\s+/g,'');
+    input.value=''; input.disabled=true; playing=false;
+    if(val === seq){ score += length*2; length++; SND.ok(); showToast('Correct — length increased'); }
+    else { length = Math.max(1, length-1); SND.bad(); showToast('Wrong'); }
+    setStatus();
+  });
+  reset.addEventListener('click', ()=>{ length=1; score=0; seq=''; playing=false; display.textContent='—'; input.value=''; setStatus(); });
+
+  setStatus();
+})();
+
+/* --------------------------
+   Word Memory (verbal)
+   --------------------------*/
+(function(){
+  const words = ['river','mirror','forest','ticket','orange','puzzle','castle','island','bridge','candle','window','keyboard'];
+  const showBtn = document.getElementById('wordMemShow');
+  const resetBtn = document.getElementById('wordMemReset');
+  const list = document.getElementById('wordMemList');
+  const input = document.getElementById('wordMemInput');
+  const status = document.getElementById('wordMemStatus');
+
+  let round=0, correctTotal=0, current=[];
+
+  function upd(){ status.textContent = `Round: ${round} — Correct: ${correctTotal}`; }
+
+  showBtn.addEventListener('click', async ()=>{
+    round++;
+    list.innerHTML=''; input.value='';
+    const count = Math.min(8, 4 + Math.floor(round/2));
+    const pool = [...words].sort(()=>Math.random()-0.5).slice(0,count);
+    current = pool.slice();
+    for(const w of pool){ const d = document.createElement('div'); d.className='tile'; d.textContent=w; list.appendChild(d); }
+    await wait(1400 + count*300);
+    list.innerHTML='';
+    upd();
+  });
+
+  resetBtn.addEventListener('click', ()=>{ round=0; correctTotal=0; current=[]; list.innerHTML=''; input.value=''; upd(); });
+
+  // check when user types and presses Enter
+  input.addEventListener('keydown', function(e){
+    if(e.key === 'Enter'){
+      const typed = input.value.toLowerCase().split(/[\s,]+/).map(s=>s.trim()).filter(Boolean);
+      const unique = [...new Set(typed)];
+      let c = 0;
+      unique.forEach(t=> { if(current.map(x=>x.toLowerCase()).includes(t)) c++; });
+      correctTotal += c;
+      showToast(`You recalled ${c} / ${current.length}`);
+      current = [];
+      input.value='';
+      upd();
+    }
+  });
+
+  upd();
+})();
+
+/* --------------------------
+   Gaṇita (Math Rapid)
+   --------------------------*/
+(function(){
+  const start = document.getElementById('mathStart');
+  const reset = document.getElementById('mathReset');
+  const promptBox = document.getElementById('mathPrompt').querySelector('.prompt');
+  const answer = document.getElementById('mathAnswer');
+  const submit = document.getElementById('mathSubmit');
+  const status = document.getElementById('mathStatus');
+
+  let running=false, timer=null, cur=null, correct=0, wrong=0, level=1;
+
+  function gen(l){
+    const max = Math.min(99, 9 + l*6);
+    const a = Math.floor(Math.random()*max)+1;
+    const b = Math.floor(Math.random()*(Math.max(2,Math.floor(max/3))))+1;
+    const ops = ['+','-','x'];
+    const op = ops[randInt(ops.length)];
+    let ans=0;
+    if(op==='+') ans = a+b;
+    if(op==='-') ans = a-b;
+    if(op==='x') ans = a*b;
+    return {expr: `${a} ${op} ${b}`, ans};
+  }
+
+  function update(){ status.textContent = `Correct: ${correct} — Wrong: ${wrong} — Level: ${level}`; }
+
+  function next(){
+    cur = gen(level);
+    promptBox.textContent = cur.expr;
+    SND.tone(700,0.08);
+    if(timer) clearTimeout(timer);
+    timer = setTimeout(()=>{ if(running){ wrong++; SND.bad(); showToast('Timed out'); update(); next(); } }, Math.max(3000, 6000 - level*300));
+  }
+
+  start.addEventListener('click', async ()=>{ if(running) return; await userResumeAudio(); running=true; correct=0; wrong=0; level=1; update(); next(); });
+  submit.addEventListener('click', ()=> {
+    if(!running || !cur) return;
+    const val = answer.value.trim(); answer.value='';
+    if(String(cur.ans) === val){ correct++; SND.ok(); showToast('Correct'); if(correct % 3 === 0) level = Math.min(12, level+1); next(); }
+    else { wrong++; SND.bad(); showToast('Wrong'); next(); }
+    update();
+  });
+  reset.addEventListener('click', ()=>{ running=false; if(timer) clearTimeout(timer); promptBox.textContent='—'; correct=0; wrong=0; level=1; update(); });
+
+  update();
+})();
+
+/* --------------------------
+   Matching Pairs (Left-brain)
+   --------------------------*/
+(function(){
+  const grid = document.getElementById('pairsGrid2');
+  const start = document.getElementById('pairsStart2');
+  const reset = document.getElementById('pairsReset2');
+  const status = document.getElementById('pairsStatus2');
+  const symbols = ['🍎','🍌','🍇','🍓','🍑','🍍','🍉','🥝'];
+  let deck=[], first=null, second=null, lock=false, found=0, moves=0;
+
+  function build(){
+    deck = [...symbols, ...symbols].sort(()=>Math.random()-0.5);
+    grid.innerHTML='';
+    deck.forEach((sym,i)=>{
+      const el = document.createElement('div'); el.className='card-tile'; el.dataset.i=i;
+      const inner = document.createElement('div'); inner.className='inner';
+      const front = document.createElement('div'); front.className='front'; front.innerHTML='?';
+      const back = document.createElement('div'); back.className='back'; back.innerHTML=sym;
+      inner.appendChild(front); inner.appendChild(back);
+      el.appendChild(inner);
+      el.onclick = onClick;
+      grid.appendChild(el);
+    });
+    found=0; moves=0; first=null; second=null; lock=false; upd();
+  }
+  function upd(){ status.textContent = `Found: ${found} / ${symbols.length} — Moves: ${moves}`; }
+  function onClick(e){
+    if(lock) return;
+    const el = e.currentTarget; const idx = Number(el.dataset.i);
+    if(el.classList.contains('flipped') || el.classList.contains('matched')) return;
+    el.classList.add('flipped'); SND.tone(660,0.08);
+    if(!first) { first={el,idx}; return; }
+    if(first && !second && el !== first.el){
+      second={el,idx}; moves++;
+      if(deck[first.idx] === deck[second.idx]){
+        setTimeout(()=>{ first.el.classList.add('matched'); second.el.classList.add('matched'); SND.ok(); showToast('Matched'); found++; first=null; second=null; upd(); if(found===symbols.length) showToast(`All found in ${moves} moves!`,2000); }, 300);
+      } else {
+        lock=true; SND.bad();
+        setTimeout(()=>{ first.el.classList.remove('flipped'); second.el.classList.remove('flipped'); first=null; second=null; lock=false; upd(); }, 700);
+      }
+      upd();
+    }
+  }
+
+  start.addEventListener('click', ()=> build());
+  reset.addEventListener('click', ()=> build());
+  build();
+})();
+
+/* --------------------------
+   Number Span (Left copy)
+   --------------------------*/
+(function(){
+  const start = document.getElementById('numLeftStart');
+  const reset = document.getElementById('numLeftReset');
+  const display = document.getElementById('numLeftDisplay');
+  const input = document.getElementById('numLeftInput');
+  const submit = document.getElementById('numLeftSubmit');
+  const status = document.getElementById('numLeftStatus');
+
+  let length=1, score=0, seq='';
+
+  function set(){ status.textContent=`Len:${length} — Score:${score}`; }
+
+  async function show(){
+    seq='';
+    for(let i=0;i<length;i++) seq += String(randInt(10));
+    display.textContent='—';
+    input.value=''; input.disabled=true;
+    for(let i=0;i<seq.length;i++){
+      display.textContent=seq[i];
+      SND.tone(400 + i*30, 0.08);
+      await wait(450);
+      display.textContent='—';
+      await wait(140);
+    }
+    await wait(200);
+    input.disabled=false; input.focus();
+  }
+
+  start.addEventListener('click', async ()=>{ await userResumeAudio(); await show(); });
+  submit.addEventListener('click', ()=>{ const v = input.value.replace(/\s+/g,''); input.value=''; input.disabled=true; if(v===seq){ score+=length; length++; SND.ok(); showToast('Correct'); } else { length=Math.max(1,length-1); SND.bad(); showToast('Wrong'); } set(); });
+  reset.addEventListener('click', ()=>{ length=1; score=0; seq=''; display.textContent='—'; input.value=''; set(); });
+  set();
+})();
+
+/* --------------------------
+   Right-brain: Visual seq, pattern, simon
+   --------------------------*/
+(function(){
+  // image visual small sequence (reused)
+  const start = document.getElementById('imgVisStart');
+  const seqArea = document.getElementById('imgVisSeq');
+  const emojis = ['🌅','🌲','🏰','🚣','🌋','🌉','🕌','🌸','🌊','🌙'];
+  start.addEventListener('click', async ()=> {
+    await userResumeAudio();
+    seqArea.innerHTML='';
+    const len = 5;
+    for(let i=0;i<len;i++){
+      const t = document.createElement('div'); t.className='tile'; t.textContent = emojis[randInt(emojis.length)];
+      seqArea.appendChild(t);
+      SND.tone(500 + i*40, 0.08);
+      await wait(500);
+      t.style.opacity='0.25';
+      await wait(120);
+    }
+    showToast('Sequence shown');
+  });
+
+  // pattern grid
+  const patGrid = document.getElementById('patGrid');
+  const patStart = document.getElementById('patStart');
+  const patReset = document.getElementById('patReset');
+  const patStatus = document.getElementById('patStatus');
+  let patRound=0, patCorrect=0, patPattern=new Set(), patPlayer=new Set(), showing=false;
+  function buildPat(){
+    patGrid.innerHTML='';
+    for(let i=0;i<16;i++){
+      const c = document.createElement('div'); c.className='pattern-cell'; c.dataset.i=i;
+      c.onclick = (e)=> {
+        if(showing) return;
+        const idx = e.currentTarget.dataset.i;
+        if(patPlayer.has(idx)){ patPlayer.delete(idx); e.currentTarget.classList.remove('on'); }
+        else { patPlayer.add(idx); e.currentTarget.classList.add('on'); SND.tone(400 + idx*6,0.08); }
+        if(patPlayer.size === patPattern.size && patPattern.size>0){
+          const a=[...patPattern].sort().join(','); const b=[...patPlayer].sort().join(',');
+          if(a===b){ patCorrect++; showToast('Correct'); SND.ok(); } else { showToast('Incorrect'); SND.bad(); }
+          patRound++; document.getElementById('patStatus').textContent = `Round:${patRound} — Correct:${patCorrect}`;
+          patPlayer.clear(); Array.from(patGrid.children).forEach(x=>x.classList.remove('on'));
+        }
+      };
+      patGrid.appendChild(c);
+    }
+  }
+  async function showPat(len){
+    showing=true;
+    patPattern = new Set([...Array(16).keys()].sort(()=>Math.random()-0.5).slice(0,len));
+    const cells = Array.from(patGrid.children);
+    for(let i of patPattern){
+      cells[i].classList.add('on'); SND.tone(520 + i*6,0.1);
+      await wait(380);
+      cells[i].classList.remove('on');
+      await wait(110);
+    }
+    showing=false;
+  }
+  patStart.addEventListener('click', async ()=>{ const len = Math.min(8, 3 + patRound); await showPat(len); });
+  patReset.addEventListener('click', ()=>{ patRound=0; patCorrect=0; patPattern=new Set(); patPlayer=new Set(); buildPat(); document.getElementById('patStatus').textContent='Round:0 — Correct:0'; });
+  buildPat();
+
+  // Simon Colors
+  (function(){
+    const buttons = [document.getElementById('simon0'),document.getElementById('simon1'),document.getElementById('simon2'),document.getElementById('simon3')];
+    const startBtn = document.getElementById('simonStart2');
+    const resetBtn = document.getElementById('simonReset2');
+    const status = document.getElementById('simonStatus2');
+    let seq = [], playing=false, playerIdx=0, level=0, score=0;
+    function set(){ status.textContent=`Level:${level} — Score:${score}`; }
+    async function flash(btnIdx){
+      const el = buttons[btnIdx];
+      el.style.transform='scale(1.06)'; SND.tone(400 + btnIdx*80,0.12);
+      await wait(280); el.style.transform='';
+    }
+    async function playSeq(){
+      for(const s of seq){ await flash(s); await wait(160); }
+      playerIdx=0;
+      buttons.forEach(b=>b.classList.remove('muted'));
+    }
+    buttons.forEach((b,i)=> b.addEventListener('click', async ()=> {
+      if(!playing) return;
+      await flash(i);
+      if(i === seq[playerIdx]){ playerIdx++; score++; set(); if(playerIdx >= seq.length){ buttons.forEach(x=>x.classList.add('muted')); await wait(400); level++; seq.push(randInt(4)); await playSeq(); } }
+      else { SND.bad(); showToast('Wrong'); playing=false; buttons.forEach(x=>x.classList.add('muted')); }
+    }));
+    startBtn.addEventListener('click', async ()=>{ await userResumeAudio(); if(playing) return; seq=[]; level=0; score=0; playing=true; seq.push(randInt(4)); await playSeq(); set(); });
+    resetBtn.addEventListener('click', ()=>{ playing=false; seq=[]; level=0; score=0; set(); buttons.forEach(b=>b.classList.add('muted')); });
+    set();
+  })();
+
+})();
+
+/* --------------------------
+   Reflex / Reaction
+   --------------------------*/
+(function(){
+  // Reaction Time
+  const start = document.getElementById('reactStart');
+  const reset = document.getElementById('reactReset');
+  const box = document.getElementById('reactBox');
+  const status = document.getElementById('reactStatus');
+  let waiting=false, startTime=0, best=null, last=null, to=null;
+
+  start.addEventListener('click', ()=>{
+    clearTimeout(to);
+    box.textContent='Get ready...'; box.style.background='linear-gradient(90deg,#333,#222)';
+    const delay = 800 + randInt(2200);
+    to = setTimeout(()=> {
+      box.textContent='CLICK!';
+      box.style.background='linear-gradient(90deg,#16a34a,#059669)';
+      startTime = performance.now(); waiting=true;
+    }, delay);
+  });
+
+  box.addEventListener('click', ()=> {
+    if(!waiting) { showToast('Too early'); SND.bad(); clearTimeout(to); box.textContent='Get ready...'; box.style.background=''; return; }
+    const t = Math.round(performance.now() - startTime);
+    last = t; if(best===null || t < best) best = t;
+    document.getElementById('reactStatus').textContent = `Best: ${best} ms — Last: ${last} ms`;
+    SND.tone(600,0.06); showToast(`${t} ms`);
+    waiting=false; box.style.background=''; box.textContent='Click Start';
+  });
+
+  reset.addEventListener('click', ()=>{ clearTimeout(to); waiting=false; best=null; last=null; box.textContent='Click Start'; box.style.background=''; document.getElementById('reactStatus').textContent='Best: — ms — Last: — ms'; });
+
+  // Tap reflex
+  (function(){
+    const startBtn = document.getElementById('tapStart');
+    const resetBtn = document.getElementById('tapReset');
+    const tapBtn = document.getElementById('tapButton');
+    const status = document.getElementById('tapStatus');
+    let to=null, startTime=0, best=null, last=null;
+
+    startBtn.addEventListener('click', ()=> {
+      clearTimeout(to); tapBtn.style.display='none'; status.textContent='Waiting...';
+      const delay = 600 + randInt(2200);
+      to = setTimeout(()=>{ tapBtn.style.display='inline-block'; startTime = performance.now(); status.textContent='Tap now!'; }, delay);
+    });
+
+    tapBtn.addEventListener('click', ()=> {
+      const t = Math.round(performance.now() - startTime);
+      last = t; if(best===null || t<best) best=t;
+      status.textContent = `Best: ${best} ms — Last: ${last} ms`;
+      SND.tone(520,0.06);
+      tapBtn.style.display='none';
+    });
+
+    resetBtn.addEventListener('click', ()=>{ clearTimeout(to); tapBtn.style.display='none'; best=null; last=null; status.textContent='Best: — ms — Last: — ms'; });
+
+  })();
+
+  // Stroop Test
+  (function(){
+    const start = document.getElementById('stroopStart');
+    const reset = document.getElementById('stroopReset');
+    const box = document.getElementById('stroopBox').querySelector('.prompt');
+    const input = document.getElementById('stroopInput');
+    const submit = document.getElementById('stroopSubmit');
+    const status = document.getElementById('stroopStatus');
+
+    const colors = ['red','blue','green','yellow','purple','orange'];
+    let running=false, cur=null, correct=0, wrong=0;
+
+    function update(){ status.textContent = `Correct:${correct} — Wrong:${wrong}`; }
+
+    function next(){
+      const word = colors[randInt(colors.length)];
+      let color = colors[randInt(colors.length)];
+      // ensure sometimes mismatch
+      if(Math.random() < 0.6) color = colors[randInt(colors.length)];
+      box.textContent = word;
+      box.style.color = color;
+      cur = color; // expected answer is color
+      SND.tone(500,0.06);
+    }
+
+    start.addEventListener('click', ()=>{ running=true; correct=0; wrong=0; update(); next(); });
+    submit.addEventListener('click', ()=> {
+      const v = input.value.trim().toLowerCase(); input.value='';
+      if(!running) return;
+      if(v === cur){ correct++; SND.ok(); showToast('Correct'); }
+      else { wrong++; SND.bad(); showToast('Wrong'); }
+      update(); next();
+    });
+    reset.addEventListener('click', ()=>{ running=false; box.textContent='—'; box.style.color=''; correct=0; wrong=0; update(); });
+  })();
+})();
+
+/* --------------------------
+   EQ Games
+   --------------------------*/
+(function(){
+  // Emotion recognition
+  const emoStart = document.getElementById('emoStart');
+  const emoReset = document.getElementById('emoReset');
+  const emoBox = document.getElementById('emoBox').querySelector('.prompt');
+  const emoOpts = document.getElementById('emoOptions');
+  const emoStatus = document.getElementById('emoStatus');
+  const emotions = [
+    {sym:'😀', label:'happy'},
+    {sym:'😢', label:'sad'},
+    {sym:'😠', label:'angry'},
+    {sym:'😨', label:'fear'},
+    {sym:'😲', label:'surprised'},
+    {sym:'😐', label:'neutral'},
+    {sym:'😅', label:'embarrassed'},
+    {sym:'😍', label:'love'}
+  ];
+  let emoCorrect=0, emoWrong=0, emoCur=null;
+
+  function updEmo(){ emoStatus.textContent = `Correct:${emoCorrect} — Wrong:${emoWrong}`; }
+
+  emoStart.addEventListener('click', ()=> {
+    // show one
+    emoOpts.innerHTML='';
+    emoCur = emotions[randInt(emotions.length)];
+    emoBox.textContent = emoCur.sym;
+    // build options (4)
+    const set = new Set([emoCur.label]);
+    while(set.size < 4) set.add(emotions[randInt(emotions.length)].label);
+    Array.from(set).sort(()=>Math.random()-0.5).forEach(l=>{
+      const b = document.createElement('button'); b.className='ghost'; b.textContent=l;
+      b.onclick = ()=> {
+        if(l === emoCur.label){ emoCorrect++; SND.ok(); showToast('Correct'); }
+        else { emoWrong++; SND.bad(); showToast('Wrong'); }
+        updEmo();
+      };
+      emoOpts.appendChild(b);
+    });
+  });
+
+  emoReset.addEventListener('click', ()=>{ emoCur=null; emoOpts.innerHTML=''; emoBox.textContent='🙂'; emoCorrect=0; emoWrong=0; updEmo(); });
+
+  // EQ scenario quiz
+  const eqStart = document.getElementById('eqStart');
+  const eqQBox = document.getElementById('eqQBox').querySelector('.prompt');
+  const eqOptions = document.getElementById('eqOptions');
+  const eqStatus = document.getElementById('eqStatus');
+  const scenarios = [
+    {q:'A friend lost their job and seems withdrawn. What do you say?', choices:['That\'s tough. How are you coping?','You should move on quickly.','At least you have time now.'], good:0},
+    {q:'You see someone anxious before a presentation. You:', choices:['Offer help and breathing tips','Tell them to toughen up','Ignore it'], good:0},
+    {q:'A colleague takes credit for your idea. You:', choices:['Talk privately and clarify the record','Publicly call them out','Do nothing'], good:0}
+  ];
+  let eqScore=0;
+
+  eqStart.addEventListener('click', ()=> {
+    const s = scenarios[randInt(scenarios.length)];
+    eqQBox.textContent = s.q;
+    eqOptions.innerHTML='';
+    s.choices.forEach((c,i)=>{
+      const b = document.createElement('button'); b.className='ghost'; b.textContent=c;
+      b.onclick = ()=> {
+        if(i===s.good){ eqScore++; SND.ok(); showToast('Good empathy'); }
+        else { SND.bad(); showToast('Consider a more empathetic response'); }
+        eqStatus.textContent = `Score: ${eqScore}`;
+      };
+      eqOptions.appendChild(b);
+    });
+  });
+
+  // Empathy prompt storage (local)
+  const empSubmit = document.getElementById('empathySubmit');
+  const empClear = document.getElementById('empathyClear');
+  const empInput = document.getElementById('empathyInput');
+  empSubmit.addEventListener('click', ()=>{
+    const text = empInput.value.trim();
+    if(!text){ showToast('Write something'); return; }
+    const key = 'empathy_responses';
+    const arr = JSON.parse(localStorage.getItem(key)||'[]');
+    arr.push({text, ts: Date.now()});
+    localStorage.setItem(key, JSON.stringify(arr));
+    empInput.value=''; showToast('Saved');
+  });
+  empClear.addEventListener('click', ()=>{ empInput.value=''; showToast('Cleared'); });
+
+})();
+
+</script>
+</body>
+</html>

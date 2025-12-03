@@ -286,6 +286,8 @@
                     </div>
 
                     <a href="index5.html" role="menuitem">Take Quiz</a>
+                    <a href="skill.html" role="menuitem">Skils</a>
+                    <a href="skill_memory_advanced.html" role="menuitem">Test Skills</a>
                 </div>
             </div>
 
@@ -384,190 +386,233 @@
     </section>
 
     <script>
-        /* ---------- CTA & Small Page Functions ---------- */
-        function startChoice() {
-            const primary = document.getElementById('primaryCTA');
-            const choice = document.getElementById('choiceButtons');
-            const sub = document.getElementById('subQuote');
-            if (!primary || !choice) return;
-            primary.style.display = 'none';
-            choice.style.display = 'flex';
-            if (sub) sub.textContent = 'Where do you want to start?';
-        }
-        function goMental() { window.location.href = 'mental-check.html'; }
-        function goJourney() { window.location.href = 'journey-map.html'; }
-        function closeCenterQuote() { const centerQuote = document.getElementById("centerQuote"); if (centerQuote) centerQuote.style.display = "none"; }
+/* ---------- CTA & Small Page Functions ---------- */
+function startChoice() {
+    const primary = document.getElementById('primaryCTA');
+    const choice = document.getElementById('choiceButtons');
+    const sub = document.getElementById('subQuote');
+    if (!primary || !choice) return;
+    primary.style.display = 'none';
+    choice.style.display = 'flex';
+    if (sub) sub.textContent = 'Where do you want to start?';
+}
 
-        /* ---------- Particles ---------- */
-        function createParticles() {
-            const particlesContainer = document.querySelector('.particles');
-            if (!particlesContainer) return;
-            for (let i = 0; i < 40; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'particle';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animationDelay = Math.random() * 6 + 's';
-                particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
-                particle.style.width = particle.style.height = (Math.random() * 6 + 4) + 'px';
-                particlesContainer.appendChild(particle);
-            }
-        }
-        window.addEventListener('load', createParticles);
+function goMental() { 
+    window.location.href = 'mental-check.html'; 
+}
 
-        /* ---------- Nav toggles & Dropdown logic (delegated, robust) ---------- */
-        const menuToggle = document.getElementById('menuToggle');
-        const navLinks = document.getElementById('navLinks');
-        const activityParent = document.getElementById('activityDropdown');
-        const activityLink = document.getElementById('activityLink');
-        const activityMenu = document.getElementById('activityMenu');
-        const gamesHasSub = document.getElementById('gamesHasSub');
+function goJourney() { 
+    window.location.href = 'journey-map.html'; 
+}
 
-        function isMobile() { return window.matchMedia('(max-width:768px)').matches; }
+function closeCenterQuote() { 
+    const centerQuote = document.getElementById("centerQuote"); 
+    if (centerQuote) centerQuote.style.display = "none"; 
+}
 
-        // mobile off-canvas nav open/close
-        if (menuToggle && navLinks) {
-            menuToggle.addEventListener('click', function(e) {
+/* ---------- Particles ---------- */
+function createParticles() {
+    const particlesContainer = document.querySelector('.particles');
+    if (!particlesContainer) return;
+    for (let i = 0; i < 40; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'particle';
+        particle.style.left = Math.random() * 100 + '%';
+        particle.style.top = Math.random() * 100 + '%';
+        particle.style.animationDelay = Math.random() * 6 + 's';
+        particle.style.animationDuration = (Math.random() * 3 + 3) + 's';
+        particle.style.width = particle.style.height = (Math.random() * 6 + 4) + 'px';
+        particlesContainer.appendChild(particle);
+    }
+}
+window.addEventListener('load', createParticles);
+
+/* ---------- Nav toggles & Dropdown logic (delegated, robust) ---------- */
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+const activityParent = document.getElementById('activityDropdown');
+const activityLink = document.getElementById('activityLink');
+const activityMenu = document.getElementById('activityMenu');
+const gamesHasSub = document.getElementById('gamesHasSub');
+
+function isMobile() { 
+    return window.matchMedia('(max-width:768px)').matches; 
+}
+
+// Mobile off-canvas nav open/close
+if (menuToggle && navLinks) {
+    menuToggle.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const open = navLinks.classList.toggle('open');
+        menuToggle.classList.toggle('open', open);
+        menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        navLinks.setAttribute('aria-hidden', open ? 'false' : 'true');
+    });
+}
+
+// Delegated click handler inside navLinks
+if (navLinks) {
+    navLinks.addEventListener('click', function(e) {
+        const clicked = e.target;
+        const link = clicked.closest('a');
+
+        // If no <a> was clicked (e.g. tap on whitespace) do nothing
+        if (!link) return;
+
+        // Activity toggle clicked (first-level)
+        if (link.classList.contains('dropdown-link')) {
+            if (isMobile()) {
+                e.preventDefault();
                 e.stopPropagation();
-                const open = navLinks.classList.toggle('open');
-                menuToggle.classList.toggle('open', open);
-                menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-                navLinks.setAttribute('aria-hidden', open ? 'false' : 'true');
-            });
-        }
-
-        // Delegated click handler inside navLinks
-        if (navLinks) {
-            navLinks.addEventListener('click', function(e) {
-                const clicked = e.target;
-                const link = clicked.closest('a');
-
-                // If no <a> was clicked (e.g. tap on whitespace) do nothing
-                if (!link) return;
-
-                // Activity toggle clicked (first-level)
-                if (link.classList.contains('dropdown-link')) {
-                    if (isMobile()) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const open = activityParent.classList.toggle('open');
-                        activityLink.setAttribute('aria-expanded', open ? 'true' : 'false');
-                        activityMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
-
-                        // when opening Activity ensure games submenu is collapsed initially
-                        if (open && gamesHasSub && gamesHasSub.classList.contains('open')) {
-                            gamesHasSub.classList.remove('open');
-                            const gToggle = gamesHasSub.querySelector('.sub-toggle');
-                            if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
-                        }
-                    } else {
-                        e.preventDefault(); // desktop: avoid # jump
-                    }
-                    return;
-                }
-
-                // Games sub-toggle clicked
-                if (link.classList.contains('sub-toggle')) {
-                    if (isMobile()) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const hasSub = link.closest('.has-sub');
-                        if (!hasSub) return;
-                        const nowOpen = hasSub.classList.toggle('open');
-                        link.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
-                        // ensure activity menu open
-                        if (!activityParent.classList.contains('open')) {
-                            activityParent.classList.add('open');
-                            activityLink.setAttribute('aria-expanded', 'true');
-                            activityMenu.setAttribute('aria-hidden', 'false');
-                        }
-                    } else {
-                        e.preventDefault(); // desktop uses hover
-                    }
-                    return;
-                }
-
-                // Otherwise it's a real navigation link (Market, Community, Take Quiz, etc.)
-                const href = link.getAttribute('href');
-                const isPlaceholder = !href || href === '#';
-                if (!isPlaceholder) {
-                    if (navLinks.classList.contains('open')) {
-                        navLinks.classList.remove('open');
-                        if (menuToggle) menuToggle.classList.remove('open');
-                        if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
-                        navLinks.setAttribute('aria-hidden', 'true');
-                    }
-                    // collapse activity/games
-                    if (activityParent && activityParent.classList.contains('open')) {
-                        activityParent.classList.remove('open');
-                        activityLink.setAttribute('aria-expanded', 'false');
-                        activityMenu.setAttribute('aria-hidden', 'true');
-                    }
+                const isCurrentlyOpen = activityParent.classList.contains('open');
+                
+                // Toggle the activity dropdown
+                if (isCurrentlyOpen) {
+                    activityParent.classList.remove('open');
+                    activityLink.setAttribute('aria-expanded', 'false');
+                    activityMenu.setAttribute('aria-hidden', 'true');
+                    // Also close games submenu when closing activity
                     if (gamesHasSub && gamesHasSub.classList.contains('open')) {
                         gamesHasSub.classList.remove('open');
                         const gToggle = gamesHasSub.querySelector('.sub-toggle');
                         if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
                     }
-                    // let default navigation proceed
+                } else {
+                    activityParent.classList.add('open');
+                    activityLink.setAttribute('aria-expanded', 'true');
+                    activityMenu.setAttribute('aria-hidden', 'false');
                 }
-            });
+            } else {
+                e.preventDefault(); // desktop: avoid # jump
+            }
+            return;
         }
 
-        // Click outside to close nav & dropdowns
-        document.addEventListener('click', function(e) {
-            const t = e.target;
-            // close off-canvas nav if open and clicked outside
-            if (navLinks && navLinks.classList.contains('open')) {
-                if (!navLinks.contains(t) && !(menuToggle && menuToggle.contains(t))) {
-                    navLinks.classList.remove('open');
-                    if (menuToggle) menuToggle.classList.remove('open');
-                    if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
-                    navLinks.setAttribute('aria-hidden', 'true');
+        // Games sub-toggle clicked
+        if (link.classList.contains('sub-toggle')) {
+            if (isMobile()) {
+                e.preventDefault();
+                e.stopPropagation();
+                const hasSub = link.closest('.has-sub');
+                if (!hasSub) return;
+                
+                const isCurrentlyOpen = hasSub.classList.contains('open');
+                
+                // Toggle the games submenu
+                if (isCurrentlyOpen) {
+                    hasSub.classList.remove('open');
+                    link.setAttribute('aria-expanded', 'false');
+                } else {
+                    hasSub.classList.add('open');
+                    link.setAttribute('aria-expanded', 'true');
+                    // Ensure activity menu open when opening games
+                    if (!activityParent.classList.contains('open')) {
+                        activityParent.classList.add('open');
+                        activityLink.setAttribute('aria-expanded', 'true');
+                        activityMenu.setAttribute('aria-hidden', 'false');
+                    }
                 }
+            } else {
+                e.preventDefault(); // desktop uses hover
             }
-            // close activity if open and clicked outside it
-            if (activityParent && activityParent.classList.contains('open') && !activityParent.contains(t)) {
+            return;
+        }
+
+        // Otherwise it's a real navigation link (Market, Community, Take Quiz, etc.)
+        const href = link.getAttribute('href');
+        const isPlaceholder = !href || href === '#';
+        if (!isPlaceholder) {
+            // Close mobile nav menu
+            if (navLinks.classList.contains('open')) {
+                navLinks.classList.remove('open');
+                if (menuToggle) menuToggle.classList.remove('open');
+                if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+                navLinks.setAttribute('aria-hidden', 'true');
+            }
+            // Collapse activity/games dropdowns
+            if (activityParent && activityParent.classList.contains('open')) {
                 activityParent.classList.remove('open');
-                if (activityLink) activityLink.setAttribute('aria-expanded','false');
-                if (activityMenu) activityMenu.setAttribute('aria-hidden','true');
+                activityLink.setAttribute('aria-expanded', 'false');
+                activityMenu.setAttribute('aria-hidden', 'true');
             }
-            // close games submenu if open and clicked outside it
-            if (gamesHasSub && gamesHasSub.classList.contains('open') && !gamesHasSub.contains(t)) {
+            if (gamesHasSub && gamesHasSub.classList.contains('open')) {
                 gamesHasSub.classList.remove('open');
                 const gToggle = gamesHasSub.querySelector('.sub-toggle');
-                if (gToggle) gToggle.setAttribute('aria-expanded','false');
+                if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
             }
-        });
+            // Let default navigation proceed
+        }
+    });
+}
 
-        // Clear mobile-only open states on resize to desktop
-        window.addEventListener('resize', function() {
-            if (window.matchMedia('(min-width:769px)').matches) {
-                if (navLinks && navLinks.classList.contains('open')) navLinks.classList.remove('open');
-                if (menuToggle && menuToggle.classList.contains('open')) menuToggle.classList.remove('open');
-                if (activityParent && activityParent.classList.contains('open')) {
-                    activityParent.classList.remove('open');
-                    if (activityLink) activityLink.setAttribute('aria-expanded','false');
-                    if (activityMenu) activityMenu.setAttribute('aria-hidden','true');
-                }
-                if (gamesHasSub && gamesHasSub.classList.contains('open')) {
-                    gamesHasSub.classList.remove('open');
-                    const gToggle = gamesHasSub.querySelector('.sub-toggle');
-                    if (gToggle) gToggle.setAttribute('aria-expanded','false');
-                }
-            }
-        });
+// Click outside to close nav & dropdowns
+document.addEventListener('click', function(e) {
+    const t = e.target;
+    
+    // Close off-canvas nav if open and clicked outside
+    if (navLinks && navLinks.classList.contains('open')) {
+        if (!navLinks.contains(t) && !(menuToggle && menuToggle.contains(t))) {
+            navLinks.classList.remove('open');
+            if (menuToggle) menuToggle.classList.remove('open');
+            if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
+            navLinks.setAttribute('aria-hidden', 'true');
+        }
+    }
+    
+    // Close activity if open and clicked outside it
+    if (activityParent && activityParent.classList.contains('open') && !activityParent.contains(t)) {
+        activityParent.classList.remove('open');
+        if (activityLink) activityLink.setAttribute('aria-expanded', 'false');
+        if (activityMenu) activityMenu.setAttribute('aria-hidden', 'true');
+    }
+    
+    // Close games submenu if open and clicked outside it
+    if (gamesHasSub && gamesHasSub.classList.contains('open') && !gamesHasSub.contains(t)) {
+        gamesHasSub.classList.remove('open');
+        const gToggle = gamesHasSub.querySelector('.sub-toggle');
+        if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
+    }
+});
 
-        // Smooth scrolling for in-page links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                const href = this.getAttribute('href');
-                if (!href || href === '#') { e.preventDefault(); return; }
-                e.preventDefault();
-                const targetId = href.substring(1);
-                const targetElement = document.getElementById(targetId);
-                if (targetElement) targetElement.scrollIntoView({ behavior: 'smooth' });
-            });
-        });
-    </script>
+// Clear mobile-only open states on resize to desktop
+window.addEventListener('resize', function() {
+    if (window.matchMedia('(min-width:769px)').matches) {
+        if (navLinks && navLinks.classList.contains('open')) {
+            navLinks.classList.remove('open');
+        }
+        if (menuToggle && menuToggle.classList.contains('open')) {
+            menuToggle.classList.remove('open');
+        }
+        if (activityParent && activityParent.classList.contains('open')) {
+            activityParent.classList.remove('open');
+            if (activityLink) activityLink.setAttribute('aria-expanded', 'false');
+            if (activityMenu) activityMenu.setAttribute('aria-hidden', 'true');
+        }
+        if (gamesHasSub && gamesHasSub.classList.contains('open')) {
+            gamesHasSub.classList.remove('open');
+            const gToggle = gamesHasSub.querySelector('.sub-toggle');
+            if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
+        }
+    }
+});
+
+// Smooth scrolling for in-page links
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+        const href = this.getAttribute('href');
+        if (!href || href === '#') { 
+            e.preventDefault(); 
+            return; 
+        }
+        e.preventDefault();
+        const targetId = href.substring(1);
+        const targetElement = document.getElementById(targetId);
+        if (targetElement) {
+            targetElement.scrollIntoView({ behavior: 'smooth' });
+        }
+    });
+});
+</script>
+
 </body>
 </html>

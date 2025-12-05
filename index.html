@@ -253,6 +253,50 @@
             .info-section { padding: 60px 20px; }
             .info-card { padding: 25px; border-radius: 10px; }
         }
+
+        /* === small hook helpers === */
+        .info-react{ transition: transform .15s ease; }
+        .info-react.pulse{ transform: scale(1.06); }
+        .why-text{ transition: max-height .3s ease, opacity .2s ease; }
+
+        /* ===== Dezerv-style mobile sticky CTA (Open Checkup) ===== */
+        .mobile-sticky-cta {
+          position: fixed;
+          left: 12px;
+          right: 12px;
+          bottom: 16px;
+          z-index: 3000;
+          display: none;               /* hidden by default */
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 12px 14px;
+          border-radius: 999px;
+          background: linear-gradient(45deg,#e74c3c,#f39c12);
+          color: #fff;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+          font-weight:700;
+          font-size: 15px;
+        }
+        .mobile-sticky-cta .cta-left { display:flex; align-items:center; gap:10px; }
+        .mobile-sticky-cta .cta-right { display:flex; align-items:center; gap:8px; }
+        .mobile-sticky-cta.visible { display: flex; transform: translateY(0); transition: transform .28s ease, opacity .2s ease; opacity: 1; }
+        @media (min-width: 769px){ .mobile-sticky-cta { display: none !important; } }
+
+        /* ===== Unlock modal styles ===== */
+        #unlockModal { display:none; position:fixed; inset:0; z-index:4000; background:rgba(0,0,0,0.6); align-items:center; justify-content:center; }
+        #unlockModal.open { display:flex; }
+        #unlockModal .modal-card { width:92%; max-width:520px; background:rgba(0,0,0,0.88); border-radius:14px; padding:28px; border:2px solid rgba(255,255,255,0.08); text-align:center; }
+        #unlockModal .modal-title { font-size:32px; font-weight:800; background: linear-gradient(45deg,#f39c12,#e74c3c,#9b59b6); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:12px; }
+        #unlockModal .modal-sub { color:#ecf0f1; margin-bottom:18px; font-size:16px; }
+        #unlockModal .modal-buttons { display:flex; gap:12px; justify-content:center; margin-top:12px; flex-wrap:wrap; }
+        #unlockModal .modal-btn { padding:12px 18px; border-radius:999px; font-weight:700; cursor:pointer; border:none; }
+        #unlockModal .primary { background: linear-gradient(45deg,#e74c3c,#f39c12); color:white; }
+        #unlockModal .ghost { background:transparent; border:1px solid rgba(255,255,255,0.08); color:#fff; }
+        @media (max-width:420px) { #unlockModal .modal-card { padding:18px; } #unlockModal .modal-title { font-size:24px; } }
+
+        /* Hide potential nav-progress on mobile (if re-added later) */
+        @media (max-width:768px) { #navProgress { display:none !important; } }
     </style>
 </head>
 <body>
@@ -326,13 +370,44 @@
                 <div class="sub-quote" id="subQuote">Master your emotions. Transform society.</div>
 
                 <!-- Step 1 button -->
-                <button id="primaryCTA" class="cta-button" onclick="startChoice()">START YOUR JOURNEY</button>
+                <button id="primaryCTA" class="cta-button">START YOUR JOURNEY</button>
 
                 <!-- Step 2 choices (hidden initially) -->
                 <div id="choiceButtons" class="choice-buttons">
                     <button class="cta-button secondary" onclick="goMental()">🧪 Check My Mental Health</button>
                     <button class="cta-button" onclick="goJourney()">🧭 Start EQ Journey</button>
                 </div>
+
+                <!-- HERO HOOK: progress badge + micro-progress bar -->
+                <div id="heroHookWrap" style="margin-top:18px; text-align:center;">
+                  <div id="heroState" aria-live="polite" style="font-weight:600; color:#fff; font-size:14px; margin-bottom:8px;">
+                    Your State: <span id="heroStateLabel">Calm • Explorer</span>
+                  </div>
+                  <div id="progressWrap" style="width:260px; margin:0 auto; border-radius:10px; overflow:hidden; background: rgba(255,255,255,0.06); height:10px;">
+                    <div id="progressFill" style="height:100%; width:22%; background: linear-gradient(45deg,#e74c3c,#f39c12); transition: width .6s ease;"></div>
+                  </div>
+                  <div id="progressText" style="color:#fff; font-size:12px; margin-top:8px;">Level 2 • 22% Complete</div>
+                </div>
+
+                <!-- Commitment Hook: micro-challenge quick-start -->
+                <div style="margin-top:14px;">
+                  <button id="microTryBtn" onclick="startMicroChallenge()" style="background:transparent; border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:999px; color:#fff; font-weight:700; cursor:pointer;">
+                    ▶ 30-sec Try (breath)
+                  </button>
+                </div>
+
+                <!-- Small in-page modal (hidden by default) -->
+                <div id="microModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:2000; align-items:center; justify-content:center;">
+                  <div style="background:rgba(0,0,0,0.9); padding:20px 24px; border-radius:12px; width:320px; text-align:center; color:#fff;">
+                    <div style="font-weight:700; margin-bottom:10px;">30-sec Breathing</div>
+                    <div id="microCountdown" style="font-size:28px; font-weight:800; margin-bottom:10px;">30</div>
+                    <div style="font-size:13px; color:#ddd;">Breathe in... breathe out... follow the count.</div>
+                    <div style="margin-top:12px;">
+                      <button onclick="endMicroChallenge()" style="padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:transparent; color:#fff; cursor:pointer;">Close</button>
+                    </div>
+                  </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -345,14 +420,63 @@
             <div class="info-card">
                 <h3>🎯 Our Mission</h3>
                 <p>Reduce crime by developing emotional intelligence. Understanding emotions leads to better decisions and a safer society for everyone.</p>
+
+                <!-- Curiosity Hook: why toggle -->
+                <button onclick="toggleWhy(this)" class="why-toggle" aria-expanded="false" style="margin-top:12px; display:inline-block; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600;">
+                  Why this matters
+                </button>
+                <div class="why-text" style="display:none; margin-top:10px; color:#f1f1f1; font-size:14px;">
+                  <!-- Short, curiosity-triggering line you can change later -->
+                  <strong>Because:</strong> building EQ rewires decision-making — small daily practice compounds into steady change.
+                </div>
+
+                <!-- Interaction Hook: reaction button (paste inside each .info-card) -->
+                <div style="margin-top:18px; display:flex; gap:8px; align-items:center;">
+                  <button class="info-react" onclick="reactCard(this)" aria-pressed="false" title="React" style="background:transparent;border:1px solid rgba(255,255,255,0.06); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:600;">
+                    🔥 Helpful
+                  </button>
+                  <span class="react-count" aria-hidden="true" style="opacity:0.9; font-size:13px; color:#fff; margin-left:6px;">0</span>
+                </div>
             </div>
             <div class="info-card">
                 <h3>🧠 EQ Assessment</h3>
                 <p>Take our comprehensive emotional intelligence quiz. Discover your strengths and areas for growth in managing emotions and relationships.</p>
+
+                <!-- Curiosity Hook: why toggle -->
+                <button onclick="toggleWhy(this)" class="why-toggle" aria-expanded="false" style="margin-top:12px; display:inline-block; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600;">
+                  Why this matters
+                </button>
+                <div class="why-text" style="display:none; margin-top:10px; color:#f1f1f1; font-size:14px;">
+                  <strong>Because:</strong> self-awareness is the first step to emotional mastery; measuring helps you track growth.
+                </div>
+
+                <!-- Interaction Hook: reaction button -->
+                <div style="margin-top:18px; display:flex; gap:8px; align-items:center;">
+                  <button class="info-react" onclick="reactCard(this)" aria-pressed="false" title="React" style="background:transparent;border:1px solid rgba(255,255,255,0.06); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:600;">
+                    💡 Insightful
+                  </button>
+                  <span class="react-count" aria-hidden="true" style="opacity:0.9; font-size:13px; color:#fff; margin-left:6px;">0</span>
+                </div>
             </div>
             <div class="info-card">
                 <h3>🌟 Make Impact</h3>
                 <p>Every participant contributes to crime prevention research. Your emotional growth creates ripple effects in your community.</p>
+
+                <!-- Curiosity Hook: why toggle -->
+                <button onclick="toggleWhy(this)" class="why-toggle" aria-expanded="false" style="margin-top:12px; display:inline-block; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600;">
+                  Why this matters
+                </button>
+                <div class="why-text" style="display:none; margin-top:10px; color:#f1f1f1; font-size:14px;">
+                  <strong>Because:</strong> personal change scales to collective safety — your practice matters beyond you.
+                </div>
+
+                <!-- Interaction Hook: reaction button -->
+                <div style="margin-top:18px; display:flex; gap:8px; align-items:center;">
+                  <button class="info-react" onclick="reactCard(this)" aria-pressed="false" title="React" style="background:transparent;border:1px solid rgba(255,255,255,0.06); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:600;">
+                    🌱 I care
+                  </button>
+                  <span class="react-count" aria-hidden="true" style="opacity:0.9; font-size:13px; color:#fff; margin-left:6px;">0</span>
+                </div>
             </div>
         </div>
     </section>
@@ -385,7 +509,50 @@
         <button class="cta-button" style="margin-top: 40px;" onclick="window.location.href='index5.html'">COMPETE NOW</button>
     </section>
 
+    <!-- Helper Hook: floating help -->
+    <div id="floatingHelp" role="button" aria-label="Help" onclick="openHelper()" style="position:fixed; right:18px; bottom:18px; z-index:2500; background:rgba(0,0,0,0.7); color:#fff; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.4);">
+      ?
+    </div>
+
+    <!-- Dezerv-style Mobile Sticky CTA (opens checkup) -->
+    <div id="mobileStickyCTA" class="mobile-sticky-cta" role="region" aria-label="Open checkup">
+      <div class="cta-left">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));">
+          <path d="M12 2l3 6 6 .5-4.5 3 1.5 6L12 14l-6 4 1.5-6L3 8.5 9 8 12 2z" fill="#fff"/>
+        </svg>
+        <div style="line-height:1;">
+          <div style="font-size:14px; opacity:0.95;">Quick Check-up</div>
+          <div style="font-size:12px; opacity:0.85;">1-minute mental health</div>
+        </div>
+      </div>
+
+      <div class="cta-right">
+        <!-- calls your existing goMental() function -->
+        <button id="stickyCtaBtn" onclick="goMental()" style="background:rgba(255,255,255,0.12); padding:8px 12px; border-radius:999px; color:#fff; font-weight:700; border:none; cursor:pointer;">
+          Open Check-up
+        </button>
+      </div>
+    </div>
+
+    <!-- Unlock modal (hidden by default) -->
+    <div id="unlockModal" role="dialog" aria-modal="true" aria-labelledby="unlockTitle" aria-hidden="true">
+      <div class="modal-card" role="document">
+        <div id="unlockTitle" class="modal-title">UNLOCK YOUR POWER</div>
+        <div class="modal-sub">Choose how to start — quick checkup or the full EQ Journey.</div>
+
+        <div class="modal-buttons">
+          <button class="modal-btn primary" id="modalStartBtn">Start Journey</button>
+          <button class="modal-btn ghost" id="modalCheckBtn">1-minute Check-up</button>
+        </div>
+
+        <div style="margin-top:12px;">
+          <button onclick="closeUnlockModal()" style="background:transparent; border:none; color:#ddd; font-size:13px; cursor:pointer;">Not now</button>
+        </div>
+      </div>
+    </div>
+
     <script>
+        
 /* ---------- CTA & Small Page Functions ---------- */
 function startChoice() {
     const primary = document.getElementById('primaryCTA');
@@ -398,6 +565,7 @@ function startChoice() {
 }
 
 function goMental() { 
+    // navigate to your mental-check.html (same as before)
     window.location.href = 'mental-check.html'; 
 }
 
@@ -574,6 +742,7 @@ document.addEventListener('click', function(e) {
     }
 });
 
+
 // Clear mobile-only open states on resize to desktop
 window.addEventListener('resize', function() {
     if (window.matchMedia('(min-width:769px)').matches) {
@@ -612,7 +781,197 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         }
     });
 });
-</script>
 
+/* ==== Hook JS: small, safe, and non-invasive ==== */
+
+/* 1) Update hero state & progress helpers (callable from mental-check page) */
+function setHeroState(label) {
+  const el = document.getElementById('heroStateLabel');
+  if (el) el.textContent = label;
+}
+function setHeroProgress(percent, text) {
+  const fill = document.getElementById('progressFill');
+  const pText = document.getElementById('progressText');
+  const navText = document.getElementById('navProgressText');
+  if (fill) fill.style.width = Math.max(3, Math.min(100, percent)) + '%';
+  if (pText && text) pText.textContent = text;
+  if (navText) navText.textContent = Math.round(percent) + '%';
+}
+
+/* 2) Interaction: reaction button */
+function reactCard(btn) {
+  try {
+    const countEl = btn.nextElementSibling;
+    let count = parseInt(countEl?.textContent || '0', 10) || 0;
+    count++;
+    if (countEl) countEl.textContent = count;
+    btn.classList.add('pulse');
+    btn.setAttribute('aria-pressed', 'true');
+    setTimeout(() => btn.classList.remove('pulse'), 350);
+  } catch(e){ /* no-op */ }
+}
+
+/* 3) Curiosity toggle */
+function toggleWhy(el) {
+  const wrap = el.parentElement;
+  if (!wrap) return;
+  const why = wrap.querySelector('.why-text');
+  if (!why) return;
+  const expanded = el.getAttribute('aria-expanded') === 'true';
+  el.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  if (expanded) { why.style.display = 'none'; }
+  else { why.style.display = 'block'; }
+}
+
+/* 4) Micro-challenge (30s breathing) */
+let microTimer = null;
+function startMicroChallenge() {
+  const modal = document.getElementById('microModal');
+  const counter = document.getElementById('microCountdown');
+  if (!modal || !counter) return;
+  modal.style.display = 'flex';
+  let t = 30;
+  counter.textContent = t;
+  if (microTimer) clearInterval(microTimer);
+  microTimer = setInterval(() => {
+    t--;
+    if (t <= 0) {
+      clearInterval(microTimer);
+      microTimer = null;
+      counter.textContent = 'Done';
+      setTimeout(() => endMicroChallenge(), 900);
+      return;
+    }
+    counter.textContent = t;
+  }, 1000);
+}
+function endMicroChallenge() {
+  const modal = document.getElementById('microModal');
+  if (modal) modal.style.display = 'none';
+  if (microTimer) { clearInterval(microTimer); microTimer = null; }
+}
+
+/* 5) Helper open (tiny tooltip behavior) */
+function openHelper() {
+  // small accessible alert / modal
+  alert('Need help? Try the 1-minute check-up or visit Journey. For more support, contact the experts page.');
+}
+
+/* 6) Quick initializer: if you want default hero progress on load */
+document.addEventListener('DOMContentLoaded', function(){
+  // default values (safe)
+  setHeroState('Calm • Explorer');
+  setHeroProgress(22, 'Level 2 • 22% Complete');
+});
+
+
+/* ===== Sticky CTA show/hide logic (mobile only) ===== */
+(function(){
+  const cta = document.getElementById('mobileStickyCTA');
+  if (!cta) return;
+
+  // Only enable on mobile
+  function mobileOnly() { return window.matchMedia('(max-width:768px)').matches; }
+
+  // Show after scrolling this many pixels
+  const SHOW_AFTER_PX = 220;
+  const footer = document.querySelector('footer') || document.querySelector('.reward-section') || null;
+  let visible = false;
+
+  function setVisible(should) {
+    if (should === visible) return;
+    visible = should;
+    if (visible) cta.classList.add('visible');
+    else cta.classList.remove('visible');
+  }
+
+  function checkScroll() {
+    if (!mobileOnly()) { setVisible(false); return; }
+    const sc = window.scrollY || window.pageYOffset;
+    setVisible(sc > SHOW_AFTER_PX);
+  }
+
+  // Hide when footer visible (avoid overlap)
+  if (footer && 'IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(ent => {
+        if (ent.isIntersecting) {
+          setVisible(false);
+        } else {
+          checkScroll();
+        }
+      });
+    }, { threshold: 0 });
+    io.observe(footer);
+  }
+
+  let ticking = false;
+  window.addEventListener('scroll', function(){
+    if (!ticking) {
+      window.requestAnimationFrame(function() {
+        checkScroll();
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
+
+  document.addEventListener('DOMContentLoaded', checkScroll);
+  window.addEventListener('resize', checkScroll);
+})();
+
+/* ===== Unlock modal helpers & wiring ===== */
+function openUnlockModal() {
+  const m = document.getElementById('unlockModal');
+  if (!m) return;
+  m.classList.add('open');
+  m.setAttribute('aria-hidden','false');
+  // focus management
+  const btn = document.getElementById('modalStartBtn');
+  if (btn) btn.focus();
+  try { sessionStorage.setItem('eq_unlock_shown', '1'); } catch(e){}
+}
+function closeUnlockModal() {
+  const m = document.getElementById('unlockModal');
+  if (!m) return;
+  m.classList.remove('open');
+  m.setAttribute('aria-hidden','true');
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  // modal button wiring
+  const s = document.getElementById('modalStartBtn');
+  const c = document.getElementById('modalCheckBtn');
+  if (s) s.addEventListener('click', function(){ closeUnlockModal(); goJourney(); });
+  if (c) c.addEventListener('click', function(){ closeUnlockModal(); goMental(); });
+
+  // wire existing START YOUR JOURNEY CTA to open modal first
+  const primaryCTA = document.getElementById('primaryCTA');
+  if (primaryCTA) {
+    primaryCTA.addEventListener('click', function(e){
+      e.preventDefault();
+      // show modal only once per session; fallback to direct navigation if already shown
+      const shown = sessionStorage.getItem('eq_unlock_shown');
+      if (!shown) openUnlockModal();
+      else goJourney();
+    });
+  }
+
+  // ESC closes modal
+  document.addEventListener('keydown', function(ev){
+    if (ev.key === 'Escape') closeUnlockModal();
+  });
+
+  // click outside to close
+  const modal = document.getElementById('unlockModal');
+  if (modal) {
+    modal.addEventListener('click', function(e){
+      if (e.target === modal) closeUnlockModal();
+    });
+  }
+});
+    </script>
+
+    <footer class="mt-12 py-8 text-center text-sm text-gray-500">© <script>document.write(new Date().getFullYear())</script> EQScholar — Built for focused growth</footer>
 </body>
 </html>

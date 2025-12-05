@@ -29,6 +29,13 @@
         .nav-links a, .nav-links .dropdown-link { color: white; text-decoration: none; font-weight:500; cursor: pointer; padding: 6px 8px; display:inline-block; }
         .nav-links a:hover, .nav-links .dropdown-link:hover { color: #f39c12; }
 
+        /* NAV PROGRESS PILL (desktop only, sits after logo) */
+        #navProgress { display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; background: rgba(255,255,255,0.05); color:#fff; font-weight:600; font-size:13px; margin-left:12px; }
+        @media (max-width: 768px) {
+            /* hide pill on mobile so it won't collide with hamburger */
+            #navProgress { display: none !important; }
+        }
+
         /* hamburger */
         #menuToggle { display: none; width:28px; height:22px; justify-content:center; align-items:center; flex-direction:column; gap:6px; cursor:pointer; }
         #menuToggle span { display:block; width:100%; height:3px; border-radius:999px; background:#fff; transition: transform .25s; }
@@ -149,13 +156,58 @@
             .leaderboard-tab { padding: 8px 18px; font-size: 0.9rem; }
             .leaderboard-item { padding: 12px 15px; font-size: 0.95rem; }
         }
+
+        /* === small hook helper styles === */
+        .info-react { transition: transform .15s ease; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:999px; cursor:pointer; font-weight:600; }
+        .info-react.pulse { transform: scale(1.06); }
+        .why-text { display:none; margin-top:8px; color:#f1f1f1; font-size:14px; }
+        .why-toggle { margin-top:12px; display:inline-block; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600; }
+
+        /* ===== Dezerv-style mobile sticky CTA (Open Checkup) ===== */
+        .mobile-sticky-cta {
+          position: fixed;
+          left: 12px;
+          right: 12px;
+          bottom: 16px;
+          z-index: 3000;
+          display: none;               /* hidden by default */
+          align-items: center;
+          justify-content: space-between;
+          gap: 12px;
+          padding: 12px 14px;
+          border-radius: 999px;
+          background: linear-gradient(45deg,#e74c3c,#f39c12);
+          color: #fff;
+          box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+          font-weight:700;
+          font-size: 15px;
+        }
+        .mobile-sticky-cta .cta-left { display:flex; align-items:center; gap:10px; }
+        .mobile-sticky-cta .cta-right { display:flex; align-items:center; gap:8px; }
+        .mobile-sticky-cta.visible { display: flex; transform: translateY(0); transition: transform .28s ease, opacity .2s ease; opacity: 1; }
+        @media (min-width: 769px){ .mobile-sticky-cta { display: none !important; } }
+
+        /* Floating help bubble */
+        #floatingHelp { position:fixed; right:18px; bottom:18px; z-index:2500; background:rgba(0,0,0,0.7); color:#fff; width:48px; height:48px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:800; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.4); }
+
+        /* Micro-challenge modal */
+        #microModal { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:4000; align-items:center; justify-content:center; }
+        #microModal .modal-inner { background:rgba(0,0,0,0.9); padding:20px 24px; border-radius:12px; width:320px; text-align:center; color:#fff; }
     </style>
 </head>
 <body>
 
     <!-- ---------- Header (enhanced) ---------- -->
     <nav class="nav-bar" role="navigation" aria-label="Main navigation">
-        <div class="logo">🧠 EQ Quiz Dashboard</div>
+        <div style="display:flex; align-items:center; gap:12px;">
+            <div class="logo">🧠 EQ Quiz Dashboard</div>
+
+            <!-- NAV PROGRESS PILL (now immediately after logo, hidden on mobile) -->
+            <div id="navProgress">
+                <span style="font-size:12px; opacity:0.95;">⚡</span>
+                <span id="navProgressText">22%</span>
+            </div>
+        </div>
 
         <!-- Hamburger for mobile -->
         <div id="menuToggle" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
@@ -195,12 +247,34 @@
         </div>
     </nav>
 
-    <!-- ---------- Main Dashboard Content (unchanged) ---------- -->
+    <!-- ---------- Main Dashboard Content (with added hooks) ---------- -->
     <main class="dashboard-container">
         
         <!-- Leaderboard Section -->
-        <section class="dashboard-card leaderboard-section">
-            <h2 class="section-title">Global Leaderboard</h2>
+        <section class="dashboard-card leaderboard-section" aria-labelledby="leader-title">
+            <h2 id="leader-title" class="section-title">Global Leaderboard</h2>
+
+            <!-- Emotional Hook: display small user-state near header -->
+            <div style="text-align:center; margin-bottom:12px; font-weight:700; color:#fff;">
+                Your State: <span id="dashboardStateLabel">Calm • Explorer</span>
+            </div>
+
+            <!-- Commitment Hook: 30-sec micro-challenge -->
+            <div style="text-align:center; margin-bottom:14px;">
+                <button id="microTryBtn" onclick="startMicroChallenge()" style="background:transparent; border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:999px; color:#fff; font-weight:700; cursor:pointer;">
+                    ▶ 30-sec Try (breath)
+                </button>
+            </div>
+
+            <!-- Interaction Hook: reaction + curiosity at top -->
+            <div style="display:flex; justify-content:center; gap:10px; align-items:center; margin-bottom:18px;">
+                <button class="info-react" onclick="reactCard(this)" aria-pressed="false" title="React">🔥 Like</button>
+                <span class="react-count" aria-hidden="true" style="color:#fff;">0</span>
+
+                <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false" title="Why">Why this matters</button>
+            </div>
+            <div class="why-text" style="max-width:820px; margin:0 auto 18px;">Because leaderboards motivate short, consistent practice — tiny wins compound into improved emotional regulation.</div>
+
             <div class="leaderboard-tabs">
                 <button class="leaderboard-tab active" data-tab="weekly">Weekly</button>
                 <button class="leaderboard-tab" data-tab="monthly">Monthly</button>
@@ -236,15 +310,43 @@
                     <div class="prize-item">
                         <h4>🥇 1st Place</h4>
                         <p>300 rs</p>
+
+                        <!-- Curiosity Hook + Interaction Hook in prize item -->
+                        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false" style="margin-top:10px;">Why this prize?</button>
+                        <div class="why-text">Rewards increase engagement — recognition helps build habit loops.</div>
+
+                        <div style="margin-top:10px;">
+                          <button class="info-react" onclick="reactCard(this)" aria-pressed="false">👏 Claim interest</button>
+                          <span class="react-count" aria-hidden="true" style="color:#fff; margin-left:8px;">0</span>
+                        </div>
                     </div>
+
                     <div class="prize-item">
                         <h4>🥈 2nd Place</h4>
                         <p>50 rs</p>
+
+                        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false" style="margin-top:10px;">Why this prize?</button>
+                        <div class="why-text">Smaller tiers keep many users motivated to keep playing and learning.</div>
+
+                        <div style="margin-top:10px;">
+                          <button class="info-react" onclick="reactCard(this)" aria-pressed="false">👍 Nice</button>
+                          <span class="react-count" aria-hidden="true" style="color:#fff; margin-left:8px;">0</span>
+                        </div>
                     </div>
+
                     <div class="prize-item">
                         <h4>🥉 3rd Place</h4>
                         <p>30 rs</p>
+
+                        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false" style="margin-top:10px;">Why this prize?</button>
+                        <div class="why-text">Even small recognition signals progress — perfect for new learners.</div>
+
+                        <div style="margin-top:10px;">
+                          <button class="info-react" onclick="reactCard(this)" aria-pressed="false">🌱 Good</button>
+                          <span class="react-count" aria-hidden="true" style="color:#fff; margin-left:8px;">0</span>
+                        </div>
                     </div>
+
                     <div class="prize-item">
                         <h4>🏅 4th to 15th Place</h4>
                         <p>10 rs</p>
@@ -254,7 +356,44 @@
         </div>
     </main>
 
-    <!-- ---------- Scripts: leaderboard + header behavior ---------- -->
+    <!-- Helper Hook: floating help -->
+    <div id="floatingHelp" role="button" aria-label="Help" onclick="openHelper()">
+      ?
+    </div>
+
+    <!-- Dezerv-style Mobile Sticky CTA (opens checkup) -->
+    <div id="mobileStickyCTA" class="mobile-sticky-cta" role="region" aria-label="Open checkup">
+      <div class="cta-left">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" style="filter:drop-shadow(0 2px 6px rgba(0,0,0,0.15));">
+          <path d="M12 2l3 6 6 .5-4.5 3 1.5 6L12 14l-6 4 1.5-6L3 8.5 9 8 12 2z" fill="#fff"/>
+        </svg>
+        <div style="line-height:1;">
+          <div style="font-size:14px; opacity:0.95;">Quick Check-up</div>
+          <div style="font-size:12px; opacity:0.85;">1-minute mental health</div>
+        </div>
+      </div>
+
+      <div class="cta-right">
+        <!-- calls mental-check.html -->
+        <button id="stickyCtaBtn" onclick="goMental()" style="background:rgba(255,255,255,0.12); padding:8px 12px; border-radius:999px; color:#fff; font-weight:700; border:none; cursor:pointer;">
+          Open Check-up
+        </button>
+      </div>
+    </div>
+
+    <!-- Micro-challenge modal -->
+    <div id="microModal" aria-hidden="true">
+      <div class="modal-inner">
+        <div style="font-weight:700; margin-bottom:10px;">30-sec Breathing</div>
+        <div id="microCountdown" style="font-size:28px; font-weight:800; margin-bottom:10px;">30</div>
+        <div style="font-size:13px; color:#ddd;">Breathe in... breathe out... follow the count.</div>
+        <div style="margin-top:12px;">
+          <button onclick="endMicroChallenge()" style="padding:8px 12px; border-radius:8px; border:1px solid rgba(255,255,255,0.08); background:transparent; color:#fff; cursor:pointer;">Close</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ---------- Scripts: leaderboard + header behavior + hooks ---------- -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Updated 14-league EQ system
@@ -513,6 +652,145 @@
                 }
             });
         })();
+
+
+        /* ==== Hook JS: small, safe, and non-invasive ==== */
+
+        /* 1) Update dashboard state & progress helpers (callable from mental-check page) */
+        function setDashboardState(label) {
+          const el = document.getElementById('dashboardStateLabel');
+          if (el) el.textContent = label;
+        }
+        function setNavProgress(percent, text) {
+          const navText = document.getElementById('navProgressText');
+          const fill = document.getElementById('progressFill'); // not on this page, but safe
+          if (navText) navText.textContent = Math.round(percent) + '%';
+          if (text && navText) navText.textContent = text;
+        }
+
+        /* 2) Interaction: reaction button */
+        function reactCard(btn) {
+          try {
+            const countEl = btn.nextElementSibling;
+            let count = parseInt(countEl?.textContent || '0', 10) || 0;
+            count++;
+            if (countEl) countEl.textContent = count;
+            btn.classList.add('pulse');
+            btn.setAttribute('aria-pressed', 'true');
+            setTimeout(() => btn.classList.remove('pulse'), 350);
+          } catch(e){ /* no-op */ }
+        }
+
+        /* 3) Curiosity toggle */
+        function toggleWhy(el) {
+          // find the closest .prize-item or container to reveal its why-text
+          const wrap = el.closest('.prize-item') || el.closest('.leaderboard-section') || el.parentElement;
+          if (!wrap) return;
+          const why = wrap.querySelector('.why-text');
+          if (!why) return;
+          const expanded = el.getAttribute('aria-expanded') === 'true';
+          el.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+          if (expanded) { why.style.display = 'none'; }
+          else { why.style.display = 'block'; }
+        }
+
+        /* 4) Micro-challenge (30s breathing) */
+        let microTimer = null;
+        function startMicroChallenge() {
+          const modal = document.getElementById('microModal');
+          const counter = document.getElementById('microCountdown');
+          if (!modal || !counter) return;
+          modal.style.display = 'flex';
+          modal.setAttribute('aria-hidden','false');
+          let t = 30;
+          counter.textContent = t;
+          if (microTimer) clearInterval(microTimer);
+          microTimer = setInterval(() => {
+            t--;
+            if (t <= 0) {
+              clearInterval(microTimer);
+              microTimer = null;
+              counter.textContent = 'Done';
+              setTimeout(() => endMicroChallenge(), 900);
+              return;
+            }
+            counter.textContent = t;
+          }, 1000);
+        }
+        function endMicroChallenge() {
+          const modal = document.getElementById('microModal');
+          if (modal) {
+            modal.style.display = 'none';
+            modal.setAttribute('aria-hidden','true');
+          }
+          if (microTimer) { clearInterval(microTimer); microTimer = null; }
+        }
+
+        /* 5) Helper open (tiny tooltip behavior) */
+        function openHelper() {
+          // small accessible message modal
+          alert('Need help? Start with the 1-minute check-up or visit Journey. For more support visit Experts.');
+        }
+
+        /* 6) Quick initializer: default dashboard state on load */
+        document.addEventListener('DOMContentLoaded', function(){
+          setDashboardState('Calm • Explorer');
+          // default nav progress text stays as-is: '22%' — if you call setNavProgress it will update
+        });
+
+        /* ===== Sticky CTA show/hide logic (mobile only) ===== */
+        (function(){
+          const cta = document.getElementById('mobileStickyCTA');
+          if (!cta) return;
+
+          function isMobile() { return window.matchMedia('(max-width:768px)').matches; }
+          const SHOW_AFTER_PX = 220;
+          const footer = document.querySelector('footer') || document.querySelector('.prizes-section') || null;
+          let visible = false;
+
+          function setVisible(should) {
+            if (should === visible) return;
+            visible = should;
+            if (visible) cta.classList.add('visible');
+            else cta.classList.remove('visible');
+          }
+
+          function checkScroll() {
+            if (!isMobile()) { setVisible(false); return; }
+            const sc = window.scrollY || window.pageYOffset;
+            setVisible(sc > SHOW_AFTER_PX);
+          }
+
+          if (footer && 'IntersectionObserver' in window) {
+            const io = new IntersectionObserver((entries) => {
+              entries.forEach(ent => {
+                if (ent.isIntersecting) {
+                  setVisible(false);
+                } else {
+                  checkScroll();
+                }
+              });
+            }, { threshold: 0 });
+            io.observe(footer);
+          }
+
+          let ticking = false;
+          window.addEventListener('scroll', function(){
+            if (!ticking) {
+              window.requestAnimationFrame(function() {
+                checkScroll();
+                ticking = false;
+              });
+              ticking = true;
+            }
+          }, { passive: true });
+
+          document.addEventListener('DOMContentLoaded', checkScroll);
+          window.addEventListener('resize', checkScroll);
+        })();
+
+        /* goMental navigation used by sticky CTA */
+        function goMental() { window.location.href = 'mental-check.html'; }
     </script>
 </body>
 </html>

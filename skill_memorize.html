@@ -1,64 +1,742 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>Skill — How to Memorize Faster</title>
-<style>
-:root{--bg1:#111315;--bg2:#172026;--accent:#f1c40f;--muted:#bdc3c7}
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:Segoe UI,Arial;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#ecf0f1;padding:22px}
-.header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
-.container{max-width:1000px;margin:0 auto}
-.panel{background:rgba(255,255,255,0.04);padding:18px;border-radius:12px}
-h1{color:var(--accent)}
-.grid{display:grid;grid-template-columns:1fr 320px;gap:18px}
-.card{background:rgba(0,0,0,0.32);padding:14px;border-radius:10px}
-.tip{background:rgba(255,255,255,0.03);padding:10px;border-radius:8px;margin-bottom:10px}
-.btn{padding:10px;border-radius:10px;border:none;background:linear-gradient(45deg,#f1c40f,#f39c12);cursor:pointer;color:#111}
-@media(max-width:880px){ .grid{grid-template-columns:1fr} }
-</style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>EQ Scholar — 14 Modes & Mini-Games</title>
+  <style>
+    /* Base (adapted from your CSS reference) */
+    *{margin:0;padding:0;box-sizing:border-box}
+    :root{
+      --accent1:#f39c12;--accent2:#e74c3c;--bg1:#667eea;--bg2:#764ba2;--card-bg:rgba(255,255,255,0.03);
+    }
+    body{font-family:Inter,system-ui,-apple-system,"Segoe UI",Roboto,Arial;min-height:100vh;color:#fff;background:linear-gradient(135deg,var(--bg1),var(--bg2));}
+    .wrap{max-width:1200px;margin:110px auto 80px;padding:20px}
+    h1{font-size:28px;margin-bottom:18px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+
+    /* Card style */
+    .mode-card{background:linear-gradient(180deg,rgba(255,255,255,0.02),rgba(0,0,0,0.02));border-radius:14px;padding:18px;border:1px solid rgba(255,255,255,0.06);backdrop-filter:blur(6px);box-shadow:0 10px 30px rgba(0,0,0,0.25)}
+    .mode-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+    .mode-icon{font-size:34px}
+    .mode-title{font-weight:800;color:var(--accent1)}
+    .mode-desc{color:#e9edf2;font-size:14px;margin-bottom:12px}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+    .btn{padding:10px 14px;border-radius:999px;border:none;cursor:pointer;font-weight:700}
+    .btn-lesson{background:transparent;border:1px solid rgba(255,255,255,0.08);color:#fff}
+    .btn-game{background:linear-gradient(45deg,var(--accent2),var(--accent1));color:#fff}
+
+    /* Modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.6);z-index:4000}
+    .modal.open{display:flex}
+    .modal-card{background:rgba(0,0,0,0.92);padding:18px;border-radius:12px;max-width:720px;width:92%;color:#fff;border:1px solid rgba(255,255,255,0.06)}
+    .modal-title{font-size:20px;font-weight:800;color:var(--accent1);margin-bottom:8px}
+    .modal-body{font-size:15px;color:#e6eef7;margin-bottom:12px}
+
+    /* Small helpers */
+    .mini{font-size:13px;color:#cfd8e3}
+    .game-area{margin-top:12px}
+    .game-output{margin-top:10px;color:#fff}
+    .small-input{padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#fff}
+
+    @media (max-width:720px){.wrap{margin:80px 12px}}
+  </style>
 </head>
 <body>
-<header class="header"><h1>How to Memorize Faster</h1><nav><a href="lesson3.html">Back</a></nav></header>
-<main class="container">
-  <div class="grid">
-    <div>
-      <div class="panel">
-        <h3>Overview</h3>
-        <p class="kicker" style="color:#bdc3c7">Blend of ancient mnemonic methods and modern spaced repetition.</p>
-        <div style="margin-top:12px;">
-          <div class="tip"><strong>Technique 1 — Loci Method</strong><br/>Visualize a familiar place and 'place' items you want to remember.</div>
-          <div class="tip"><strong>Technique 2 — Chunking</strong><br/>Break information into smaller groups.</div>
-          <div class="tip"><strong>Technique 3 — Spaced Repetition</strong><br/>Review at increasing intervals.</div>
-        </div>
-
-        <div style="margin-top:18px">
-          <h4>Practice (5 min)</h4>
-          <p class="kicker" style="color:#bdc3c7">Try creating a memory palace for 5 grocery items.</p>
-          <button class="btn" onclick="alert('Start: visualize 5 stops in your home and place items')">Start Practice</button>
-        </div>
+  <div class="wrap">
+    <header style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px">
+      <div>
+        <div style="font-size:18px;font-weight:800">🧠 EQ Scholar — 14 Modes</div>
+        <div class="mini">Each card has Lesson + Game (click Game to launch the mini-game)</div>
       </div>
+      <div>
+        <button id="openAllBtn" class="btn btn-lesson">Open Lessons (all)</button>
+      </div>
+    </header>
 
-      <div style="margin-top:14px" class="panel">
-        <h4>Exercise</h4>
-        <ol style="color:#bdc3c7;margin-top:10px">
-          <li>Pick 5 words</li><li>Create vivid images</li><li>Place them in familiar spots</li><li>Recall after 2 minutes</li>
-        </ol>
-        <button class="btn" style="margin-top:10px" onclick="alert('Great job — repeat twice daily')">Mark Complete</button>
+    <main class="grid" id="modesGrid" aria-live="polite">
+      <!-- Cards injected by JS -->
+    </main>
+
+    <div style="height:40px"></div>
+    <footer style="text-align:center;font-size:13px;color:#e6eef7;opacity:0.9">Built using your CSS reference — games are lightweight, JS-only demos for each mode.</footer>
+  </div>
+
+  <!-- Modal for lessons & games -->
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="modal-card" role="document" aria-labelledby="modalTitle">
+      <div class="modal-title" id="modalTitle">Title</div>
+      <div class="modal-body" id="modalBody">Body</div>
+      <div id="modalGameArea" class="game-area" aria-live="polite"></div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+        <button id="closeModalBtn" class="btn btn-lesson">Close</button>
       </div>
     </div>
-
-    <aside>
-      <div class="panel">
-        <h4>Quick Tips</h4>
-        <p class="kicker">Use vivid, emotional imagery; connect items to movement or smell for better recall.</p>
-      </div>
-      <div style="margin-top:12px" class="panel">
-        <h4>Resources</h4>
-        <p class="kicker">Link to meditation for concentration, PDF notes, spaced repetition scheduler.</p>
-      </div>
-    </aside>
   </div>
-</main>
+
+  <script>
+    /* ===== Data: 14 modes with lesson text and game handlers ===== */
+    // Game function placeholders are declared below; MODES references them by name.
+    const MODES = [
+      { id:1, icon:'😇', title:'Self-Awareness', lesson:'Autobiographical recall, metamemory and emotional labelling. Practice journaling and reflect on events with reasons and feelings.', game: 'selfAwareness' },
+      { id:2, icon:'🎯', title:'Focus & Attention', lesson:'Selective attention and working memory. Train sustained attention with distraction resistance drills.', game: 'focus' },
+      { id:3, icon:'🧘', title:'Emotional Regulation', lesson:'Reappraisal, breathing and response-choice. Practice calming micro-skills.', game: 'emotionalRegulation' },
+      { id:4, icon:'🌀', title:'Cognitive Flexibility', lesson:'Switch rules and update strategies when the environment changes.', game: 'flexibility' },
+      { id:5, icon:'🤝', title:'Empathy & Social Awareness', lesson:'Recognize others emotions and context; learn perspective-taking.', game: 'empathy' },
+      { id:6, icon:'💬', title:'Communication', lesson:'Decode tone and intent; practice concise, clear messages.', game: 'communication' },
+      { id:7, icon:'⚖️', title:'Decision-Making', lesson:'Weigh options, predict consequences and use simple simulations to practice.', game: 'decision' },
+      { id:8, icon:'🧩', title:'Problem-Solving', lesson:'Hold multiple pieces in working memory and apply stepwise strategies.', game: 'problem' },
+      { id:9, icon:'🚀', title:'Motivation & Drive', lesson:'Micro-goals, reinforcement schedules and habit steps.', game: 'motivation' },
+      { id:10, icon:'🌊', title:'Stress & Anxiety', lesson:'Interoception, breath and habituation exercises; reduce reactivity via practice.', game: 'stress' },
+      { id:11, icon:'🏰', title:'Memory & Learning', lesson:'Spaced repetition, encoding and retrieval practice.', game: 'memory' },
+      { id:12, icon:'✨', title:'Creativity', lesson:'Divergent thinking and recombination of experiences to form novel ideas.', game: 'creativity' },
+      { id:13, icon:'🔁', title:'Behaviour Reprogramming', lesson:'Break habit loops: cue, routine, reward. Replace an old routine with a new one.', game: 'reprogram' },
+      { id:14, icon:'🏄', title:'Flow & Performance', lesson:'Procedural automation and sustained focus; aim for challenge-skill balance.', game: 'flow' }
+    ];
+
+    // LIGHTWEIGHT registry mapping id -> function (declared later)
+    const GAME_REGISTRY = {};
+
+    /* ===== build UI (safe — no inline JS handlers that might run before definitions) ===== */
+    const grid = document.getElementById('modesGrid');
+    function buildCards() {
+      if (!grid) return;
+      MODES.forEach(mode => {
+        const card = document.createElement('div');
+        card.className = 'mode-card';
+        card.dataset.modeId = String(mode.id);
+        card.innerHTML = `
+          <div class="mode-header">
+            <div class="mode-icon">${mode.icon}</div>
+            <div>
+              <div class="mode-title">${mode.title}</div>
+              <div class="mini">Mode ${mode.id}</div>
+            </div>
+          </div>
+          <div class="mode-desc">${escapeHtml(mode.lesson.split('.').slice(0,1).join('.'))}. <span style="color:var(--accent1);font-weight:700">Tap Lesson for full.</span></div>
+          <div class="btn-row">
+            <button class="btn btn-lesson js-lesson">Lesson</button>
+            <button class="btn btn-game js-play">Play Game</button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    // small helper: escape text inserted into HTML (defensive)
+    function escapeHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+    // delegated click handler for Lesson / Play
+    function onGridClick(e){
+      const lessonBtn = e.target.closest('.js-lesson');
+      const playBtn = e.target.closest('.js-play');
+      if (lessonBtn || playBtn) {
+        const card = (lessonBtn || playBtn).closest('.mode-card');
+        if (!card) return;
+        const id = Number(card.dataset.modeId);
+        const mode = MODES.find(m=>m.id===id);
+        if (!mode) return;
+        if (lessonBtn) openLesson(mode);
+        if (playBtn) openGame(mode);
+      }
+    }
+
+    /* Modal control */
+    const modal = document.getElementById('modal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const modalGameArea = document.getElementById('modalGameArea');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    function openLesson(mode) {
+      modalTitle.textContent = `${mode.title} — Lesson`;
+      modalBody.textContent = mode.lesson;
+      modalGameArea.innerHTML = '<div class="mini" style="margin-top:8px">Tip: use the Play button to practise this skill.</div>';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+    }
+    function openGame(mode) {
+      modalTitle.textContent = `${mode.title} — Play`;
+      modalBody.textContent = 'Mini-game. Score is ephemeral — repeat to improve.';
+      modalGameArea.innerHTML = '';
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden','false');
+      // run game by name through registry (safer)
+      const name = mode.game;
+      const fn = GAME_REGISTRY[name];
+      if (typeof fn === 'function') {
+        try { fn(modalGameArea); } catch (err) { modalGameArea.textContent = 'Game error: ' + (err && err.message); }
+      } else {
+        modalGameArea.textContent = 'Game not available.';
+      }
+    }
+    function closeModal() {
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden','true');
+      modalGameArea.innerHTML = '';
+    }
+
+    // Open lessons button
+    const openAllBtn = document.getElementById('openAllBtn');
+    function openAllLessons(){
+      // for demo: show count and console each lesson id
+      MODES.forEach(m=>console.log('Lesson', m.id, '-', m.title));
+      alert(`There are ${MODES.length} lessons. Open any card to read the lesson.`);
+    }
+
+    // Wire up events after DOM ready
+    document.addEventListener('DOMContentLoaded', ()=>{
+      buildCards();
+      const gridEl = document.getElementById('modesGrid');
+      if (gridEl) gridEl.addEventListener('click', onGridClick);
+      if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
+      if (openAllBtn) openAllBtn.addEventListener('click', openAllLessons);
+      // ESC to close modal
+      document.addEventListener('keydown', (ev)=> { if (ev.key === 'Escape') closeModal(); });
+    });
+
+    /* ======= MINI-GAMES: register functions in GAME_REGISTRY ======= */
+
+    // 1 Self-Awareness: Timeline ordering (simple up/down)
+    GAME_REGISTRY.selfAwareness = function(container){
+      const events = ['First day at school','A proud moment','A tough loss','A friendship memory','An accomplishment'];
+      const shuffled = events.map(v=>({v, r:Math.random()})).sort((a,b)=>a.r-b.r).map(x=>x.v);
+      const ul = document.createElement('ul');
+      ul.style.listStyle = 'none';
+      ul.style.marginTop = '10px';
+      container.appendChild(createText('Arrange these events into correct chronological order (use Up/Down).'));
+      container.appendChild(ul);
+      shuffled.forEach((it, idx) => {
+        const li = document.createElement('li');
+        li.style.padding = '8px';
+        li.style.marginBottom = '8px';
+        li.style.background = 'var(--card-bg)';
+        li.style.border = '1px solid rgba(255,255,255,0.04)';
+        li.innerHTML = `<div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span>${escapeHtml(it)}</span><span><button class="btn btn-lesson move-up">▲</button><button class="btn btn-lesson move-down">▼</button></span></div>`;
+        ul.appendChild(li);
+      });
+      // delegation for up/down
+      ul.addEventListener('click', function(e){
+        const up = e.target.closest('.move-up');
+        const down = e.target.closest('.move-down');
+        const li = e.target.closest('li');
+        if (!li) return;
+        if (up && li.previousElementSibling) li.parentElement.insertBefore(li, li.previousElementSibling);
+        if (down && li.nextElementSibling) li.parentElement.insertBefore(li, li.nextElementSibling.nextElementSibling);
+      });
+      const check = document.createElement('button');
+      check.className = 'btn btn-game';
+      check.textContent = 'Check Order';
+      const out = document.createElement('div');
+      out.className = 'game-output';
+      check.addEventListener('click', ()=>{
+        const current = Array.from(ul.children).map(n => n.innerText.replace(/\n/g,'').trim());
+        let score = 0;
+        if (current[0].includes('First day')) score++;
+        if (current[current.length - 1].includes('accomplishment')) score++;
+        out.textContent = `Score: ${score}/2 — Reflect on your life timeline for better self-awareness.`;
+      });
+      const wrap = document.createElement('div');
+      wrap.style.marginTop = '8px';
+      wrap.appendChild(check);
+      wrap.appendChild(out);
+      container.appendChild(wrap);
+    };
+
+    // small helper to create a text node
+    function createText(s){
+      const d = document.createElement('div');
+      d.className = 'mini';
+      d.textContent = s;
+      return d;
+    }
+
+    // 2 Focus: Distraction sniper
+    GAME_REGISTRY.focus = function(container){
+      container.appendChild(createText('Click green targets quickly. Avoid red distractions. 20s.'));
+      const area = document.createElement('div');
+      area.id = 'focusArea';
+      area.style.marginTop = '10px';
+      area.style.minHeight = '140px';
+      area.style.position = 'relative';
+      area.style.borderRadius = '8px';
+      area.style.background = 'rgba(255,255,255,0.02)';
+      area.style.padding = '8px';
+      area.style.overflow = 'hidden';
+      container.appendChild(area);
+      const status = document.createElement('div');
+      status.style.marginTop = '10px';
+      status.innerHTML = `<span id="fScore">Score: 0</span> <span style="margin-left:12px" id="fTime">Time: 20</span>`;
+      container.appendChild(status);
+
+      let score = 0;
+      let timeLeft = 20;
+      const fScore = status.querySelector('#fScore');
+      const fTime = status.querySelector('#fTime');
+
+      const interval = setInterval(()=>{
+        timeLeft--;
+        if (fTime) fTime.textContent = 'Time: ' + Math.max(0, timeLeft);
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          area.innerHTML = `<div style="padding:12px">Done — Score: ${score}</div>`;
+          return;
+        }
+        spawn();
+      }, 1000);
+
+      function spawn(){
+        const el = document.createElement('div');
+        const isTarget = Math.random() > 0.35;
+        el.style.position = 'absolute';
+        el.style.left = Math.random() * 80 + '%';
+        el.style.top = Math.random() * 80 + '%';
+        el.style.padding = '10px 12px';
+        el.style.borderRadius = '8px';
+        el.style.cursor = 'pointer';
+        el.style.userSelect = 'none';
+        el.style.boxShadow = '0 6px 14px rgba(0,0,0,0.25)';
+        if (isTarget) {
+          el.textContent = '◉';
+          el.style.background = 'linear-gradient(45deg,#44bd32,#2ecc71)';
+          el.addEventListener('click', ()=> { score++; if (fScore) fScore.textContent = 'Score: ' + score; el.remove(); });
+        } else {
+          el.textContent = '✖';
+          el.style.background = 'linear-gradient(45deg,#e74c3c,#c0392b)';
+          el.addEventListener('click', ()=> { score = Math.max(0, score - 1); if (fScore) fScore.textContent = 'Score: ' + score; el.remove(); });
+        }
+        area.appendChild(el);
+        setTimeout(()=> { if (el && el.parentElement) el.remove(); }, 900 + Math.random() * 1500);
+      }
+    };
+
+    // 3 Emotional regulation
+    GAME_REGISTRY.emotionalRegulation = function(container){
+      const scenarios = [
+        { q: 'Someone cuts in front of you in line.', options: ['Confront loudly','Take deep breath & step back','Record & post online'], ans: 1 },
+        { q: 'You get harsh feedback at work.', options: ['Shout','Ask for clarification calmly','Retaliate in private'], ans: 1 },
+        { q: 'A friend forgets your birthday.', options: ['Ghost them','Express feelings calmly','Sabotage their plans'], ans: 1 }
+      ];
+      let i = 0, correct = 0;
+      const area = document.createElement('div');
+      container.appendChild(area);
+
+      function render(){
+        if (i >= scenarios.length) {
+          area.innerHTML = `<div class="mini">Done — Calm choices: ${correct}/${scenarios.length}</div>`;
+          return;
+        }
+        const s = scenarios[i];
+        area.innerHTML = `<div class="mini">${escapeHtml(s.q)}</div><div style="margin-top:8px;display:flex;flex-direction:column;gap:8px"></div><div id="erOut" class="game-output"></div>`;
+        const list = area.querySelector('div');
+        s.options.forEach((opt, idx) => {
+          const b = document.createElement('button');
+          b.className = 'btn btn-lesson';
+          b.textContent = opt;
+          b.addEventListener('click', ()=>{
+            const out = area.querySelector('#erOut');
+            if (idx === s.ans) { correct++; out.textContent = 'Good choice — calm response.'; } else { out.textContent = 'Less effective — try reappraisal.'; }
+            i++;
+            setTimeout(render, 900);
+          });
+          list.appendChild(b);
+        });
+      }
+      render();
+    };
+
+    // 4 Cognitive flexibility
+    GAME_REGISTRY.flexibility = function(container){
+      container.appendChild(createText('Click the numbers matching the current rule. Rule may flip.'));
+      const nums = document.createElement('div');
+      nums.style.marginTop = '10px';
+      nums.style.display = 'flex';
+      nums.style.gap = '8px';
+      nums.style.flexWrap = 'wrap';
+      container.appendChild(nums);
+      const status = document.createElement('div');
+      status.style.marginTop = '8px';
+      status.innerHTML = `<strong id="flexRule">Rule: EVEN</strong> — <span id="flexScore">Score: 0</span>`;
+      container.appendChild(status);
+
+      let rule = 'even', score = 0, round = 0;
+
+      function spawn(){
+        nums.innerHTML = '';
+        for (let i=0;i<8;i++){
+          const n = Math.floor(Math.random()*50)+1;
+          const b = document.createElement('button');
+          b.className = 'btn btn-lesson';
+          b.textContent = n;
+          b.addEventListener('click', ()=>{
+            const ok = (rule === 'even') ? n % 2 === 0 : n % 2 === 1;
+            score = ok ? score + 1 : Math.max(0, score - 1);
+            const sc = container.querySelector('#flexScore');
+            if (sc) sc.textContent = 'Score: ' + score;
+            round++;
+            if (Math.random() < 0.25) {
+              rule = (rule === 'even') ? 'odd' : 'even';
+              const rEl = container.querySelector('#flexRule');
+              if (rEl) rEl.textContent = 'Rule: ' + rule.toUpperCase();
+            }
+            if (round < 12) spawn();
+          });
+          nums.appendChild(b);
+        }
+      }
+      spawn();
+    };
+
+    // 5 Empathy
+    GAME_REGISTRY.empathy = function(container){
+      const faces = [{label:'happy',emoji:'🙂'},{label:'sad',emoji:'😢'},{label:'angry',emoji:'😠'},{label:'surprised',emoji:'😲'},{label:'confused',emoji:'🤔'}];
+      let i=0,score=0;
+      const area = document.createElement('div');
+      container.appendChild(area);
+
+      function next(){
+        if (i >= 5) { area.innerHTML = `<div class="mini">Done — Accuracy ${score}/5</div>`; return; }
+        const f = faces[Math.floor(Math.random()*faces.length)];
+        area.innerHTML = `<div style="font-size:48px">${f.emoji}</div><div class="mini">Choose the emotion</div><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div><div id="emOut" class="game-output"></div>`;
+        const list = area.querySelector('div');
+        faces.forEach(x=>{
+          const b = document.createElement('button');
+          b.className = 'btn btn-lesson';
+          b.textContent = x.label;
+          b.addEventListener('click', ()=>{
+            const out = area.querySelector('#emOut');
+            if (x.label === f.label) { score++; out.textContent = 'Correct'; } else { out.textContent = 'Not quite — reflect on micro-expression.'; }
+            i++; setTimeout(next,700);
+          });
+          list.appendChild(b);
+        });
+      }
+      next();
+    };
+
+    // 6 Communication
+    GAME_REGISTRY.communication = function(container){
+      const dialogues = [{t:'"Nice job"',tone:'sarcastic'},{t:'"Nice job"',tone:'genuine'},{t:'"We need to talk"',tone:'concerned'},{t:'"That\'s fine"',tone:'dismissive'}];
+      let i=0,score=0;
+      const area = document.createElement('div');
+      container.appendChild(area);
+      function next(){
+        if (i >= dialogues.length) { area.innerHTML = `<div class="mini">Done — Correct: ${score}/${dialogues.length}</div>`; return; }
+        const s = dialogues[i];
+        area.innerHTML = `<div class="mini">How should you read the tone for: <strong>${s.t}</strong></div><div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap"></div><div id="comOut" class="game-output"></div>`;
+        const choices = ['genuine','sarcastic','concerned','dismissive'];
+        const list = area.querySelector('div');
+        choices.forEach(c=>{
+          const b = document.createElement('button');
+          b.className = 'btn btn-lesson';
+          b.textContent = c;
+          b.addEventListener('click', ()=>{
+            const out = area.querySelector('#comOut');
+            if (c === s.tone) { score++; out.textContent = 'Good read'; } else { out.textContent = 'Try listening for cues'; }
+            i++; setTimeout(next,700);
+          });
+          list.appendChild(b);
+        });
+      }
+      next();
+    };
+
+    // 7 Decision-making
+    GAME_REGISTRY.decision = function(container){
+      const branches = [
+        { q: 'You find a wallet with cash', opts: ['Keep it','Try to find owner','Hand to police'], res: [-1,1,1] },
+        { q: 'You can work overtime for money', opts: ['Do it','Prioritize rest','Negotiate compensation'], res: [1,0,1] }
+      ];
+      let i = 0, score = 0;
+      const area = document.createElement('div');
+      container.appendChild(area);
+      function next(){
+        if (i >= branches.length) { area.innerHTML = `<div class="mini">Done — Impact score ${score}</div>`; return; }
+        const b = branches[i];
+        area.innerHTML = `<div class="mini">${escapeHtml(b.q)}</div><div style="margin-top:8px;display:flex;gap:8px;flex-direction:column"></div><div id="decOut" class="game-output"></div>`;
+        const list = area.querySelector('div');
+        b.opts.forEach((opt, idx)=>{
+          const bt = document.createElement('button');
+          bt.className = 'btn btn-lesson';
+          bt.textContent = opt;
+          bt.addEventListener('click', ()=> {
+            score += b.res[idx];
+            const out = area.querySelector('#decOut');
+            if (out) out.textContent = 'Consequence recorded.';
+            i++; setTimeout(next, 800);
+          });
+          list.appendChild(bt);
+        });
+      }
+      next();
+    };
+
+    // 8 Problem solving: sequence memory
+    GAME_REGISTRY.problem = function(container){
+      const seq = Array.from({length:5}, ()=> Math.floor(Math.random()*9)+1);
+      let pos = 0;
+      container.appendChild(createText('Repeat the sequence. Numbers will flash; click them in order.'));
+      const pArea = document.createElement('div');
+      pArea.style.marginTop = '10px';
+      pArea.style.display = 'flex';
+      pArea.style.gap = '8px';
+      pArea.style.flexWrap = 'wrap';
+      container.appendChild(pArea);
+      const pOut = document.createElement('div');
+      pOut.className = 'game-output';
+      container.appendChild(pOut);
+      for (let i=1;i<=9;i++){
+        const b = document.createElement('button');
+        b.className = 'btn btn-lesson';
+        b.textContent = i;
+        b.dataset.num = String(i);
+        b.addEventListener('click', ()=> {
+          const picked = Number(b.dataset.num);
+          if (picked === seq[pos]) {
+            pos++;
+            pOut.textContent = (pos === seq.length) ? 'Success! Sequence complete.' : 'Correct — next.';
+          } else {
+            pOut.textContent = 'Wrong — try again later.';
+          }
+        });
+        pArea.appendChild(b);
+      }
+      // brief flash
+      let showIndex = 0;
+      const show = setInterval(()=> {
+        const n = seq[showIndex];
+        const btn = Array.from(pArea.children).find(x => x.textContent === String(n));
+        if (btn) {
+          btn.style.transform = 'scale(1.12)';
+          setTimeout(()=> btn.style.transform = 'scale(1)', 300);
+        }
+        showIndex++;
+        if (showIndex >= seq.length) clearInterval(show);
+      }, 700);
+    };
+
+    // 9 Motivation
+    GAME_REGISTRY.motivation = function(container){
+      container.appendChild(createText('Set one micro-goal now. Choose a task and mark it done to get a small reward.'));
+      const wrap = document.createElement('div');
+      wrap.style.marginTop = '8px';
+      const input = document.createElement('input');
+      input.className = 'small-input';
+      input.id = 'microInp';
+      input.placeholder = 'e.g., Write 50 words';
+      wrap.appendChild(input);
+      const start = document.createElement('button');
+      start.className = 'btn btn-game';
+      start.textContent = 'Start';
+      start.style.marginLeft = '8px';
+      wrap.appendChild(start);
+      container.appendChild(wrap);
+      const out = document.createElement('div');
+      out.id = 'microOut';
+      out.className = 'game-output';
+      out.style.marginTop = '8px';
+      container.appendChild(out);
+
+      start.addEventListener('click', ()=>{
+        const v = input.value.trim();
+        if (!v) return alert('Enter a tiny task');
+        out.textContent = 'Task set — complete it and press Done.';
+        const doneBtn = document.createElement('button');
+        doneBtn.className = 'btn btn-game';
+        doneBtn.style.marginTop = '8px';
+        doneBtn.textContent = 'Done';
+        doneBtn.addEventListener('click', ()=> {
+          out.textContent = 'Nice — you earned 10 XP!';
+          doneBtn.remove();
+        });
+        container.appendChild(doneBtn);
+      });
+    };
+
+    // 10 Stress
+    GAME_REGISTRY.stress = function(container){
+      container.appendChild(createText('Follow the breathing guide. Inhale/Exhale visual for 30s.'));
+      const box = document.createElement('div');
+      box.id = 'breathBox';
+      box.style.marginTop = '10px';
+      box.style.height = '110px';
+      box.style.display = 'flex';
+      box.style.alignItems = 'center';
+      box.style.justifyContent = 'center';
+      box.style.borderRadius = '10px';
+      box.style.background = 'rgba(255,255,255,0.02)';
+      container.appendChild(box);
+      const out = document.createElement('div');
+      out.className = 'game-output';
+      container.appendChild(out);
+      let sec = 30;
+      const iv = setInterval(()=> {
+        sec--;
+        const t = 4 + (sec % 6 % 2);
+        box.textContent = (t % 2 === 0) ? 'Inhale — ' + t : 'Exhale — ' + t;
+        if (sec <= 0) {
+          clearInterval(iv);
+          out.textContent = 'Session complete — feel your body.';
+          box.textContent = 'Done';
+        }
+      }, 1000);
+    };
+
+    // 11 Memory
+    GAME_REGISTRY.memory = function(container){
+      const pairs = ['🐶','🐱','🐭','🐹'];
+      const cards = pairs.concat(pairs).map(v=>({v, r:Math.random()})).sort((a,b)=>a.r-b.r).map(x=>x.v);
+      container.appendChild(createText('Find matching pairs. Click to flip.'));
+      const area = document.createElement('div');
+      area.style.marginTop = '10px';
+      area.style.display = 'grid';
+      area.style.gridTemplateColumns = 'repeat(4, 1fr)';
+      area.style.gap = '8px';
+      container.appendChild(area);
+      const out = document.createElement('div');
+      out.className = 'game-output';
+      container.appendChild(out);
+      let opened = [], matches = 0;
+      cards.forEach((c, idx)=> {
+        const b = document.createElement('button');
+        b.className = 'btn btn-lesson';
+        b.style.minHeight = '48px';
+        b.textContent = '?';
+        b.dataset.val = c;
+        b.addEventListener('click', ()=> {
+          if (opened.length === 2) return;
+          if (b.disabled) return;
+          b.textContent = b.dataset.val;
+          opened.push(b);
+          if (opened.length === 2) {
+            if (opened[0].dataset.val === opened[1].dataset.val) {
+              matches++;
+              opened.forEach(x => x.disabled = true);
+              opened = [];
+              out.textContent = 'Matches: ' + matches;
+              if (matches === pairs.length) out.textContent = 'All matched — good memory!';
+            } else {
+              setTimeout(()=> { opened.forEach(x => x.textContent = '?'); opened = []; }, 700);
+            }
+          }
+        });
+        area.appendChild(b);
+      });
+    };
+
+    // 12 Creativity
+    GAME_REGISTRY.creativity = function(container){
+      const words = ['Moon','Coffee','Bridge','Dream','Code','Tree','Light','Echo','River','Clock'];
+      container.appendChild(createText('Combine two random words into a short idea/title.'));
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-game';
+      btn.textContent = 'Give me words';
+      container.appendChild(btn);
+      const out = document.createElement('div');
+      out.id = 'cmbArea';
+      out.className = 'game-output';
+      out.style.marginTop = '8px';
+      container.appendChild(out);
+
+      btn.addEventListener('click', ()=>{
+        const a = words[Math.floor(Math.random()*words.length)];
+        let b = words[Math.floor(Math.random()*words.length)];
+        while (b === a) b = words[Math.floor(Math.random()*words.length)];
+        out.innerHTML = `<div style="font-weight:800">${escapeHtml(a)} + ${escapeHtml(b)}</div><div style="margin-top:8px"></div>`;
+        const wrap = document.createElement('div');
+        const inp = document.createElement('input');
+        inp.className = 'small-input';
+        inp.placeholder = 'Your idea title';
+        const save = document.createElement('button');
+        save.className = 'btn btn-game';
+        save.style.marginLeft = '8px';
+        save.textContent = 'Save';
+        save.addEventListener('click', ()=> {
+          const v = inp.value.trim();
+          if (!v) return alert('Type a short title');
+          out.innerHTML = `Saved: ${escapeHtml(v)} — nice synthesis!`;
+        });
+        wrap.appendChild(inp);
+        wrap.appendChild(save);
+        out.appendChild(wrap);
+      });
+    };
+
+    // 13 Reprogram
+    GAME_REGISTRY.reprogram = function(container){
+      container.appendChild(createText('Identify one habit to replace. Pick a new micro-action to practice for 7 days.'));
+      const wrap = document.createElement('div');
+      wrap.style.marginTop = '8px';
+      const oldInput = document.createElement('input'); oldInput.className='small-input'; oldInput.placeholder='Old habit (e.g., check phone)';
+      const newInput = document.createElement('input'); newInput.className='small-input'; newInput.placeholder='New micro-action (e.g., take 3 breaths)';
+      newInput.style.marginTop = '8px';
+      wrap.appendChild(oldInput);
+      wrap.appendChild(newInput);
+      const setBtn = document.createElement('button'); setBtn.className='btn btn-game'; setBtn.style.marginTop='8px'; setBtn.textContent = 'Set Replacement';
+      const out = document.createElement('div'); out.className='game-output'; out.style.marginTop='8px';
+      setBtn.addEventListener('click', ()=>{
+        const oldV = oldInput.value.trim(); const newV = newInput.value.trim();
+        if (!oldV || !newV) return alert('Fill both');
+        out.textContent = `Replacement set: when you notice (${oldV}) → do (${newV}). Practice today. (Streak not tracked in demo.)`;
+      });
+      wrap.appendChild(setBtn);
+      wrap.appendChild(out);
+      container.appendChild(wrap);
+    };
+
+    // 14 Flow
+    GAME_REGISTRY.flow = function(container){
+      container.appendChild(createText('Click the moving dot to keep the runner alive. Speed increases.'));
+      const area = document.createElement('div');
+      area.style.marginTop = '10px';
+      area.style.height = '120px';
+      area.style.position = 'relative';
+      area.style.background = 'rgba(255,255,255,0.02)';
+      area.style.borderRadius = '10px';
+      area.style.overflow = 'hidden';
+      const out = document.createElement('div'); out.className='game-output';
+      container.appendChild(area);
+      container.appendChild(out);
+
+      let score = 0;
+      let active = true;
+      let speed = 1800;
+
+      function spawn(){
+        if (!active) return;
+        const dot = document.createElement('div');
+        dot.textContent = '●';
+        dot.style.position = 'absolute';
+        dot.style.left = '10px';
+        dot.style.top = (20 + Math.random()*80) + 'px';
+        dot.style.fontSize = '20px';
+        dot.style.cursor = 'pointer';
+        area.appendChild(dot);
+        const start = Date.now();
+        const id = setInterval(()=>{
+          const elapsed = Date.now() - start;
+          const pct = elapsed / speed;
+          dot.style.left = (pct * 90) + '%';
+          if (pct >= 1) {
+            clearInterval(id);
+            dot.remove();
+            active = false;
+            out.textContent = 'Missed! Final score: ' + score;
+          }
+        }, 30);
+        dot.addEventListener('click', ()=>{
+          score++;
+          out.textContent = 'Score: ' + score;
+          dot.remove();
+          clearInterval(id);
+          speed = Math.max(500, speed * 0.92);
+          setTimeout(spawn, 300);
+        });
+        setTimeout(()=>{ if (active) spawn(); }, 400);
+      }
+      spawn();
+    };
+
+  </script>
 </body>
 </html>

@@ -4,25 +4,83 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mental Check-Up | EQ Scholar</title>
+<style>
+  /* ---------- Reset & Base ---------- */
+  * { box-sizing: border-box; margin:0; padding:0; font-family: Inter, Arial, sans-serif; }
+  html,body { height:100%; }
+  body { background: linear-gradient(135deg,#667eea 0%,#764ba2 100%); color:#fff; -webkit-font-smoothing:antialiased; padding:20px; }
 
-<link rel="stylesheet" href="checkup.css">
-<script src="checkup.js" defer></script>
+  .wrapper { max-width:820px; margin: 12px auto 80px; background: rgba(0,0,0,0.45); border-radius:12px; padding:20px; border:1px solid rgba(255,255,255,0.06); box-shadow: 0 10px 40px rgba(0,0,0,0.4); }
+
+  /* Header with progress + state label */
+  .hero { text-align:center; padding:18px 10px 12px; position:relative; }
+  .hero h1 { font-size:22px; margin-bottom:6px; color:#f39c12; }
+  .hero p { color:#e9edf1; font-size:14px; opacity:0.95; margin-bottom:10px; line-height:1.3; }
+
+  .header-row { display:flex; align-items:center; justify-content:center; gap:12px; margin-top:8px; }
+  #heroStateLabel { font-weight:700; color:#fff; background: rgba(255,255,255,0.04); padding:6px 10px; border-radius:999px; font-size:13px; }
+  #headerProgress { display:inline-flex; align-items:center; gap:8px; background: rgba(255,255,255,0.06); padding:6px 8px; border-radius:999px; font-weight:700; font-size:13px; color:#fff; }
+
+  /* Blocks and questions */
+  form { margin-top:10px; }
+  .block { background: rgba(255,255,255,0.02); padding:14px; border-radius:10px; margin-bottom:14px; border:1px solid rgba(255,255,255,0.03); }
+  .block h2 { font-size:16px; color:#f39c12; margin-bottom:8px; display:flex; align-items:center; justify-content:space-between; }
+  .q { margin-top:10px; margin-bottom:6px; font-size:15px; }
+  .opt { display:flex; gap:12px; flex-wrap:wrap; }
+  .opt label { background: rgba(255,255,255,0.03); padding:8px 10px; border-radius:8px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; gap:8px; }
+  .opt input { accent-color:#f39c12; }
+
+  .submit-btn { display:block; margin:16px auto 8px; background: linear-gradient(45deg,#e74c3c,#f39c12); color:white; border:none; padding:12px 18px; border-radius:999px; font-weight:800; cursor:pointer; font-size:15px; }
+
+  /* result box */
+  .result { margin-top:16px; padding:16px; background: rgba(0,0,0,0.5); border-radius:10px; display:block; }
+  .hidden { display:none; }
+
+  /* Why text small */
+  .why-toggle { background:transparent; border:1px solid rgba(255,255,255,0.06); padding:6px 8px; border-radius:8px; color:#fff; font-weight:700; cursor:pointer; font-size:13px; }
+  .why-text { display:none; margin-top:8px; color:#e9edf1; font-size:13px; background: rgba(0,0,0,0.25); padding:10px; border-radius:8px; }
+
+  /* Micro modal */
+  #microModal { display:none; position:fixed; inset:0; background: rgba(0,0,0,0.6); align-items:center; justify-content:center; z-index:4000; }
+  .modal-inner { background: rgba(0,0,0,0.95); padding:20px; border-radius:12px; width:320px; text-align:center; color:#fff; border:1px solid rgba(255,255,255,0.04); }
+
+  /* Floating help */
+  #floatingHelp { position:fixed; right:16px; bottom:16px; width:48px; height:48px; border-radius:50%; background:rgba(0,0,0,0.7); display:flex; align-items:center; justify-content:center; font-weight:800; cursor:pointer; z-index:4500; box-shadow:0 8px 24px rgba(0,0,0,0.5); }
+
+  /* Mobile sticky CTA (hidden on this page) */
+  .mobile-sticky-cta { position:fixed; left:12px; right:12px; bottom:16px; z-index:3000; display:none; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border-radius:999px; background:linear-gradient(45deg,#e74c3c,#f39c12); color:#fff; box-shadow:0 10px 30px rgba(0,0,0,0.25); font-weight:700; font-size:15px; }
+  .mobile-sticky-cta.visible { display:flex; }
+  @media (min-width:769px) { .mobile-sticky-cta{ display:none !important; } }
+
+  /* small helpers */
+  .muted { opacity:0.9; font-size:13px; }
+  .result-actions { display:flex; gap:10px; margin-top:12px; flex-wrap:wrap; }
+  .small-btn { padding:8px 10px; border-radius:8px; background:transparent; border:1px solid rgba(255,255,255,0.08); color:#fff; cursor:pointer; font-weight:700; }
+</style>
 </head>
 
 <body>
-
 <div class="wrapper">
 
-  <header class="hero">
+  <header class="hero" role="banner">
     <h1>Your Mental State Check-Up</h1>
-    <p>Answer 12 quick questions to understand your emotional state.<br>
-    <strong>This is not a medical diagnosis — just guidance.</strong></p>
+    <p>Answer 12 quick questions to understand your emotional state.<br><strong>This is not a medical diagnosis — just guidance.</strong></p>
+
+    <div class="header-row" aria-hidden="false">
+      <div id="headerProgress" aria-live="polite">Progress: <strong id="headerProgressValue">0%</strong></div>
+      <div id="heroStateLabel">State: <strong id="heroStateText">Unknown</strong></div>
+    </div>
   </header>
 
-  <form id="checkForm">
+  <form id="checkForm" autocomplete="off" aria-labelledby="Your Mental State Check-Up">
 
-    <section class="block">
-      <h2>⚠ Risk Indicators</h2>
+    <!-- block 1 -->
+    <section class="block" aria-label="Risk Indicators">
+      <h2>⚠ Risk Indicators
+        <button type="button" class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">Why</button>
+      </h2>
+
+      <div class="why-text">These questions identify immediate safety or severe functional impairment — high answers suggest seeking expert help.</div>
 
       <div class="q">1. Do you feel hopeless or worthless often?</div>
       <div class="opt">
@@ -57,8 +115,12 @@
       </div>
     </section>
 
-    <section class="block">
-      <h2>🧭 Lost / Confusion</h2>
+    <!-- block 2 -->
+    <section class="block" aria-label="Lost or Confused">
+      <h2>🧭 Lost / Confusion
+        <button type="button" class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">Why</button>
+      </h2>
+      <div class="why-text">These measure clarity of purpose and cognitive control — useful for guiding next steps in learning and coaching.</div>
 
       <div class="q">5. Do you find it hard to understand what you want?</div>
       <div class="opt">
@@ -93,8 +155,12 @@
       </div>
     </section>
 
-    <section class="block">
-      <h2>🌩 Stress & Overthinking</h2>
+    <!-- block 3 -->
+    <section class="block" aria-label="Stress & Overthinking">
+      <h2>🌩 Stress & Overthinking
+        <button type="button" class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">Why</button>
+      </h2>
+      <div class="why-text">These capture chronic stress, fatigue and attention — all important for training memory, focus, and resilience.</div>
 
       <div class="q">9. Do you overthink often?</div>
       <div class="opt">
@@ -129,13 +195,248 @@
       </div>
     </section>
 
-    <button class="submit-btn" type="button" onclick="calculateScore()">Check My State</button>
-
+    <button class="submit-btn" type="button" id="submitBtn">Check My State</button>
   </form>
 
-  <div id="resultBox" class="result hidden"></div>
-
+  <div id="resultBox" class="result hidden" role="status" aria-live="polite"></div>
 </div>
 
+<!-- floating help -->
+<div id="floatingHelp" role="button" aria-label="Help" title="Help">?</div>
+
+<!-- mobile sticky CTA (kept but hidden while on checkup page) -->
+<div id="mobileStickyCTA" class="mobile-sticky-cta" role="region" aria-label="Quick action">
+  <div style="display:flex; align-items:center; gap:10px;">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 2l3 6 6 .5-4.5 3 1.5 6L12 14l-6 4 1.5-6L3 8.5 9 8 12 2z" fill="#fff"/></svg>
+    <div style="line-height:1;"><div style="font-size:14px;">Quick Check-up</div><div style="font-size:12px; opacity:0.9;">1-minute mental health</div></div>
+  </div>
+  <div>
+    <button id="stickyCtaBtn" onclick="document.getElementById('submitBtn').click()" style="background:rgba(255,255,255,0.12); padding:8px 12px; border-radius:999px; color:#fff; font-weight:700; border:none; cursor:pointer;">Check Now</button>
+  </div>
+</div>
+
+<!-- micro modal -->
+<div id="microModal" aria-hidden="true">
+  <div class="modal-inner" role="dialog" aria-modal="true" aria-labelledby="microTitle">
+    <div id="microTitle" style="font-weight:800; margin-bottom:10px;">30-sec Breathing</div>
+    <div id="microCountdown" style="font-size:28px; font-weight:800; margin-bottom:8px;">30</div>
+    <div class="muted">Breathe in — hold — breathe out. Relax your shoulders.</div>
+    <div style="margin-top:14px;"><button class="small-btn" onclick="endMicroChallenge()">Close</button></div>
+  </div>
+</div>
+
+<script>
+/* ---------- Helpers & Hooks (all inline & self-contained) ---------- */
+
+/* Utility: set header progress & state, persist to localStorage and notify parent */
+function setHeaderProgress(percent, label) {
+  const val = document.getElementById('headerProgressValue');
+  const state = document.getElementById('heroStateText');
+  if (val) val.textContent = Math.round(percent) + '%';
+  if (state && label) state.textContent = label;
+
+  // Persist lightweight state so other pages can read it
+  try {
+    localStorage.setItem('eqscholar_checkup_percent', String(Math.round(percent)));
+    localStorage.setItem('eqscholar_checkup_state', String(label || 'Unknown'));
+    // send postMessage for parent windows (if site uses iframe/opened window)
+    window.parent?.postMessage && window.parent.postMessage({ type: 'eqscholar:checkup', percent: Math.round(percent), state: label }, '*');
+    window.opener?.postMessage && window.opener.postMessage({ type: 'eqscholar:checkup', percent: Math.round(percent), state: label }, '*');
+  } catch(e) { /* ignore */ }
+}
+
+/* Toggle "why" blocks (curiosity hook) */
+function toggleWhy(btn) {
+  const parent = btn.closest('.block');
+  if (!parent) return;
+  const why = parent.querySelector('.why-text');
+  if (!why) return;
+  const expanded = btn.getAttribute('aria-expanded') === 'true';
+  btn.setAttribute('aria-expanded', expanded ? 'false' : 'true');
+  why.style.display = expanded ? 'none' : 'block';
+}
+
+/* Reaction / tiny interaction hook (used on result buttons) */
+function reactCard(btn) {
+  // simple UI reaction (no server)
+  try {
+    let countEl = btn.nextElementSibling;
+    if (!countEl || !/^\d+$/.test(countEl.textContent || '')) {
+      // create if missing
+      countEl = document.createElement('span');
+      countEl.textContent = '1';
+      countEl.style.marginLeft = '8px';
+      btn.parentNode.appendChild(countEl);
+      btn.classList.add('pulse');
+      setTimeout(()=>btn.classList.remove('pulse'),350);
+      return;
+    }
+    const current = parseInt(countEl.textContent||'0',10) || 0;
+    countEl.textContent = current + 1;
+    btn.classList.add('pulse');
+    setTimeout(()=>btn.classList.remove('pulse'),350);
+  } catch(e){}
+}
+
+/* Micro-challenge (30s breathing) */
+let microTimer = null;
+function startMicroChallenge() {
+  const modal = document.getElementById('microModal');
+  const counter = document.getElementById('microCountdown');
+  if (!modal || !counter) return;
+  modal.style.display = 'flex';
+  modal.setAttribute('aria-hidden','false');
+  let t = 30;
+  counter.textContent = t;
+  if (microTimer) clearInterval(microTimer);
+  microTimer = setInterval(() => {
+    t--;
+    if (t <= 0) {
+      clearInterval(microTimer);
+      microTimer = null;
+      counter.textContent = 'Done';
+      setTimeout(endMicroChallenge, 900);
+      return;
+    }
+    counter.textContent = t;
+  }, 1000);
+}
+function endMicroChallenge() {
+  const modal = document.getElementById('microModal');
+  if (modal) {
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden','true');
+  }
+  if (microTimer) { clearInterval(microTimer); microTimer = null; }
+}
+
+/* Floating help */
+document.getElementById('floatingHelp').addEventListener('click', function(){
+  alert('This checkup is a quick indicator. If answers show high risk, please contact a mental health professional or use the Experts page.');
+});
+
+/* Sticky CTA: show on mobile only if not on this checkup (so hidden here)
+   We'll try to show it only on other pages; on this page we keep it hidden */
+(function manageStickyCTA(){
+  const cta = document.getElementById('mobileStickyCTA');
+  if (!cta) return;
+  // Hide because we're on checkup page
+  cta.style.display = 'none';
+})();
+
+/* ---------- Score calculation & results ---------- */
+function mapScoreToState(score) {
+  // score between 0 (best) and 36 (worst)
+  // convert to percent where lower score = better
+  const max = 36;
+  const percent = Math.round((1 - (score / max)) * 100); // 0..100 where higher is better
+  // Determine textual state
+  let stateLabel = 'Unknown';
+  if (score <= 6) stateLabel = 'God Mode • Stable';
+  else if (score <= 10) stateLabel = 'Balanced • Calm';
+  else if (score <= 16) stateLabel = 'Awareness • Learning';
+  else if (score <= 22) stateLabel = 'Seeker • Struggling';
+  else if (score <= 28) stateLabel = 'Storm • Vulnerable';
+  else stateLabel = 'Lost • Needs Help';
+  return { percent, stateLabel };
+}
+
+function calculateScore() {
+  // read all 12 radios, sum values (0..36)
+  const form = document.getElementById('checkForm');
+  if (!form) return;
+  const data = new FormData(form);
+  let total = 0;
+  let unanswered = 0;
+  for (let i = 1; i <= 12; i++) {
+    const v = data.get('q' + i);
+    if (v === null) unanswered++;
+    else total += Number(v);
+  }
+  if (unanswered > 0) {
+    alert('Please answer all questions before checking. Unanswered: ' + unanswered);
+    return;
+  }
+
+  // map to percent & state
+  const mapped = mapScoreToState(total);
+  setHeaderProgress(mapped.percent, mapped.stateLabel);
+
+  // show result box text with short tailored advice
+  const resultBox = document.getElementById('resultBox');
+  resultBox.classList.remove('hidden');
+  resultBox.innerHTML = `
+    <div style="font-weight:800; font-size:18px; color:#f39c12;">Your Score: ${total} / 36 — ${mapped.percent}%</div>
+    <div style="margin-top:8px; font-weight:700;">State: ${mapped.stateLabel}</div>
+    <div style="margin-top:10px; color:#e9edf1;">
+      ${getAdviceForState(mapped.stateLabel)}
+    </div>
+    <div class="result-actions">
+      <button class="small-btn" onclick="window.location.href='journey-map.html'">Start Journey</button>
+      <button class="small-btn" onclick="window.location.href='expert.html'">Contact Expert</button>
+      <button class="small-btn" onclick="startMicroChallenge()">30-sec Breath</button>
+      <button class="small-btn" onclick="reactCard(this)">Helpful</button>
+    </div>
+  `;
+
+  // persist to localStorage & notify parent windows (dashboard)
+  try {
+    localStorage.setItem('eqscholar_checkup_score', String(total));
+    localStorage.setItem('eqscholar_checkup_percent', String(mapped.percent));
+    localStorage.setItem('eqscholar_checkup_state', mapped.stateLabel);
+    window.parent?.postMessage && window.parent.postMessage({ type: 'eqscholar:checkup', score: total, percent: mapped.percent, state: mapped.stateLabel }, '*');
+    window.opener?.postMessage && window.opener.postMessage({ type: 'eqscholar:checkup', score: total, percent: mapped.percent, state: mapped.stateLabel }, '*');
+  } catch(e){ /* ignore */ }
+
+  // optionally scroll result into view
+  resultBox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+function getAdviceForState(state) {
+  switch(true) {
+    case /God Mode|Stable|Balanced/.test(state):
+      return 'Great — you show strong emotional resilience. Keep the habit: short daily practices and occasional check-ins.';
+    case /Awareness|Learning/.test(state):
+      return 'You\'re aware and learning. Focus on consistent micro-practices: 5-minute focus, weekly reflection, and small exposure to stress to build resilience.';
+    case /Seeker|Struggling/.test(state):
+      return 'You are facing challenges. Try short structured routines: 30s breathing, 10-minute planning sessions, and talk with a trusted peer or coach.';
+    case /Storm|Vulnerable/.test(state):
+      return 'High stress signs present. Consider scheduling a session with an expert and use immediate grounding (breath, walk). If you feel unsafe, contact emergency or a helpline.';
+    default:
+      return 'Your responses suggest significant distress. Please reach out to an expert on our Experts page — immediate human support is recommended.';
+  }
+}
+
+/* Wire submit button */
+document.getElementById('submitBtn').addEventListener('click', calculateScore);
+
+/* Make "why-toggle" buttons collapse all at start */
+document.querySelectorAll('.why-text').forEach(el => el.style.display = 'none');
+
+/* Expose setHeaderProgress so other pages can call if they load this page in same tab */
+window.setHeaderProgress = setHeaderProgress;
+
+/* Try to update header from localStorage if user ran check previously */
+(function initFromStorage(){
+  try {
+    const s = localStorage.getItem('eqscholar_checkup_percent');
+    const st = localStorage.getItem('eqscholar_checkup_state');
+    if (s) {
+      setHeaderProgress(Number(s), st || 'Saved');
+    }
+  } catch(e){}
+})();
+
+/* Keyboard accessibility: allow hitting Enter on radio groups to move (basic) */
+document.querySelectorAll('.opt input[type="radio"]').forEach(r => {
+  r.addEventListener('keydown', (ev) => {
+    if (ev.key === 'Enter') {
+      ev.preventDefault();
+      // find submit button and trigger
+      document.getElementById('submitBtn').click();
+    }
+  });
+});
+</script>
 </body>
 </html>

@@ -1,0 +1,858 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>God Mode – Divine Mind & Good Works</title>
+  <style>
+    /* ---------- Reset & Base ---------- */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      min-height:100vh;
+      color:#fff;
+      overflow-x:hidden;
+    }
+    a { color:inherit; text-decoration:none; }
+
+    /* ---------- NAVBAR (same style family as home) ---------- */
+    .nav-bar {
+      position:fixed;
+      top:0; left:0; right:0;
+      background:rgba(0,0,0,0.9);
+      backdrop-filter:blur(10px);
+      padding:16px 40px;
+      z-index:1000;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:12px;
+    }
+    .logo { font-weight:800; font-size:20px; display:flex; gap:6px; align-items:center; }
+    .nav-links { display:flex; gap:22px; align-items:center; }
+    .nav-links a { font-weight:500; font-size:14px; padding:4px 2px; }
+    .nav-links a:hover { color:#f39c12; }
+
+    /* simple mobile nav */
+    #menuToggle {
+      display:none;
+      width:26px; height:20px;
+      flex-direction:column;
+      justify-content:center;
+      gap:5px;
+      cursor:pointer;
+    }
+    #menuToggle span {
+      display:block; width:100%; height:3px;
+      border-radius:999px; background:#fff;
+      transition:transform .3s, opacity .3s;
+    }
+    #menuToggle.open span:first-child {
+      transform: translateY(4px) rotate(35deg);
+    }
+    #menuToggle.open span:last-child {
+      transform: translateY(-4px) rotate(-35deg);
+    }
+    @media (max-width:768px){
+      .nav-bar{ padding:12px 16px; }
+      .nav-links{
+        position:fixed;
+        top:52px; right:0;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:14px;
+        padding:16px 18px;
+        width:250px;
+        background:rgba(0,0,0,0.96);
+        border-left:1px solid rgba(255,255,255,0.06);
+        transform:translateX(100%);
+        transition:transform .3s ease;
+        max-height:calc(100vh - 52px);
+        overflow:auto;
+      }
+      .nav-links.open{ transform:translateX(0); }
+      #menuToggle{ display:flex; }
+    }
+
+    /* ---------- HERO ---------- */
+    .hero {
+      padding:120px 20px 60px;
+      display:flex;
+      justify-content:center;
+    }
+    .hero-inner {
+      width:100%;
+      max-width:1100px;
+      background:rgba(0,0,0,0.75);
+      border-radius:20px;
+      padding:32px 28px;
+      box-shadow:0 24px 50px rgba(0,0,0,0.4);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-badge {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:6px 12px;
+      border-radius:999px;
+      background:rgba(243, 156, 18, 0.18);
+      font-size:12px;
+      margin-bottom:14px;
+    }
+    .hero-title {
+      font-size:36px;
+      line-height:1.2;
+      font-weight:800;
+      background:linear-gradient(45deg,#f9e79f,#f39c12,#e74c3c);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:12px;
+    }
+    .hero-sub {
+      font-size:16px;
+      max-width:640px;
+      opacity:0.92;
+      margin-bottom:24px;
+    }
+    .hero-cta-row{
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      margin-bottom:18px;
+    }
+    .btn {
+      border:none;
+      border-radius:999px;
+      padding:10px 18px;
+      font-size:14px;
+      font-weight:700;
+      cursor:pointer;
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      text-decoration:none;
+      white-space:nowrap;
+    }
+    .btn-primary{
+      background:linear-gradient(45deg,#e74c3c,#f39c12);
+      color:#fff;
+      box-shadow:0 10px 24px rgba(0,0,0,0.35);
+    }
+    .btn-ghost{
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.28);
+      color:#fff;
+    }
+    .hero-mini {
+      font-size:12px;
+      opacity:0.9;
+    }
+    @media(max-width:640px){
+      .hero-title{ font-size:26px; }
+      .hero-sub{ font-size:14px; }
+    }
+
+    /* ---------- SECTIONS ---------- */
+    .section {
+      padding:30px 20px 20px;
+      display:flex;
+      justify-content:center;
+    }
+    .section-inner {
+      width:100%;
+      max-width:1100px;
+    }
+    .section-title {
+      font-size:26px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+    .section-sub {
+      font-size:14px;
+      opacity:0.9;
+      margin-bottom:22px;
+      max-width:760px;
+    }
+
+    /* cards / grids */
+    .grid-2 {
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:18px;
+    }
+    .grid-3 {
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:18px;
+    }
+    @media(max-width:900px){
+      .grid-2,.grid-3{ grid-template-columns:1fr; }
+    }
+
+    .card {
+      background:linear-gradient(135deg, rgba(52,152,219,0.12), rgba(155,89,182,0.16));
+      border-radius:14px;
+      padding:18px 18px 16px;
+      border:1px solid rgba(255,255,255,0.12);
+      backdrop-filter:blur(10px);
+      box-shadow:0 14px 32px rgba(0,0,0,0.3);
+      font-size:14px;
+    }
+    .card h3{
+      font-size:16px;
+      margin-bottom:8px;
+      color:#f9e79f;
+    }
+    .card strong{ color:#f39c12; }
+
+    /* Tag / pill */
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      font-size:11px;
+      padding:4px 10px;
+      border-radius:999px;
+      background:rgba(0,0,0,0.55);
+      margin-bottom:8px;
+    }
+
+    /* ---------- Opposite sins table ---------- */
+    .table {
+      width:100%;
+      border-collapse:collapse;
+      font-size:13px;
+      margin-top:10px;
+    }
+    .table th, .table td {
+      border-bottom:1px solid rgba(255,255,255,0.15);
+      padding:6px 4px;
+      text-align:left;
+      vertical-align:top;
+    }
+    .table th { font-size:12px; text-transform:uppercase; opacity:0.8; }
+
+    /* ---------- Simple accordion ---------- */
+    .accordion-item{
+      border-radius:12px;
+      overflow:hidden;
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(0,0,0,0.55);
+      margin-bottom:10px;
+    }
+    .acc-header{
+      padding:10px 14px;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:14px;
+      cursor:pointer;
+    }
+    .acc-header span{ font-weight:600; }
+    .acc-body{
+      padding:0 14px 10px;
+      display:none;
+      font-size:13px;
+      opacity:0.95;
+    }
+    .acc-body.open{ display:block; }
+    .acc-icon{ font-size:16px; opacity:0.8; }
+
+    /* ---------- Footer ---------- */
+    footer{
+      padding:24px 10px 34px;
+      text-align:center;
+      font-size:12px;
+      opacity:0.7;
+    }
+    /* ===== GOD MODE HERO (DEVIL STYLE MIRROR) ===== */
+
+.god-hero {
+  padding: 120px 20px 70px;
+  display: flex;
+  justify-content: center;
+}
+
+.god-hero .hero-inner {
+  background: radial-gradient(
+      circle at top,
+      rgba(255, 190, 80, 0.08),
+      rgba(0, 0, 0, 0.92)
+  );
+  border-radius: 26px;
+  padding: 38px 36px 34px;
+  max-width: 1080px;
+  box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+  text-align: center;
+}
+
+/* icon */
+.god-hero .hero-icon {
+  font-size: 56px;
+  margin-bottom: 14px;
+  filter: drop-shadow(0 6px 20px rgba(255,180,80,0.4));
+}
+
+/* badge */
+.god-hero .hero-badge {
+  display: inline-block;
+  margin-bottom: 18px;
+  padding: 6px 16px;
+  border-radius: 999px;
+  background: rgba(255,180,80,0.12);
+  border: 1px solid rgba(255,180,80,0.35);
+  font-size: 12px;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+}
+
+/* title */
+.god-hero .hero-title {
+  font-size: 38px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: #ffb84d;
+  margin-bottom: 18px;
+}
+
+/* primary text */
+.god-hero .hero-sub {
+  font-size: 16px;
+  line-height: 1.65;
+  color: #f3f4f6;
+  max-width: 780px;
+  margin: 0 auto 14px;
+}
+
+/* softer secondary paragraph */
+.god-hero .hero-sub-soft {
+  color: rgba(255,255,255,0.85);
+  font-size: 15px;
+}
+
+/* CTA spacing */
+.god-hero .hero-cta-row {
+  margin-top: 26px;
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+/* foot note */
+.god-hero .hero-mini {
+  margin-top: 24px;
+  font-size: 13px;
+  line-height: 1.6;
+  color: rgba(255,255,255,0.75);
+}
+
+.god-hero .hero-mini a {
+  color: #ffb84d;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* responsive */
+@media (max-width: 768px) {
+  .god-hero .hero-title {
+    font-size: 26px;
+  }
+  .god-hero .hero-inner {
+    padding: 28px 20px;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav-bar">
+    <div class="logo">🧠 EQScholar</div>
+    <div id="menuToggle" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
+      <span></span><span></span>
+    </div>
+    <div class="nav-links" id="navLinks" aria-hidden="true">
+      <a href="index.html">Home</a>
+      <a href="devil-mode.html">Devil Mode</a>
+      <a href="journey-map.html">Journey</a>
+      <a href="mental-check.html">Mental Health</a>
+      <a href="index5.html">Take Quiz</a>
+      <a href="index3.html">Profile</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+<section class="hero god-hero">
+  <div class="hero-inner">
+
+    <!-- GOD ICON -->
+    <div class="hero-icon">
+      😇
+    </div>
+
+    <!-- BADGE -->
+    <div class="hero-badge">
+      Alignment Map • For Conscious Living
+    </div>
+
+    <!-- TITLE -->
+    <h1 class="hero-title">
+      What God Mode Really Is — And How It Changes Your Life
+    </h1>
+
+    <!-- CORE DEFINITION -->
+    <p class="hero-sub">
+      <strong>God Mode</strong> is not fantasy or blind positivity.
+      It is a <strong>mental alignment state</strong> where your
+      thoughts, emotions, actions, and values move in the same direction.
+      When alignment increases, resistance drops — and life starts
+      responding in your favor.
+    </p>
+
+    <!-- COMPOUNDING / LUCK -->
+    <p class="hero-sub hero-sub-soft">
+      In God Mode, <strong>luck is not random</strong>.
+      It is the side-effect of <strong>1% correct decisions made daily</strong>:
+      less self-sabotage, cleaner habits, better relationships,
+      and long-term clarity.
+      <br><br>
+      Small good actions compound quietly — and over time,
+      they reshape your destiny.
+    </p>
+
+    <!-- CTA -->
+    <div class="hero-cta-row">
+      <a href="journey-map.html" class="btn btn-primary">
+        I want to come out of Lost Mode
+      </a>
+      <a href="#god-habits" class="btn btn-ghost">
+        See God Mode Principles ↓
+      </a>
+    </div>
+
+    <!-- FOOT NOTE -->
+    <div class="hero-mini">
+      God Mode is not permanent. The Devil Loop will call again.
+      This page exists to <strong>realign you consciously</strong>.
+      <br>
+      If you feel unstable, follow the
+      <a href="journey-map.html"><u>Journey Map</u></a>
+      to return safely to Normal Mode first.
+    </div>
+
+  </div>
+</section>
+
+
+  <!-- SECTION: BREAKING THE DEVIL LOOP -->
+  <section class="section" id="break-loop">
+    <div class="section-inner">
+      <h2 class="section-title">1. Breaking the Devil Loop → Back to Normal Mode</h2>
+      <p class="section-sub">
+        In Devil Mode you are not “evil”, you are <strong>trapped in loops</strong>:
+        desire → action → guilt → pain → desire again. Normal Mode means:
+        your brain becomes neutral and stable enough to choose.
+      </p>
+
+      <div class="grid-2">
+        <div class="card">
+          <h3>🔁 How the Devil Loop runs</h3>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>1️⃣ <strong>Trigger</strong> – stress, boredom, jealousy, ego-hit.</li>
+            <li>2️⃣ <strong>Promise</strong> – mind whispers “this sin will relax you”.</li>
+            <li>3️⃣ <strong>Act</strong> – anger outburst, lust, greed, addiction.</li>
+            <li>4️⃣ <strong>Temporary relief</strong> – brain gets a small dopamine high.</li>
+            <li>5️⃣ <strong>Crash</strong> – guilt, shame, loss, broken trust.</li>
+            <li>6️⃣ <strong>Pain</strong> becomes new trigger → loop repeats.</li>
+          </ul>
+          <p style="margin-top:10px;">
+            Every loop builds a <strong>habit groove in the brain</strong>. That’s why it
+            feels like “something else is controlling me”.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>🧯 Step-by-step exit to Normal Mode</h3>
+          <div class="pill">Emergency Out</div>
+          <ol style="margin-left:18px; margin-top:4px;">
+            <li><strong>Pause the body</strong> – stop mouth, hands, phone for 30–60 seconds.</li>
+            <li><strong>Name the Devil</strong> – “This is anger / lust / greed, not me.”</li>
+            <li><strong>Breathe 10 slow breaths</strong> – signal safety to nervous system.</li>
+            <li><strong>Move space</strong> – leave room, wash face, change posture.</li>
+            <li><strong>Small opposite action</strong> – kindness text, apologise, walk away.</li>
+          </ol>
+          <p style="margin-top:8px;">
+            You are not in God Mode yet. But this is <strong>Normal Mode</strong>:
+            your brain is calm enough to choose a better path.
+          </p>
+          <p style="margin-top:6px; font-size:12px; opacity:0.9;">
+            For detailed exercises, go to your <a href="journey-map.html"><u>Journey Section</u></a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: DEVIL ALWAYS TRIES AGAIN -->
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title">2. Remember: Devil will call you again & again</h2>
+      <p class="section-sub">
+        Even after reaching Normal or God Mode, temptation will come back.
+        That’s not failure, that is <strong>how the brain is wired</strong>.
+        Your power is to recognise the call early and respond differently.
+      </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3>📞 Same call, new excuses</h3>
+          <p>
+            Devil voice doesn’t say “come sin”. It says:
+          </p>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>“Just this one time.”</li>
+            <li>“Everyone does it.”</li>
+            <li>“You deserve a break, you suffered a lot.”</li>
+            <li>“You can fix it later.”</li>
+          </ul>
+          <p style="margin-top:6px;">
+            Train your EQ to <strong>catch the sentence</strong> before the action.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>🧱 Defence: God-approved boundaries</h3>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>Delete / block temptation sources (people, apps, streets).</li>
+            <li>Keep your body rested – tired brain chooses Devil.</li>
+            <li>Follow fixed <strong>minimum daily routine</strong> (sleep, food, work).</li>
+            <li>Share your weak areas with 1 trusted person – devil hates light.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>🌊 Ripple effect – why it’s serious</h3>
+          <p>
+            One “small” sin rarely stays small:
+          </p>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>One lie → many lies → relationship broken.</li>
+            <li>Illegal money → fear → more crime → jail.</li>
+            <li>Lust click → addiction → broken marriage.</li>
+            <li>Violence for food/pleasure → heart becomes hard.</li>
+          </ul>
+          <p style="margin-top:6px;">
+            Devil makes <strong>1° turn</strong> now that becomes
+            <strong>1000x destruction</strong> in future dimensions of your life.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: OPPOSITE OF SINS = GOOD WORKS GOD LOVES -->
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title">3. Opposite of each Sin – Works that God Likes</h2>
+      <p class="section-sub">
+        God Mode is not just “not sinning”. It is doing the
+        <strong>opposite action</strong> so your brain rewires. These are examples:
+      </p>
+
+      <div class="card">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Devil Sin / Habit</th>
+              <th>God-Mode Opposite Work</th>
+              <th>Effect on You</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Kama – Lust / objectifying body</td>
+              <td>Purity, respecting body as temple; clean relationships</td>
+              <td>Mind becomes lighter, you see people as souls, not objects.</td>
+            </tr>
+            <tr>
+              <td>Krodha – Anger / revenge</td>
+              <td>Patience, forgiveness, firm but calm boundaries</td>
+              <td>Nervous system heals; respect from others grows.</td>
+            </tr>
+            <tr>
+              <td>Lobha – Greed</td>
+              <td>Generosity, honest charity, simple living</td>
+              <td>Inner security increases, anxiety about money drops.</td>
+            </tr>
+            <tr>
+              <td>Moha – Delusion / emotional attachment</td>
+              <td>Clarity, accepting reality, detachment with love</td>
+              <td>You stop begging for validation; self-respect rises.</td>
+            </tr>
+            <tr>
+              <td>Mada – Pride / ego</td>
+              <td>Humility, giving credit, learning mentality</td>
+              <td>People help you; you grow faster with less resistance.</td>
+            </tr>
+            <tr>
+              <td>Matsarya – Jealousy</td>
+              <td>Appreciation, blessing others’ success</td>
+              <td>Heart becomes soft; comparison poison reduces.</td>
+            </tr>
+            <tr>
+              <td>Dishonesty / Exploitation</td>
+              <td>Truthful speech, fair deals, protecting weak</td>
+              <td>You can sleep peacefully; long-term trust builds wealth.</td>
+            </tr>
+            <tr>
+              <td>Illegal money</td>
+              <td>Dharmic earning – clean income, paying dues</td>
+              <td>Fear goes away; your work itself becomes worship.</td>
+            </tr>
+            <tr>
+              <td>Illegal relationships / cheating</td>
+              <td>Loyalty, respect, clear commitment or clean exit</td>
+              <td>Less drama; deeper real love becomes possible.</td>
+            </tr>
+            <tr>
+              <td>Addictions (alcohol, substances, porn etc.)</td>
+              <td>Sober clarity, healthy pleasures (sport, music, seva)</td>
+              <td>Brain fog clears; energy and self-control return.</td>
+            </tr>
+            <tr>
+              <td>Killing for taste / cruelty</td>
+              <td>Non-violence, compassion to all beings, ahimsa diet</td>
+              <td>Heart sensitivity grows; anger naturally reduces.</td>
+            </tr>
+            <tr>
+              <td>Laziness, wasting life</td>
+              <td>Tapas – disciplined effort, service work</td>
+              <td>You feel valuable; depression and guilt reduce over time.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: GOD MODE BY 8 LIMBS OF YOGA -->
+  <section class="section" id="god-habits">
+    <div class="section-inner">
+      <h2 class="section-title">4. God Mode through 8 Principles of Yoga</h2>
+      <p class="section-sub">
+        The 8 limbs of Yoga are like a full God-Mode system:
+        from behaviour → daily habits → inner focus → union with the Divine.
+        Use them as a checklist of good works.
+      </p>
+
+      <!-- 1–4 -->
+      <div class="grid-2">
+        <div class="card">
+          <h3>1. Yama – How you treat the world</h3>
+          <p class="pill">Outer morality</p>
+          <ul style="margin-left:18px;">
+            <li><strong>Ahimsa</strong> – non-violence in words, actions, online.</li>
+            <li><strong>Satya</strong> – truthfulness, no manipulation.</li>
+            <li><strong>Asteya</strong> – no stealing, no exploiting.</li>
+            <li><strong>Brahmacharya</strong> – wise handling of sexual energy.</li>
+            <li><strong>Aparigraha</strong> – non-greed, contentment with enough.</li>
+          </ul>
+          <p style="margin-top:8px;">
+            These are <strong>direct opposites</strong> of Devil habits.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>2. Niyama – How you treat yourself</h3>
+          <p class="pill">Inner discipline</p>
+          <ul style="margin-left:18px;">
+            <li><strong>Shaucha</strong> – cleanliness of body, space, thoughts.</li>
+            <li><strong>Santosha</strong> – gratitude, choosing contentment.</li>
+            <li><strong>Tapas</strong> – consistent effort, doing hard but right thing.</li>
+            <li><strong>Svadhyaya</strong> – self-study, scripture, reflection.</li>
+            <li><strong>Ishvara Pranidhana</strong> – surrender results to God.</li>
+          </ul>
+          <p style="margin-top:8px;">
+            Practice = God feels near. Ego softens, peace increases.
+          </p>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:18px;">
+        <div class="card">
+          <h3>3. Asana – Respecting the body</h3>
+          <p>
+            Not just fancy poses. God Mode means:
+          </p>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>Daily movement / stretching.</li>
+            <li>Posture that reflects dignity, not collapse.</li>
+            <li>Using body for service, not just pleasure.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>4. Pranayama – Mastering breath & energy</h3>
+          <p>
+            Short, clean breathing practices:
+          </p>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>3–5 mins slow belly breathing morning & night.</li>
+            <li>Use breath instead of anger as first response.</li>
+            <li>Every craving → 10 breaths before decision.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:18px;">
+        <div class="card">
+          <h3>5. Pratyahara – Turning senses inward</h3>
+          <p>
+            You start choosing what you allow inside:
+          </p>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>Unfollow toxic pages, block triggers.</li>
+            <li>Create quiet time without phone daily.</li>
+            <li>Use music, books, content that lift you up.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>6. Dharana – Focused mind</h3>
+          <p>
+            Train one-pointed attention:
+          </p>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>Single-task: one tab, one job, one conversation.</li>
+            <li>Set 20–30 min focus blocks.</li>
+            <li>Bring mind back gently when it wanders.</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="grid-2" style="margin-top:18px;">
+        <div class="card">
+          <h3>7. Dhyana – Deep meditation</h3>
+          <p>
+            Longer periods of stillness where:
+          </p>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>You observe thoughts without buying them.</li>
+            <li>Heart feels softer, present, connected.</li>
+            <li>Intuition becomes clearer than impulse.</li>
+          </ul>
+        </div>
+
+        <div class="card">
+          <h3>8. Samadhi – Union / God Mode Peak</h3>
+          <p>
+            Rare, high state: complete absorption in God / Truth.
+            Not permanent, but every glimpse:
+          </p>
+          <ul style="margin-left:18px; margin-top:6px;">
+            <li>Destroys many old impressions at once.</li>
+            <li>Makes sin feel tasteless, like mud water.</li>
+            <li>Inspires lifelong commitment to good works.</li>
+          </ul>
+          <p style="margin-top:8px; font-size:12px; opacity:0.9;">
+            Your EQ journey, prayer and meditation train you for this.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: PRACTICAL DAILY PLAN (ACCORDION) -->
+  <section class="section">
+    <div class="section-inner">
+      <h2 class="section-title">5. How to Use This Page in Daily Life</h2>
+      <p class="section-sub">
+        Don’t try to become “perfect God” in one day. Start with small,
+        stable actions. Use this as your <strong>operating manual</strong>.
+      </p>
+
+      <div class="accordion-item">
+        <div class="acc-header">
+          <span>Plan for those still in Lost Mode</span>
+          <span class="acc-icon">+</span>
+        </div>
+        <div class="acc-body">
+          <p>
+            1️⃣ Visit the <a href="devil-mode.html"><u>Devil Mode page</u></a> and
+            honestly mark where you are stuck.<br/>
+            2️⃣ Start your <a href="journey-map.html"><u>Journey</u></a> – follow just
+            the first 1–2 practices daily.<br/>
+            3️⃣ Use the emergency steps in section 1 of this page whenever you slip.<br/>
+            4️⃣ Do <strong>one opposite action</strong> of your main sin every day
+            (from the table above).
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="acc-header">
+          <span>Plan for those in Normal Mode</span>
+          <span class="acc-icon">+</span>
+        </div>
+        <div class="acc-body">
+          <p>
+            1️⃣ Choose <strong>1 Yama + 1 Niyama</strong> and track them for 21 days.<br/>
+            2️⃣ Add 5–10 mins of breathwork and 5 mins quiet sitting.<br/>
+            3️⃣ Clean up 1 area of life each week – money, relationships, phone usage.<br/>
+            4️⃣ Regularly re-check using your <a href="mental-check.html"><u>Mental Health Check</u></a>.
+          </p>
+        </div>
+      </div>
+
+      <div class="accordion-item">
+        <div class="acc-header">
+          <span>Plan for God-Mode Aspirants</span>
+          <span class="acc-icon">+</span>
+        </div>
+        <div class="acc-body">
+          <p>
+            1️⃣ Slowly implement all 8 limbs at your level.<br/>
+            2️⃣ Serve: do some work only for God / society, not money or fame.<br/>
+            3️⃣ Guard senses strongly – you can’t feed devil and blame God.<br/>
+            4️⃣ Keep humility: if you fall, come back here, not to shame.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    © <script>document.write(new Date().getFullYear())</script>
+    EQScholar — God Mode is daily practice, not instant status.
+  </footer>
+
+  <script>
+    // simple mobile nav
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener('click', () => {
+        const open = navLinks.classList.toggle('open');
+        menuToggle.classList.toggle('open', open);
+        menuToggle.setAttribute('aria-expanded', open ? 'true':'false');
+        navLinks.setAttribute('aria-hidden', open ? 'false':'true');
+      });
+    }
+
+    // accordion
+    document.querySelectorAll('.accordion-item').forEach(item => {
+      const header = item.querySelector('.acc-header');
+      const body = item.querySelector('.acc-body');
+      const icon = item.querySelector('.acc-icon');
+      header.addEventListener('click', () => {
+        const open = body.classList.toggle('open');
+        icon.textContent = open ? '−' : '+';
+      });
+    });
+  </script>
+</body>
+</html>

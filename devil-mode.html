@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devil Mode – Understand the Dark Loop</title>
+  <style>
+    /* ---------- Reset & Base ---------- */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      min-height:100vh;
+      background: radial-gradient(circle at top, #8b0000 0%, #000000 55%, #130f1a 100%);
+      color:#fff;
+      overflow-x:hidden;
+    }
+    a { color:inherit; text-decoration:none; }
+
+    /* ---------- NAVBAR (simple version) ---------- */
+    .nav-bar {
+      position: sticky;
+      top:0;
+      z-index:1000;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(10px);
+      padding:16px 24px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .logo {
+      font-weight:800;
+      font-size:20px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .nav-links {
+      display:flex;
+      gap:18px;
+      font-size:14px;
+      flex-wrap:wrap;
+    }
+    .nav-links a {
+      padding:4px 2px;
+      font-weight:500;
+    }
+    .nav-links a:hover {
+      color:#f39c12;
+    }
+
+    @media (max-width:768px){
+      .nav-bar { flex-direction:column; align-items:flex-start; }
+      .nav-links { width:100%; justify-content:flex-start; }
+    }
+
+    /* ---------- HERO ---------- */
+    .hero-section {
+      padding:60px 20px 40px;
+      display:flex;
+      justify-content:center;
+      text-align:center;
+    }
+    .hero-inner {
+      width:100%;
+      max-width:900px;
+      background:rgba(0,0,0,0.75);
+      border-radius:20px;
+      padding:32px 20px 28px;
+      border:1px solid rgba(255,255,255,0.08);
+      box-shadow:0 30px 60px rgba(0,0,0,0.5);
+      position:relative;
+      overflow:hidden;
+    }
+    .hero-inner::before {
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at top, rgba(255,0,0,0.25), transparent 55%);
+      opacity:0.45;
+      z-index:-1;
+    }
+    .devil-emoji {
+      font-size:64px;
+      margin-bottom:12px;
+      animation: glow-dark 2.5s ease-in-out infinite alternate;
+    }
+    .hero-title {
+      font-size:34px;
+      font-weight:800;
+      letter-spacing:1px;
+      margin-bottom:10px;
+      background: linear-gradient(45deg,#ff4b2b,#f39c12,#e74c3c);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+    .hero-subtitle {
+      font-size:16px;
+      opacity:0.9;
+      max-width:640px;
+      margin:0 auto 18px;
+    }
+    .hero-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      font-size:12px;
+      padding:6px 12px;
+      border-radius:999px;
+      background:rgba(255,255,255,0.06);
+      border:1px solid rgba(255,255,255,0.12);
+      margin-bottom:14px;
+    }
+    .hero-links {
+      display:flex;
+      justify-content:center;
+      gap:14px;
+      flex-wrap:wrap;
+      margin-top:10px;
+      font-size:13px;
+    }
+    .hero-link-btn {
+      padding:8px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.14);
+      background:transparent;
+      cursor:pointer;
+      font-size:13px;
+    }
+    .hero-link-btn:hover {
+      background:rgba(255,255,255,0.06);
+    }
+
+    /* ---------- SECTIONS ---------- */
+    .section {
+      padding:60px 20px;
+    }
+    .section.narrow { padding-top:20px; }
+    .section-title {
+      font-size:26px;
+      font-weight:800;
+      text-align:center;
+      margin-bottom:10px;
+    }
+    .section-subtitle {
+      text-align:center;
+      font-size:14px;
+      opacity:0.85;
+      max-width:720px;
+      margin:0 auto 30px;
+    }
+
+    /* ---------- GRID CARDS ---------- */
+    .info-grid {
+      max-width:1100px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+      gap:24px;
+    }
+    .info-card {
+      background: linear-gradient(135deg, rgba(231,76,60,0.16), rgba(52,73,94,0.45));
+      padding:24px 20px 20px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(10px);
+      transition: transform .25s ease, box-shadow .25s ease;
+      position:relative;
+      overflow:hidden;
+    }
+    .info-card:hover {
+      transform:translateY(-4px);
+      box-shadow:0 16px 30px rgba(0,0,0,0.45);
+    }
+    .info-card h3 {
+      font-size:18px;
+      margin-bottom:8px;
+      color:#f39c12;
+    }
+    .info-tag {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      opacity:0.8;
+      margin-bottom:6px;
+    }
+    .info-card p {
+      font-size:14px;
+      line-height:1.5;
+      opacity:0.92;
+    }
+    .info-list {
+      margin-top:8px;
+      font-size:13px;
+      opacity:0.9;
+    }
+    .info-list li {
+      margin-left:18px;
+      margin-bottom:4px;
+    }
+
+    /* ---------- Curiosity & Reaction hooks ---------- */
+    .why-toggle {
+      margin-top:10px;
+      display:inline-block;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.18);
+      color:#fff;
+      padding:6px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:600;
+    }
+    .why-text {
+      display:none;
+      margin-top:8px;
+      font-size:13px;
+      opacity:0.9;
+    }
+
+    .info-react {
+      margin-top:14px;
+      background:transparent;
+      border:1px solid rgba(255,255,255,0.18);
+      color:#fff;
+      padding:6px 10px;
+      border-radius:999px;
+      cursor:pointer;
+      font-size:12px;
+      font-weight:600;
+      transition: transform .15s ease, border-color .15s ease;
+    }
+    .info-react.pulse {
+      transform:scale(1.07);
+      border-color:#f39c12;
+    }
+    .react-count {
+      margin-left:6px;
+      font-size:12px;
+      opacity:0.85;
+    }
+
+    /* ---------- LOOP FLOW ---------- */
+    .loop-flow {
+      max-width:950px;
+      margin:0 auto;
+      display:flex;
+      flex-wrap:wrap;
+      gap:12px;
+      justify-content:center;
+    }
+    .loop-step {
+      flex:1 1 160px;
+      min-width:140px;
+      padding:10px 12px;
+      border-radius:12px;
+      background:rgba(0,0,0,0.7);
+      border:1px solid rgba(255,255,255,0.12);
+      font-size:13px;
+      position:relative;
+    }
+    .loop-step-title {
+      font-weight:700;
+      font-size:13px;
+      margin-bottom:4px;
+      color:#f39c12;
+    }
+
+    /* ---------- RIPPLE TABLE ---------- */
+    .ripple-grid {
+      max-width:900px;
+      margin:0 auto;
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+      gap:18px;
+    }
+    .ripple-card {
+      background:rgba(0,0,0,0.75);
+      border-radius:14px;
+      border:1px solid rgba(255,255,255,0.14);
+      padding:16px 14px;
+      font-size:13px;
+    }
+    .ripple-card h4 {
+      font-size:15px;
+      margin-bottom:6px;
+      color:#f39c12;
+    }
+
+    /* ---------- FOOTER ---------- */
+    footer {
+      padding:20px 12px 30px;
+      text-align:center;
+      font-size:12px;
+      opacity:0.7;
+    }
+
+    /* ---------- ANIMATIONS ---------- */
+    @keyframes glow-dark {
+      from { text-shadow:0 0 10px rgba(231,76,60,0.6); }
+      to   { text-shadow:0 0 22px rgba(231,76,60,1); }
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav-bar">
+    <div class="logo">😈 Devil Mode – EQScholar</div>
+    <div class="nav-links">
+      <a href="index.html">← Back to Home</a>
+      <a href="journey-map.html">Journey</a>
+      <a href="mental-check.html">Mental Check-up</a>
+      <a href="god-mode.html">God Mode</a>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero-section">
+    <div class="hero-inner">
+      <div class="devil-emoji">😈</div>
+      <div class="hero-pill">
+        Dark Pattern Map · For Awareness Only
+      </div>
+      <h1 class="hero-title">How Devil Mode Enters & Destroys</h1>
+      <p class="hero-subtitle">
+        “Devil Mode” is not a monster outside you. It’s a pattern inside the mind: desires, anger,
+        greed and addictions that enter once, then loop again and again until they feel “normal”.
+        This page explains how that loop forms – and how it eats your life like slow poison.
+      </p>
+      <div class="hero-links">
+        <button class="hero-link-btn" style="color:grey;" onclick="document.getElementById('sins-map').scrollIntoView({behavior:'smooth'})">
+          See all main sins
+        </button>
+        <button class="hero-link-btn" style="color:grey;" onclick="document.getElementById('loop').scrollIntoView({behavior:'smooth'})">
+          See the loop reaction →
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: MAP OF SINS -->
+  <section class="section" id="sins-map">
+    <h2 class="section-title">1. Map of Devil-Mode Sins</h2>
+    <p class="section-subtitle">
+      Based on Gita-style teachings: first the classic inner vices, then their modern expansions.
+      The goal is not guilt, but clear seeing – once you see the pattern, you can step out of it.
+    </p>
+
+    <div class="info-grid">
+      <!-- Kama -->
+      <div class="info-card">
+        <div class="info-tag">Gate 1 · Kama (Lust / Craving)</div>
+        <h3>Uncontrolled Desire</h3>
+        <p>
+          Intense craving for pleasure, attention or stimulation – physical, digital or emotional.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Boredom, loneliness, comparison, sexual images.</li>
+          <li><strong>Immediate effect:</strong> Narrowed focus, mind keeps replaying fantasies.</li>
+          <li><strong>Long-term:</strong> Broken focus, addiction to pleasure, using people as objects.</li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          Why this becomes a gate to hell
+        </button>
+        <div class="why-text">
+          Lust promises relief but keeps raising the dose. Each hit gives less joy and more emptiness,
+          so the mind becomes a slave chasing the next high.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          🔥 I recognise this
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Krodha -->
+      <div class="info-card">
+        <div class="info-tag">Gate 2 · Krodha</div>
+        <h3>Anger & Hatred</h3>
+        <p>
+          Explosive reaction when desires are blocked, ego is hurt, or injustice is perceived.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Feeling disrespected, ignored, controlled.</li>
+          <li><strong>Immediate effect:</strong> Body heats up, logic shuts down, words become weapons.</li>
+          <li><strong>Long-term:</strong> Broken relationships, guilt, shame, then more anger at self.</li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          Why anger feels “right” in the moment
+        </button>
+        <div class="why-text">
+          Anger gives a fake sense of power. In that moment the mind believes,
+          “I am strong now,” while actually losing control and destroying trust.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          💣 Seen in myself
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Lobha -->
+      <div class="info-card">
+        <div class="info-tag">Gate 3 · Lobha</div>
+        <h3>Greed & Never Enough</h3>
+        <p>
+          The insatiable hunger for more – money, followers, possessions, power – even when basic needs are met.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Comparison, insecurity, fear of losing status.</li>
+          <li><strong>Immediate effect:</strong> Justification of shortcuts and ignoring values.</li>
+          <li><strong>Long-term:</strong> Burnout, anxiety, losing peace for numbers and objects.</li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          How greed hides inside “ambition”
+        </button>
+        <div class="why-text">
+          Healthy ambition serves a purpose. Greed serves only ego. When “more” has no finish line,
+          every success still feels like failure.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          📉 Makes sense
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Moha / Mada / Matsarya / Dishonesty -->
+      <div class="info-card">
+        <div class="info-tag">Arishadvarga</div>
+        <h3>Delusion, Pride, Jealousy & Exploitation</h3>
+        <p>
+          These are supporting forces that keep devil-mode running.
+        </p>
+        <ul class="info-list">
+          <li><strong>Moha (Attachment / Delusion):</strong> “I can’t live without this person / thing / identity.”</li>
+          <li><strong>Mada (Pride / Ego):</strong> “I am above rules; I won’t apologise.”</li>
+          <li><strong>Matsarya (Jealousy):</strong> Resentment when others rise.</li>
+          <li><strong>Dishonesty & Violence:</strong> Lying, manipulating, exploiting, abusing power.</li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          How these guard the prison
+        </button>
+        <div class="why-text">
+          When you start to wake up, these qualities whisper excuses:
+          “It’s not that bad… others are worse… you deserve this.” They protect the sin, not you.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          🧩 I see the pattern
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Illegal Money -->
+      <div class="info-card">
+        <div class="info-tag">Modern Sin</div>
+        <h3>Illegal Money & Corruption</h3>
+        <p>
+          Money gained by cheating, fraud, bribe or exploitation – against law or dharma.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Fear of scarcity, greed, “everyone does it” culture.</li>
+          <li><strong>Immediate effect:</strong> Adrenaline rush + hidden anxiety of being caught.</li>
+          <li><strong>Long-term:</strong> Deep mistrust in relationships, disturbed sleep, loss of self-respect,
+            family also living in fear.
+          </li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          How one deal becomes a lifestyle
+        </button>
+        <div class="why-text">
+          The first illegal rupee creates a new identity:
+          “I am the person who can cross the line.” Next time, the mind feels less pain crossing it again.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          💸 Understand
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Illegal relationships -->
+      <div class="info-card">
+        <div class="info-tag">Modern Sin</div>
+        <h3>Illegal / Secret Relationships</h3>
+        <p>
+          Emotional or physical relations built on cheating, betrayal, or breaking sacred trust.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Emotional hunger, ego boost, revenge, loneliness.</li>
+          <li><strong>Immediate effect:</strong> High drama, excitement, feeling “special”.</li>
+          <li><strong>Long-term:</strong> Guilt, broken families, inability to trust even healthy love.</li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          How it poisons your idea of love
+        </button>
+        <div class="why-text">
+          Secret love teaches the mind that love = lying. Later, even honest relationships feel unsafe,
+          because your own mind remembers how easily boundaries were broken.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          💔 Hard truth
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Addiction -->
+      <div class="info-card">
+        <div class="info-tag">Modern Sin</div>
+        <h3>Addictions (Alcohol, Drugs, Porn, Gambling)</h3>
+        <p>
+          Any substance or behaviour that hijacks your brain’s reward system and becomes “I can’t stop”.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Stress, trauma, peer pressure, easy access.</li>
+          <li><strong>Immediate effect:</strong> Temporary numbness, escape from pain.</li>
+          <li><strong>Long-term:</strong> Brain rewiring, damaged organs, destroyed finances,
+            broken trust, lost potential.
+          </li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          Why it’s slow poison
+        </button>
+        <div class="why-text">
+          Addictions don’t kill in one day. They quietly steal sleep, focus, confidence, spirituality –
+          until the person who could have been a “god-mode” mind becomes a slave of a bottle or screen.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          🧪 Tough but true
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Killing for taste / non-veg -->
+      <div class="info-card">
+        <div class="info-tag">Modern Sin</div>
+        <h3>Killing for Taste (Cruelty for Pleasure)</h3>
+        <p>
+          Causing harm or death to other beings just for tongue, fashion, or entertainment.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Habit, culture, desensitisation – “everyone does it”.</li>
+          <li><strong>Immediate effect:</strong> Mind disconnects from empathy to continue the habit.</li>
+          <li><strong>Long-term:</strong> Heart becomes harder, compassion weakens, violence feels “normal”.</li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          Ripple in the heart centre
+        </button>
+        <div class="why-text">
+          Every time we ignore another being’s pain, we train ourselves to ignore our own conscience.
+          This blocks higher states like genuine love, devotion and deep peace.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          🐾 I need to think
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Laziness -->
+      <div class="info-card">
+        <div class="info-tag">Modern Sin</div>
+        <h3>Laziness & Spiritual Inertia</h3>
+        <p>
+          Not just resting – but repeatedly avoiding right action even when you know what to do.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Fear of failure, comfort addiction, lack of meaning.</li>
+          <li><strong>Immediate effect:</strong> Small relief: “I’ll do it tomorrow.”</li>
+          <li><strong>Long-term:</strong> Dreams die, self-respect collapses, depression risk increases.</li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          Why laziness is a silent killer
+        </button>
+        <div class="why-text">
+          Some sins destroy quickly; laziness destroys by never letting your true self appear.
+          The world never sees the version of you that God designed.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          🛌 I feel called out
+        </button>
+        <span class="react-count">0</span>
+      </div>
+
+      <!-- Image / status -->
+      <div class="info-card">
+        <div class="info-tag">Modern Sin</div>
+        <h3>False Image & Status Worship</h3>
+        <p>
+          Living only for others’ eyes – social media image, fake lifestyle, constant performance.
+        </p>
+        <ul class="info-list">
+          <li><strong>Triggers:</strong> Insecurity, fear of rejection, comparison, vanity.</li>
+          <li><strong>Immediate effect:</strong> Anxiety about how you look rather than who you are.</li>
+          <li><strong>Long-term:</strong> Identity crisis, emptiness, shallow relationships, burnout.</li>
+        </ul>
+
+        <button class="why-toggle" onclick="toggleWhy(this)" aria-expanded="false">
+          How this blocks God Mode
+        </button>
+        <div class="why-text">
+          God-mode mind is rooted in truth. When life becomes a movie for others’ approval,
+          there is no energy left for real growth, service or inner connection.
+        </div>
+
+        <button class="info-react" onclick="reactCard(this)" aria-pressed="false">
+          🎭 Too real
+        </button>
+        <span class="react-count">0</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: HOW IT ENTERS FIRST TIME -->
+  <section class="section narrow" id="entry">
+    <h2 class="section-title">2. How Devil Mode Enters the Mind the First Time</h2>
+    <p class="section-subtitle">
+      No one wakes up and decides “I want to be evil”. Entry is subtle – it starts as a small
+      inner compromise.
+    </p>
+
+    <div class="loop-flow">
+      <div class="loop-step">
+        <div class="loop-step-title">1. Trigger</div>
+        <p>A pain (loneliness, shame, poverty) or a temptation (pleasure, shortcut, revenge).</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">2. Thought Seed</div>
+        <p>“What if I just try it once? Nobody will know. I deserve some relief.”</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">3. Emotion Hook</div>
+        <p>The body floods with craving, anger or excitement. Logic becomes weak.</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">4. First Crossing</div>
+        <p>You do the act the first time. The conscience screams but you silence it.</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">5. Justification</div>
+        <p>Mind creates stories: “I had no choice… others are worse… I’ll stop later.”</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">6. New Identity Seed</div>
+        <p>Deep inside, a line is written: “I am the kind of person who can do this.”</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: LOOP REACTION -->
+  <section class="section narrow" id="loop">
+    <h2 class="section-title">3. The Loop Reaction that Repeats Again & Again</h2>
+    <p class="section-subtitle">
+      After the first time, devil-mode runs like code. Trigger → Thought → Emotion → Action →
+      Short-term reward → Pain → Numbness → Repeat.
+    </p>
+
+    <div class="loop-flow">
+      <div class="loop-step">
+        <div class="loop-step-title">Trigger</div>
+        <p>Same situation appears again – stress, desire, boredom, peer group.</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">Autopilot Thought</div>
+        <p>The earlier choice becomes the easiest path in the brain. No deep thinking now.</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">Explosion / Indulgence</div>
+        <p>You repeat the sin – sometimes stronger than last time to feel the same high.</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">Guilt & Shame</div>
+        <p>“Why did I do this again?” But shame is so painful that you escape… using same sin.</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">Numbness</div>
+        <p>Conscience voice becomes weaker. What once felt wrong now feels “normal”.</p>
+      </div>
+      <div class="loop-step">
+        <div class="loop-step-title">Identity Lock</div>
+        <p>“This is just who I am.” At this point the person is chained, not by others, but by belief.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: RIPPLE EFFECTS -->
+  <section class="section narrow" id="ripple">
+    <h2 class="section-title">4. 1000× Ripple Effect – One Sin, Many Dimensions</h2>
+    <p class="section-subtitle">
+      Devil-mode doesn’t damage only one area. Like a stone in water, it sends waves into every
+      dimension of life – self, body, relationships, money, future, spiritual growth.
+    </p>
+
+    <div class="ripple-grid">
+      <div class="ripple-card">
+        <h4>1. Inside You</h4>
+        <p>
+          Self-respect drops, inner voice becomes harsh, anxiety and overthinking rise.
+          You start fearing silence because silence shows you the truth.
+        </p>
+      </div>
+      <div class="ripple-card">
+        <h4>2. Body & Brain</h4>
+        <p>
+          Stress hormones, addiction rewiring, sleep disturbance, lifestyle diseases.
+          The body pays the bill for mind’s repeated compromise.
+        </p>
+      </div>
+      <div class="ripple-card">
+        <h4>3. Relationships</h4>
+        <p>
+          Lies, hiding, anger and selfishness slowly kill trust. Even those who love you
+          start protecting themselves from your patterns.
+        </p>
+      </div>
+      <div class="ripple-card">
+        <h4>4. Money & Work</h4>
+        <p>
+          Corruption, laziness and addictions destroy discipline. Opportunities are lost,
+          reputation collapses, long-term wealth gets traded for short-term comfort.
+        </p>
+      </div>
+      <div class="ripple-card">
+        <h4>5. Future Self</h4>
+        <p>
+          Every repeat writes code in the brain: “I am weak, I can’t change.” Five years later,
+          the gap between who you are and who you could be becomes 1000×.
+        </p>
+      </div>
+      <div class="ripple-card">
+        <h4>6. Spiritual Dimension</h4>
+        <p>
+          When mind is busy hiding, it cannot look up. Guilt makes you avoid God, scripture,
+          meditation – the exact medicines that could free you.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION: EXIT HOOK -->
+  <section class="section narrow" id="exit">
+    <h2 class="section-title">5. From Devil Mode to God Mode</h2>
+    <p class="section-subtitle">
+      Devil-mode is powerful, but not final. The moment you honestly see the pattern and accept,
+      “Yes, this is harming me and others,” the chain already starts cracking. The next step is
+      to build opposite habits – we explore that fully in the God Mode page and in your EQ Journey.
+    </p>
+
+    <div class="hero-links" style="margin-top:4px;">
+      <a class="hero-link-btn" href="god-mode.html">Go to God Mode Page →</a>
+      <a class="hero-link-btn" href="journey-map.html">Return to EQ Journey</a>
+    </div>
+  </section>
+
+  <footer>
+    © <script>document.write(new Date().getFullYear())</script> EQScholar · Devil Mode Map
+  </footer>
+
+  <script>
+    // Curiosity toggle
+    function toggleWhy(btn){
+      const box = btn.parentElement.querySelector('.why-text');
+      if(!box) return;
+      const isOpen = box.style.display === 'block';
+      box.style.display = isOpen ? 'none' : 'block';
+      btn.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+    }
+
+    // Reaction button
+    function reactCard(btn){
+      const countEl = btn.nextElementSibling;
+      let count = parseInt(countEl?.textContent || '0', 10) || 0;
+      count++;
+      if(countEl) countEl.textContent = count;
+      btn.classList.add('pulse');
+      btn.setAttribute('aria-pressed','true');
+      setTimeout(()=>btn.classList.remove('pulse'), 250);
+    }
+  </script>
+</body>
+</html>

@@ -297,6 +297,60 @@
 
         /* Hide potential nav-progress on mobile (if re-added later) */
         @media (max-width:768px) { #navProgress { display:none !important; } }
+
+        /* Make icons clickable + smooth movement */
+        .god-icon,
+        .devil-icon {
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+        }
+
+        /* Nudge / bounce effect on click */
+        .icon-nudge {
+            transform: translateY(-8px) scale(1.05);
+        }
+
+        /* Text link container */
+.side-learn {
+    margin-top: 12px;
+}
+
+/* Anchor link (God + Devil) */
+.side-link,
+.side-learn a {
+    display: inline-block;
+    font-size: 14px;
+    font-weight: 600;
+    color: rgba(255,255,255,0.95);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+/* Hover (desktop) */
+.side-link:hover,
+.side-learn a:hover {
+    opacity: 1;
+    transform: translateX(3px);
+}
+
+/* Tap feedback (mobile) */
+.side-link:active,
+.side-learn a:active {
+    transform: translateX(6px);
+}
+
+/* Keyboard accessibility */
+.side-link:focus-visible,
+.side-learn a:focus-visible {
+    outline: 2px solid #f39c12;
+    outline-offset: 4px;
+    border-radius: 4px;
+}
+
+
+
     </style>
 </head>
 <body>
@@ -351,6 +405,7 @@
                     <strong>WISDOM</strong><br>
                     Choose the path of<br>
                     understanding and empathy
+                    <div class="side-learn"><a href="god-mode.html" class="side-link">What is God Mode? →</a></div>
                 </div>
             </div>
 
@@ -360,6 +415,7 @@
                     <strong>IMPULSE</strong><br>
                     Follow anger and<br>
                     destructive emotions
+                    <div class="side-learn"><a href="devil-mode.html" class="side-link">Understand Devil Mind →</a></div>
                 </div>
             </div>
 
@@ -970,6 +1026,36 @@ document.addEventListener('DOMContentLoaded', function(){
     });
   }
 });
+
+// ===== God & Devil icon click / tap movement =====
+document.addEventListener('DOMContentLoaded', function () {
+  const icons = document.querySelectorAll('.god-icon, .devil-icon');
+
+  icons.forEach(icon => {
+    // Click / tap
+    icon.addEventListener('click', () => {
+      icon.classList.add('icon-nudge');
+      setTimeout(() => {
+        icon.classList.remove('icon-nudge');
+      }, 180);
+    });
+
+    // (Optional) keyboard accessibility: Enter / Space
+    icon.setAttribute('tabindex', '0');
+    icon.setAttribute('role', 'button');
+
+    icon.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        icon.classList.add('icon-nudge');
+        setTimeout(() => {
+          icon.classList.remove('icon-nudge');
+        }, 180);
+      }
+    });
+  });
+});
+
     </script>
 
     <footer class="mt-12 py-8 text-center text-sm text-gray-500">© <script>document.write(new Date().getFullYear())</script> EQScholar — Built for focused growth</footer>

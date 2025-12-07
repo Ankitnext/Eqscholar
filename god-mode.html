@@ -75,7 +75,7 @@
       #menuToggle{ display:flex; }
     }
 
-    /* ---------- HERO ---------- */
+    /* ---------- HERO (generic) ---------- */
     .hero {
       padding:120px 20px 60px;
       display:flex;
@@ -199,6 +199,7 @@
       backdrop-filter:blur(10px);
       box-shadow:0 14px 32px rgba(0,0,0,0.3);
       font-size:14px;
+      overflow-x:auto; /* allows table to scroll on mobile */
     }
     .card h3{
       font-size:16px;
@@ -225,6 +226,7 @@
       border-collapse:collapse;
       font-size:13px;
       margin-top:10px;
+      min-width:620px; /* so on mobile it can scroll horizontally */
     }
     .table th, .table td {
       border-bottom:1px solid rgba(255,255,255,0.15);
@@ -267,103 +269,149 @@
       font-size:12px;
       opacity:0.7;
     }
+
     /* ===== GOD MODE HERO (DEVIL STYLE MIRROR) ===== */
 
-.god-hero {
-  padding: 120px 20px 70px;
-  display: flex;
-  justify-content: center;
-}
+    .god-hero {
+      padding: 120px 20px 70px;
+      display: flex;
+      justify-content: center;
+    }
 
-.god-hero .hero-inner {
-  background: radial-gradient(
-      circle at top,
-      rgba(255, 190, 80, 0.08),
-      rgba(0, 0, 0, 0.92)
-  );
-  border-radius: 26px;
-  padding: 38px 36px 34px;
-  max-width: 1080px;
-  box-shadow: 0 30px 80px rgba(0,0,0,0.65);
-  text-align: center;
-}
+    .god-hero .hero-inner {
+      background: radial-gradient(
+          circle at top,
+          rgba(255, 190, 80, 0.08),
+          rgba(0, 0, 0, 0.92)
+      );
+      border-radius: 26px;
+      padding: 38px 36px 34px;
+      max-width: 1080px;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.65);
+      text-align: center;
+    }
 
-/* icon */
-.god-hero .hero-icon {
-  font-size: 56px;
-  margin-bottom: 14px;
-  filter: drop-shadow(0 6px 20px rgba(255,180,80,0.4));
-}
+    /* icon */
+    .god-hero .hero-icon {
+      font-size: 56px;
+      margin-bottom: 14px;
+      filter: drop-shadow(0 6px 20px rgba(255,180,80,0.4));
+    }
 
-/* badge */
-.god-hero .hero-badge {
-  display: inline-block;
-  margin-bottom: 18px;
-  padding: 6px 16px;
-  border-radius: 999px;
-  background: rgba(255,180,80,0.12);
-  border: 1px solid rgba(255,180,80,0.35);
-  font-size: 12px;
-  letter-spacing: .05em;
-  text-transform: uppercase;
-}
+    /* badge */
+    .god-hero .hero-badge {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 6px 16px;
+      border-radius: 999px;
+      background: rgba(255,180,80,0.12);
+      border: 1px solid rgba(255,180,80,0.35);
+      font-size: 12px;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
 
-/* title */
-.god-hero .hero-title {
-  font-size: 38px;
-  line-height: 1.25;
-  font-weight: 800;
-  color: #ffb84d;
-  margin-bottom: 18px;
-}
+    /* title */
+    .god-hero .hero-title {
+      font-size: 38px;
+      line-height: 1.25;
+      font-weight: 800;
+      color: #ffb84d;
+      margin-bottom: 18px;
+    }
 
-/* primary text */
-.god-hero .hero-sub {
-  font-size: 16px;
-  line-height: 1.65;
-  color: #f3f4f6;
-  max-width: 780px;
-  margin: 0 auto 14px;
-}
+    /* primary text */
+    .god-hero .hero-sub {
+      font-size: 16px;
+      line-height: 1.65;
+      color: #f3f4f6;
+      max-width: 780px;
+      margin: 0 auto 14px;
+    }
 
-/* softer secondary paragraph */
-.god-hero .hero-sub-soft {
-  color: rgba(255,255,255,0.85);
-  font-size: 15px;
-}
+    /* softer secondary paragraph */
+    .god-hero .hero-sub-soft {
+      color: rgba(255,255,255,0.85);
+      font-size: 15px;
+    }
 
-/* CTA spacing */
-.god-hero .hero-cta-row {
-  margin-top: 26px;
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
+    /* CTA spacing */
+    .god-hero .hero-cta-row {
+      margin-top: 26px;
+      display: flex;
+      justify-content: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
 
-/* foot note */
-.god-hero .hero-mini {
-  margin-top: 24px;
-  font-size: 13px;
-  line-height: 1.6;
-  color: rgba(255,255,255,0.75);
-}
+    /* foot note */
+    .god-hero .hero-mini {
+      margin-top: 24px;
+      font-size: 13px;
+      line-height: 1.6;
+      color: rgba(255,255,255,0.75);
+    }
 
-.god-hero .hero-mini a {
-  color: #ffb84d;
-  text-decoration: underline;
-  text-underline-offset: 3px;
-}
+    .god-hero .hero-mini a {
+      color: #ffb84d;
+      text-decoration: underline;
+      text-underline-offset: 3px;
+    }
 
-/* responsive */
-@media (max-width: 768px) {
-  .god-hero .hero-title {
-    font-size: 26px;
-  }
-  .god-hero .hero-inner {
-    padding: 28px 20px;
-  }
-}
+    /* responsive hero block */
+    @media (max-width: 768px) {
+      .god-hero {
+        padding: 96px 14px 40px;
+      }
+      .god-hero .hero-inner {
+        padding: 26px 18px 24px;
+        border-radius: 20px;
+      }
+      .god-hero .hero-title {
+        font-size: 24px;
+      }
+      .god-hero .hero-sub {
+        font-size: 14px;
+      }
+      .god-hero .hero-sub-soft {
+        font-size: 13px;
+      }
+      .hero-cta-row {
+        flex-direction:column;
+        align-items:center;
+      }
+      .btn {
+        width:100%;
+        justify-content:center;
+      }
+    }
+
+    /* Extra mobile refinements */
+    @media (max-width: 600px) {
+      body {
+        font-size: 14px;
+      }
+      .section {
+        padding: 24px 14px 16px;
+      }
+      .section-title {
+        font-size: 20px;
+      }
+      .section-sub {
+        font-size: 13px;
+      }
+      .card {
+        padding: 14px 12px 12px;
+        font-size: 13px;
+      }
+      .table {
+        font-size: 11px;
+        min-width: 540px;
+      }
+      .table th, .table td {
+        padding: 4px 3px;
+      }
+    }
 
   </style>
 </head>
@@ -386,67 +434,66 @@
   </nav>
 
   <!-- HERO -->
-<section class="hero god-hero">
-  <div class="hero-inner">
+  <section class="hero god-hero">
+    <div class="hero-inner">
 
-    <!-- GOD ICON -->
-    <div class="hero-icon">
-      😇
+      <!-- GOD ICON -->
+      <div class="hero-icon">
+        😇
+      </div>
+
+      <!-- BADGE -->
+      <div class="hero-badge">
+        Alignment Map • For Conscious Living
+      </div>
+
+      <!-- TITLE -->
+      <h1 class="hero-title">
+        What God Mode Really Is — And How It Changes Your Life
+      </h1>
+
+      <!-- CORE DEFINITION -->
+      <p class="hero-sub">
+        <strong>God Mode</strong> is not fantasy or blind positivity.
+        It is a <strong>mental alignment state</strong> where your
+        thoughts, emotions, actions, and values move in the same direction.
+        When alignment increases, resistance drops — and life starts
+        responding in your favor.
+      </p>
+
+      <!-- COMPOUNDING / LUCK -->
+      <p class="hero-sub hero-sub-soft">
+        In God Mode, <strong>luck is not random</strong>.
+        It is the side-effect of <strong>1% correct decisions made daily</strong>:
+        less self-sabotage, cleaner habits, better relationships,
+        and long-term clarity.
+        <br><br>
+        Small good actions compound quietly — and over time,
+        they reshape your destiny.
+      </p>
+
+      <!-- CTA -->
+      <div class="hero-cta-row">
+        <a href="journey-map.html" class="btn btn-primary">
+          I want to come out of Lost Mode
+        </a>
+        <a href="#god-habits" class="btn btn-ghost">
+          See God Mode Principles ↓
+        </a>
+      </div>
+
+      <!-- FOOT NOTE -->
+      <div class="hero-mini">
+        God Mode is not permanent. The Devil Loop will call again.
+        This page exists to <strong>realign you consciously</strong>.
+        <br>
+        If you feel unstable, follow the
+        <a href="journey-map.html"><u>Journey Map</u></a>
+        to return safely to Normal Mode first.
+      </div>
+
     </div>
-
-    <!-- BADGE -->
-    <div class="hero-badge">
-      Alignment Map • For Conscious Living
-    </div>
-
-    <!-- TITLE -->
-    <h1 class="hero-title">
-      What God Mode Really Is — And How It Changes Your Life
-    </h1>
-
-    <!-- CORE DEFINITION -->
-    <p class="hero-sub">
-      <strong>God Mode</strong> is not fantasy or blind positivity.
-      It is a <strong>mental alignment state</strong> where your
-      thoughts, emotions, actions, and values move in the same direction.
-      When alignment increases, resistance drops — and life starts
-      responding in your favor.
-    </p>
-
-    <!-- COMPOUNDING / LUCK -->
-    <p class="hero-sub hero-sub-soft">
-      In God Mode, <strong>luck is not random</strong>.
-      It is the side-effect of <strong>1% correct decisions made daily</strong>:
-      less self-sabotage, cleaner habits, better relationships,
-      and long-term clarity.
-      <br><br>
-      Small good actions compound quietly — and over time,
-      they reshape your destiny.
-    </p>
-
-    <!-- CTA -->
-    <div class="hero-cta-row">
-      <a href="journey-map.html" class="btn btn-primary">
-        I want to come out of Lost Mode
-      </a>
-      <a href="#god-habits" class="btn btn-ghost">
-        See God Mode Principles ↓
-      </a>
-    </div>
-
-    <!-- FOOT NOTE -->
-    <div class="hero-mini">
-      God Mode is not permanent. The Devil Loop will call again.
-      This page exists to <strong>realign you consciously</strong>.
-      <br>
-      If you feel unstable, follow the
-      <a href="journey-map.html"><u>Journey Map</u></a>
-      to return safely to Normal Mode first.
-    </div>
-
-  </div>
-</section>
-
+  </section>
 
   <!-- SECTION: BREAKING THE DEVIL LOOP -->
   <section class="section" id="break-loop">

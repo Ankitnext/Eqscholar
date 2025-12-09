@@ -366,6 +366,64 @@
       from { text-shadow:0 0 10px rgba(231,76,60,0.6); }
       to   { text-shadow:0 0 22px rgba(231,76,60,1); }
     }
+        /* ---------- DEVIL PUZZLE BOX ---------- */
+    .puzzle-section {
+      padding: 40px 20px 20px;
+    }
+
+    .puzzle-box {
+      max-width: 780px;
+      margin: 0 auto;
+      background: radial-gradient(circle at top, rgba(255,0,0,0.16), rgba(0,0,0,0.9));
+      border-radius: 18px;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 22px 18px 20px;
+      text-align: center;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.6);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .puzzle-box::before {
+      content:"";
+      position:absolute;
+      inset:-40%;
+      background: radial-gradient(circle at top, rgba(255,255,255,0.08), transparent 55%);
+      opacity:0.25;
+      pointer-events:none;
+    }
+
+    .puzzle-label {
+      font-size:11px;
+      text-transform:uppercase;
+      letter-spacing:1.6px;
+      opacity:0.8;
+      margin-bottom:6px;
+    }
+
+    .puzzle-title {
+      font-size:22px;
+      font-weight:800;
+      margin-bottom:8px;
+      background: linear-gradient(45deg,#ff4b2b,#f39c12,#e74c3c);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+    }
+
+    .puzzle-text {
+      font-size:14px;
+      opacity:0.9;
+      max-width:620px;
+      margin:0 auto 14px;
+      line-height:1.6;
+    }
+
+    .puzzle-meta {
+      font-size:12px;
+      opacity:0.8;
+      margin-bottom:12px;
+    }
+
   </style>
 </head>
 <body>
@@ -838,6 +896,29 @@
       <a class="hero-link-btn" href="journey-map.html">Return to EQ Journey</a>
     </div>
   </section>
+
+    <!-- SECTION: DEVIL PUZZLE BOX -->
+  <section class="section narrow puzzle-section" id="devil-puzzle">
+    <div class="puzzle-box">
+      <div class="puzzle-label">Devil Puzzle Box · Mind Trap Challenge</div>
+      <h2 class="puzzle-title">Can You Escape the 1 Million Dollar Devil Loop?</h2>
+      <p class="puzzle-text">
+        Imagine a puzzle so deep that it doesn’t just test IQ – it exposes the exact trap your own
+        “devil mode” uses on you. Each question is a mirror: if you answer honestly, you see how your
+        mind sells peace, time and relationships for short-term pleasure.
+      </p>
+      <p class="puzzle-meta">
+        7 layers. No timer. No obvious hints. At the end you’ll see: are you running your mind, or is
+        your devil loop running you?
+      </p>
+      <div class="hero-links" style="margin-top:6px;">
+        <a class="hero-link-btn" href="devil_quiz.html">
+          😈 Open the Devil Puzzle Box →
+        </a>
+      </div>
+    </div>
+  </section>
+
 
   <footer>
     © <script>document.write(new Date().getFullYear())</script> EQScholar · Devil Mode Map

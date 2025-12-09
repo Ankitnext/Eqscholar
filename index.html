@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>EQ Quiz - Unlock Your Power</title>
+    <title>EQScholar – EQ Quiz & Journey</title>
     <style>
         /* ---------- Reset & Base ---------- */
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -311,51 +311,48 @@
         }
 
         /* Text link container */
-.side-learn {
-    margin-top: 12px;
-}
+        .side-learn {
+            margin-top: 12px;
+        }
 
-/* Anchor link (God + Devil) */
-.side-link,
-.side-learn a {
-    display: inline-block;
-    font-size: 14px;
-    font-weight: 600;
-    color: rgba(255,255,255,0.95);
-    text-decoration: underline;
-    text-underline-offset: 4px;
-    cursor: pointer;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
+        /* Anchor link (God + Devil) */
+        .side-link,
+        .side-learn a {
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 600;
+            color: rgba(255,255,255,0.95);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+        }
 
-/* Hover (desktop) */
-.side-link:hover,
-.side-learn a:hover {
-    opacity: 1;
-    transform: translateX(3px);
-}
+        /* Hover (desktop) */
+        .side-link:hover,
+        .side-learn a:hover {
+            opacity: 1;
+            transform: translateX(3px);
+        }
 
-/* Tap feedback (mobile) */
-.side-link:active,
-.side-learn a:active {
-    transform: translateX(6px);
-}
+        /* Tap feedback (mobile) */
+        .side-link:active,
+        .side-learn a:active {
+            transform: translateX(6px);
+        }
 
-/* Keyboard accessibility */
-.side-link:focus-visible,
-.side-learn a:focus-visible {
-    outline: 2px solid #f39c12;
-    outline-offset: 4px;
-    border-radius: 4px;
-}
-
-
-
+        /* Keyboard accessibility */
+        .side-link:focus-visible,
+        .side-learn a:focus-visible {
+            outline: 2px solid #f39c12;
+            outline-offset: 4px;
+            border-radius: 4px;
+        }
     </style>
 </head>
 <body>
     <nav class="nav-bar" role="navigation" aria-label="Main navigation">
-        <div class="logo">🧠 EQ Quiz Initiative</div>
+        <div class="logo">🧠 EQScholar</div>
 
         <!-- Hamburger for mobile -->
         <div id="menuToggle" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
@@ -384,7 +381,7 @@
                     </div>
 
                     <a href="index5.html" role="menuitem">Take Quiz</a>
-                    <a href="skill.html" role="menuitem">Skils</a>
+                    <a href="skill.html" role="menuitem">Skills</a>
                     <a href="skill_memory_advanced.html" role="menuitem">Test Skills</a>
                 </div>
             </div>
@@ -400,9 +397,9 @@
         <div class="particles"></div>
         <div class="duality-container">
             <div class="god-side">
-                <div class="god-icon">😇</div>
+                <div class="god-icon" aria-label="God Mode icon">😇</div>
                 <div class="god-text">
-                    <strong>WISDOM</strong><br>
+                    <strong>WISDOM MODE</strong><br>
                     Choose the path of<br>
                     understanding and empathy
                     <div class="side-learn"><a href="god-mode.html" class="side-link">What is God Mode? →</a></div>
@@ -410,10 +407,10 @@
             </div>
 
             <div class="devil-side">
-                <div class="devil-icon">😈</div>
+                <div class="devil-icon" aria-label="Devil Mode icon">😈</div>
                 <div class="devil-text">
-                    <strong>IMPULSE</strong><br>
-                    Follow anger and<br>
+                    <strong>DEVIL MODE</strong><br>
+                    Follow anger, impulse and<br>
                     destructive emotions
                     <div class="side-learn"><a href="devil-mode.html" class="side-link">Understand Devil Mind →</a></div>
                 </div>
@@ -423,32 +420,32 @@
             <div class="center-quote" id="centerQuote">
                 <span class="close-btn" onclick="closeCenterQuote()">×</span>
                 <div class="main-quote">UNLOCK YOUR POWER</div>
-                <div class="sub-quote" id="subQuote">Master your emotions. Transform society.</div>
+                <div class="sub-quote" id="subQuote">Check your emotional health, then start your EQ Journey.</div>
 
                 <!-- Step 1 button -->
                 <button id="primaryCTA" class="cta-button">START YOUR JOURNEY</button>
 
                 <!-- Step 2 choices (hidden initially) -->
                 <div id="choiceButtons" class="choice-buttons">
-                    <button class="cta-button secondary" onclick="goMental()">🧪 Check My Mental Health</button>
+                    <button class="cta-button secondary" onclick="goMental()">🧪 1-Minute Mental Check-up</button>
                     <button class="cta-button" onclick="goJourney()">🧭 Start EQ Journey</button>
                 </div>
 
                 <!-- HERO HOOK: progress badge + micro-progress bar -->
                 <div id="heroHookWrap" style="margin-top:18px; text-align:center;">
                   <div id="heroState" aria-live="polite" style="font-weight:600; color:#fff; font-size:14px; margin-bottom:8px;">
-                    Your State: <span id="heroStateLabel">Calm • Explorer</span>
+                    Your State: <span id="heroStateLabel">New Explorer</span>
                   </div>
                   <div id="progressWrap" style="width:260px; margin:0 auto; border-radius:10px; overflow:hidden; background: rgba(255,255,255,0.06); height:10px;">
-                    <div id="progressFill" style="height:100%; width:22%; background: linear-gradient(45deg,#e74c3c,#f39c12); transition: width .6s ease;"></div>
+                    <div id="progressFill" style="height:100%; width:10%; background: linear-gradient(45deg,#e74c3c,#f39c12); transition: width .6s ease;"></div>
                   </div>
-                  <div id="progressText" style="color:#fff; font-size:12px; margin-top:8px;">Level 2 • 22% Complete</div>
+                  <div id="progressText" style="color:#fff; font-size:12px; margin-top:8px;">Level 1 • 10% Complete</div>
                 </div>
 
                 <!-- Commitment Hook: micro-challenge quick-start -->
                 <div style="margin-top:14px;">
                   <button id="microTryBtn" onclick="startMicroChallenge()" style="background:transparent; border:1px solid rgba(255,255,255,0.08); padding:8px 12px; border-radius:999px; color:#fff; font-weight:700; cursor:pointer;">
-                    ▶ 30-sec Try (breath)
+                    ▶ 30-second Calm Test
                   </button>
                 </div>
 
@@ -470,96 +467,119 @@
 
     <section class="info-section" id="impact">
         <h2 style="font-size: 42px; margin-bottom: 60px; color: #f39c12;">
-            Transform Society Through Emotional Intelligence
+            Build Emotional Intelligence. Reduce Future Crime.
         </h2>
         <div class="info-grid">
             <div class="info-card">
                 <h3>🎯 Our Mission</h3>
-                <p>Reduce crime by developing emotional intelligence. Understanding emotions leads to better decisions and a safer society for everyone.</p>
+                <p>EQScholar helps students and adults understand their emotions, control impulses and make better decisions — so fewer lives are destroyed by anger, addictions and bad choices.</p>
 
                 <!-- Curiosity Hook: why toggle -->
                 <button onclick="toggleWhy(this)" class="why-toggle" aria-expanded="false" style="margin-top:12px; display:inline-block; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600;">
                   Why this matters
                 </button>
                 <div class="why-text" style="display:none; margin-top:10px; color:#f1f1f1; font-size:14px;">
-                  <!-- Short, curiosity-triggering line you can change later -->
-                  <strong>Because:</strong> building EQ rewires decision-making — small daily practice compounds into steady change.
+                  <strong>Because:</strong> most crimes start from one unmanaged emotion — one moment of Devil Mode. Training EQ reduces those moments.
                 </div>
 
                 <!-- Interaction Hook: reaction button (paste inside each .info-card) -->
                 <div style="margin-top:18px; display:flex; gap:8px; align-items:center;">
                   <button class="info-react" onclick="reactCard(this)" aria-pressed="false" title="React" style="background:transparent;border:1px solid rgba(255,255,255,0.06); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:600;">
-                    🔥 Helpful
+                    🔥 I agree
                   </button>
                   <span class="react-count" aria-hidden="true" style="opacity:0.9; font-size:13px; color:#fff; margin-left:6px;">0</span>
                 </div>
             </div>
             <div class="info-card">
-                <h3>🧠 EQ Assessment</h3>
-                <p>Take our comprehensive emotional intelligence quiz. Discover your strengths and areas for growth in managing emotions and relationships.</p>
+                <h3>🧪 1-Minute Mental Check-up</h3>
+                <p>Take a quick emotional health scan. In under 60 seconds, get a snapshot of your stress, anger, focus and relationships with simple, science-based questions.</p>
 
                 <!-- Curiosity Hook: why toggle -->
                 <button onclick="toggleWhy(this)" class="why-toggle" aria-expanded="false" style="margin-top:12px; display:inline-block; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600;">
                   Why this matters
                 </button>
                 <div class="why-text" style="display:none; margin-top:10px; color:#f1f1f1; font-size:14px;">
-                  <strong>Because:</strong> self-awareness is the first step to emotional mastery; measuring helps you track growth.
+                  <strong>Because:</strong> you can’t fix what you can’t see. The check-up shows where you are on the map — calm, confused, or close to Devil Mode.
                 </div>
 
                 <!-- Interaction Hook: reaction button -->
                 <div style="margin-top:18px; display:flex; gap:8px; align-items:center;">
                   <button class="info-react" onclick="reactCard(this)" aria-pressed="false" title="React" style="background:transparent;border:1px solid rgba(255,255,255,0.06); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:600;">
-                    💡 Insightful
+                    💡 Want to try
                   </button>
                   <span class="react-count" aria-hidden="true" style="opacity:0.9; font-size:13px; color:#fff; margin-left:6px;">0</span>
                 </div>
             </div>
             <div class="info-card">
-                <h3>🌟 Make Impact</h3>
-                <p>Every participant contributes to crime prevention research. Your emotional growth creates ripple effects in your community.</p>
+                <h3>🧭 EQ Journey & God Mode</h3>
+                <p>After your check-up, follow a 14-mode EQ Journey that trains focus, empathy, self-control and purpose. Slowly shift from Lost Mode → Normal Mode → God Mode.</p>
 
                 <!-- Curiosity Hook: why toggle -->
                 <button onclick="toggleWhy(this)" class="why-toggle" aria-expanded="false" style="margin-top:12px; display:inline-block; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600;">
                   Why this matters
                 </button>
                 <div class="why-text" style="display:none; margin-top:10px; color:#f1f1f1; font-size:14px;">
-                  <strong>Because:</strong> personal change scales to collective safety — your practice matters beyond you.
+                  <strong>Because:</strong> EQ is a skill, not magic. Small daily training sessions compound into a different personality after months.
                 </div>
 
                 <!-- Interaction Hook: reaction button -->
                 <div style="margin-top:18px; display:flex; gap:8px; align-items:center;">
                   <button class="info-react" onclick="reactCard(this)" aria-pressed="false" title="React" style="background:transparent;border:1px solid rgba(255,255,255,0.06); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:600;">
-                    🌱 I care
+                    🌱 I want this
                   </button>
                   <span class="react-count" aria-hidden="true" style="opacity:0.9; font-size:13px; color:#fff; margin-left:6px;">0</span>
+                </div>
+            </div>
+
+            <!-- New: Devil Puzzle card as extra hook, not main CTA -->
+            <div class="info-card">
+                <h3>😈 Devil's Puzzle (Long Challenge)</h3>
+                <p>A long-form EQ puzzle where every answer pulls you closer to God Mode or deeper into Devil Mode. Designed to be solved over many days, not in one sitting.</p>
+
+                <button onclick="toggleWhy(this)" class="why-toggle" aria-expanded="false" style="margin-top:12px; display:inline-block; background:transparent; border:1px solid rgba(255,255,255,0.06); color:#fff; padding:6px 10px; border-radius:8px; cursor:pointer; font-weight:600;">
+                  Who should play this?
+                </button>
+                <div class="why-text" style="display:none; margin-top:10px; color:#f1f1f1; font-size:14px;">
+                  <strong>Best for:</strong> people who already started the Journey and want to stress-test their focus, patience and truthfulness.
+                </div>
+
+                <div style="margin-top:18px; display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:center;">
+                  <button class="info-react" onclick="reactCard(this)" aria-pressed="false" title="React" style="background:transparent;border:1px solid rgba(255,255,255,0.06); color:#fff; padding:8px 10px; border-radius:999px; cursor:pointer; font-weight:600;">
+                    🧩 Sounds interesting
+                  </button>
+                  <span class="react-count" aria-hidden="true" style="opacity:0.9; font-size:13px; color:#fff; margin-left:6px;">0</span>
+
+                  <button onclick="window.location.href='devil_quiz.html'" style="background:transparent;border:1px solid rgba(255,255,255,0.4); color:#fff; padding:8px 14px; border-radius:999px; cursor:pointer; font-weight:600;">
+                    Enter Devil Puzzle →
+                  </button>
                 </div>
             </div>
         </div>
     </section>
 
     <section class="reward-section" id="rewards">
-        <div class="reward-title">🏆 Yearly Prizes - Total: ₹24,000</div>
-        <p style="font-size: 20px; margin-bottom: 40px;">Excellence in emotional intelligence deserves recognition</p>
+        <div class="reward-title">🏆 Yearly Prizes – Total Pool: 24,00000</div>
+        <p style="font-size: 20px; margin-bottom: 40px;">Top EQ performers are rewarded for consistent growth and impact.</p>
         <div class="reward-grid">
             <div class="reward-item">
                 <h4>🥇 1st Place</h4>
-                <p class="prize-text">₹2,000</p>
+                <p class="prize-text">2,00,000</p>
             </div>
             <div class="reward-item">
                 <h4>🥈 2nd Place</h4>
-                <p class="prize-text">₹1,000</p>
+                <p class="prize-text">1,00,000</p>
             </div>
             <div class="reward-item">
                 <h4>🥉 3rd Place</h4>
-                <p class="prize-text">₹500</p>
+                <p class="prize-text">50,000</p>
             </div>
             <div class="reward-item">
                 <h4>🏅 4th to 15th Place</h4>
-                <p class="prize-text">₹100</p>
+                <p class="prize-text">10,000</p>
             </div>
             <div class="reward-item">
                 <h4>🏅 16th to 50th Place</h4>
-                <p class="prize-text">₹50</p>
+                <p class="prize-text">5,000</p>
             </div>
         </div>
         <button class="cta-button" style="margin-top: 40px;" onclick="window.location.href='index5.html'">COMPETE NOW</button>
@@ -594,7 +614,7 @@
     <div id="unlockModal" role="dialog" aria-modal="true" aria-labelledby="unlockTitle" aria-hidden="true">
       <div class="modal-card" role="document">
         <div id="unlockTitle" class="modal-title">UNLOCK YOUR POWER</div>
-        <div class="modal-sub">Choose how to start — quick checkup or the full EQ Journey.</div>
+        <div class="modal-sub">Choose how to start — quick check-up or the full EQ Journey.</div>
 
         <div class="modal-buttons">
           <button class="modal-btn primary" id="modalStartBtn">Start Journey</button>
@@ -617,11 +637,10 @@ function startChoice() {
     if (!primary || !choice) return;
     primary.style.display = 'none';
     choice.style.display = 'flex';
-    if (sub) sub.textContent = 'Where do you want to start?';
+    if (sub) sub.textContent = 'Choose how you want to start today.';
 }
 
 function goMental() { 
-    // navigate to your mental-check.html (same as before)
     window.location.href = 'mental-check.html'; 
 }
 
@@ -680,7 +699,6 @@ if (navLinks) {
         const clicked = e.target;
         const link = clicked.closest('a');
 
-        // If no <a> was clicked (e.g. tap on whitespace) do nothing
         if (!link) return;
 
         // Activity toggle clicked (first-level)
@@ -690,12 +708,10 @@ if (navLinks) {
                 e.stopPropagation();
                 const isCurrentlyOpen = activityParent.classList.contains('open');
                 
-                // Toggle the activity dropdown
                 if (isCurrentlyOpen) {
                     activityParent.classList.remove('open');
                     activityLink.setAttribute('aria-expanded', 'false');
                     activityMenu.setAttribute('aria-hidden', 'true');
-                    // Also close games submenu when closing activity
                     if (gamesHasSub && gamesHasSub.classList.contains('open')) {
                         gamesHasSub.classList.remove('open');
                         const gToggle = gamesHasSub.querySelector('.sub-toggle');
@@ -707,7 +723,7 @@ if (navLinks) {
                     activityMenu.setAttribute('aria-hidden', 'false');
                 }
             } else {
-                e.preventDefault(); // desktop: avoid # jump
+                e.preventDefault();
             }
             return;
         }
@@ -722,14 +738,12 @@ if (navLinks) {
                 
                 const isCurrentlyOpen = hasSub.classList.contains('open');
                 
-                // Toggle the games submenu
                 if (isCurrentlyOpen) {
                     hasSub.classList.remove('open');
                     link.setAttribute('aria-expanded', 'false');
                 } else {
                     hasSub.classList.add('open');
                     link.setAttribute('aria-expanded', 'true');
-                    // Ensure activity menu open when opening games
                     if (!activityParent.classList.contains('open')) {
                         activityParent.classList.add('open');
                         activityLink.setAttribute('aria-expanded', 'true');
@@ -737,23 +751,21 @@ if (navLinks) {
                     }
                 }
             } else {
-                e.preventDefault(); // desktop uses hover
+                e.preventDefault();
             }
             return;
         }
 
-        // Otherwise it's a real navigation link (Market, Community, Take Quiz, etc.)
+        // Real navigation link
         const href = link.getAttribute('href');
         const isPlaceholder = !href || href === '#';
         if (!isPlaceholder) {
-            // Close mobile nav menu
             if (navLinks.classList.contains('open')) {
                 navLinks.classList.remove('open');
                 if (menuToggle) menuToggle.classList.remove('open');
                 if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
                 navLinks.setAttribute('aria-hidden', 'true');
             }
-            // Collapse activity/games dropdowns
             if (activityParent && activityParent.classList.contains('open')) {
                 activityParent.classList.remove('open');
                 activityLink.setAttribute('aria-expanded', 'false');
@@ -764,7 +776,6 @@ if (navLinks) {
                 const gToggle = gamesHasSub.querySelector('.sub-toggle');
                 if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
             }
-            // Let default navigation proceed
         }
     });
 }
@@ -773,7 +784,6 @@ if (navLinks) {
 document.addEventListener('click', function(e) {
     const t = e.target;
     
-    // Close off-canvas nav if open and clicked outside
     if (navLinks && navLinks.classList.contains('open')) {
         if (!navLinks.contains(t) && !(menuToggle && menuToggle.contains(t))) {
             navLinks.classList.remove('open');
@@ -783,14 +793,12 @@ document.addEventListener('click', function(e) {
         }
     }
     
-    // Close activity if open and clicked outside it
     if (activityParent && activityParent.classList.contains('open') && !activityParent.contains(t)) {
         activityParent.classList.remove('open');
         if (activityLink) activityLink.setAttribute('aria-expanded', 'false');
         if (activityMenu) activityMenu.setAttribute('aria-hidden', 'true');
     }
     
-    // Close games submenu if open and clicked outside it
     if (gamesHasSub && gamesHasSub.classList.contains('open') && !gamesHasSub.contains(t)) {
         gamesHasSub.classList.remove('open');
         const gToggle = gamesHasSub.querySelector('.sub-toggle');
@@ -864,7 +872,7 @@ function reactCard(btn) {
     btn.classList.add('pulse');
     btn.setAttribute('aria-pressed', 'true');
     setTimeout(() => btn.classList.remove('pulse'), 350);
-  } catch(e){ /* no-op */ }
+  } catch(e){ }
 }
 
 /* 3) Curiosity toggle */
@@ -909,15 +917,13 @@ function endMicroChallenge() {
 
 /* 5) Helper open (tiny tooltip behavior) */
 function openHelper() {
-  // small accessible alert / modal
-  alert('Need help? Try the 1-minute check-up or visit Journey. For more support, contact the experts page.');
+  alert('Not sure where to start? Use the 1-minute mental check-up or tap Journey to see the 14 modes.');
 }
 
-/* 6) Quick initializer: if you want default hero progress on load */
+/* 6) Quick initializer */
 document.addEventListener('DOMContentLoaded', function(){
-  // default values (safe)
-  setHeroState('Calm • Explorer');
-  setHeroProgress(22, 'Level 2 • 22% Complete');
+  setHeroState('New Explorer');
+  setHeroProgress(10, 'Level 1 • 10% Complete');
 });
 
 
@@ -926,10 +932,8 @@ document.addEventListener('DOMContentLoaded', function(){
   const cta = document.getElementById('mobileStickyCTA');
   if (!cta) return;
 
-  // Only enable on mobile
   function mobileOnly() { return window.matchMedia('(max-width:768px)').matches; }
 
-  // Show after scrolling this many pixels
   const SHOW_AFTER_PX = 220;
   const footer = document.querySelector('footer') || document.querySelector('.reward-section') || null;
   let visible = false;
@@ -947,7 +951,6 @@ document.addEventListener('DOMContentLoaded', function(){
     setVisible(sc > SHOW_AFTER_PX);
   }
 
-  // Hide when footer visible (avoid overlap)
   if (footer && 'IntersectionObserver' in window) {
     const io = new IntersectionObserver((entries) => {
       entries.forEach(ent => {
@@ -982,7 +985,6 @@ function openUnlockModal() {
   if (!m) return;
   m.classList.add('open');
   m.setAttribute('aria-hidden','false');
-  // focus management
   const btn = document.getElementById('modalStartBtn');
   if (btn) btn.focus();
   try { sessionStorage.setItem('eq_unlock_shown', '1'); } catch(e){}
@@ -995,30 +997,25 @@ function closeUnlockModal() {
 }
 
 document.addEventListener('DOMContentLoaded', function(){
-  // modal button wiring
   const s = document.getElementById('modalStartBtn');
   const c = document.getElementById('modalCheckBtn');
   if (s) s.addEventListener('click', function(){ closeUnlockModal(); goJourney(); });
   if (c) c.addEventListener('click', function(){ closeUnlockModal(); goMental(); });
 
-  // wire existing START YOUR JOURNEY CTA to open modal first
   const primaryCTA = document.getElementById('primaryCTA');
   if (primaryCTA) {
     primaryCTA.addEventListener('click', function(e){
       e.preventDefault();
-      // show modal only once per session; fallback to direct navigation if already shown
       const shown = sessionStorage.getItem('eq_unlock_shown');
       if (!shown) openUnlockModal();
-      else goJourney();
+      else startChoice();
     });
   }
 
-  // ESC closes modal
   document.addEventListener('keydown', function(ev){
     if (ev.key === 'Escape') closeUnlockModal();
   });
 
-  // click outside to close
   const modal = document.getElementById('unlockModal');
   if (modal) {
     modal.addEventListener('click', function(e){
@@ -1032,7 +1029,6 @@ document.addEventListener('DOMContentLoaded', function () {
   const icons = document.querySelectorAll('.god-icon, .devil-icon');
 
   icons.forEach(icon => {
-    // Click / tap
     icon.addEventListener('click', () => {
       icon.classList.add('icon-nudge');
       setTimeout(() => {
@@ -1040,7 +1036,6 @@ document.addEventListener('DOMContentLoaded', function () {
       }, 180);
     });
 
-    // (Optional) keyboard accessibility: Enter / Space
     icon.setAttribute('tabindex', '0');
     icon.setAttribute('role', 'button');
 
@@ -1058,6 +1053,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     </script>
 
-    <footer class="mt-12 py-8 text-center text-sm text-gray-500">© <script>document.write(new Date().getFullYear())</script> EQScholar — Built for focused growth</footer>
+    <footer class="mt-12 py-8 text-center text-sm text-gray-500">
+        © <script>document.write(new Date().getFullYear())</script> EQScholar — Built for focused growth
+    </footer>
 </body>
 </html>

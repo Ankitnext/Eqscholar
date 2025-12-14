@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Brain OS – How the Mind Works</title>
+
+<style>
+/* ---------- Reset & Base ---------- */
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Arial',sans-serif; }
+body {
+  background: linear-gradient(135deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);
+  min-height:100vh;
+  color:#ecf0f1;
+  overflow-x:auto;
+  padding:20px;
+}
+
+/* ---------- PAGE ---------- */
+.map-container { max-width:1400px; margin:120px auto 40px; padding:0 20px; }
+.map-header { text-align:center; margin-bottom:50px; }
+.map-title {
+  font-size:3rem;
+  font-weight:bold;
+  color:#f39c12;
+  text-shadow:2px 2px 10px rgba(0,0,0,.5);
+}
+.map-subtitle { font-size:1.2rem; color:#bdc3c7; margin-top:10px; }
+
+/* ---------- SECTIONS ---------- */
+.map-section {
+  margin-bottom:70px;
+  padding:30px;
+  border-radius:20px;
+  backdrop-filter:blur(10px);
+}
+.section-header { text-align:center; margin-bottom:30px; }
+.section-title { font-size:2rem; margin-bottom:10px; }
+.section-description { color:#bdc3c7; }
+
+/* COLORS */
+.input-section {
+  background:linear-gradient(45deg,rgba(44,84,84,.3),rgba(61,76,76,.3));
+  border:2px solid rgba(0,206,201,.3);
+}
+.input-section .section-title { color:#00cec9; }
+
+.process-section {
+  background:linear-gradient(45deg,rgba(84,44,84,.3),rgba(61,61,76,.3));
+  border:2px solid rgba(155,89,182,.3);
+}
+.process-section .section-title { color:#9b59b6; }
+
+.output-section {
+  background:linear-gradient(45deg,rgba(84,84,44,.3),rgba(76,61,61,.3));
+  border:2px solid rgba(243,156,18,.3);
+}
+.output-section .section-title { color:#f39c12; }
+
+/* ---------- GRID ---------- */
+.lessons-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+  gap:25px;
+}
+
+/* ---------- CARD ---------- */
+.lesson-card {
+  background:rgba(0,0,0,.45);
+  border-radius:15px;
+  padding:25px;
+  position:relative;
+  transition:.3s ease;
+  border:2px solid transparent;
+  backdrop-filter:blur(5px);
+}
+.lesson-card:hover {
+  transform:translateY(-8px) scale(1.02);
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
+}
+
+.lesson-header { display:flex; align-items:center; margin-bottom:15px; }
+.lesson-icon { font-size:2.3rem; margin-right:15px; }
+.lesson-info h3 { font-size:1.3rem; color:#f39c12; }
+
+.lesson-title {
+  font-size:1.1rem;
+  font-weight:bold;
+  margin-bottom:10px;
+}
+.lesson-description {
+  font-size:.95rem;
+  color:#bdc3c7;
+  line-height:1.4;
+}
+
+/* ---------- BUTTONS ---------- */
+.lesson-actions { display:flex; gap:10px; margin-top:15px; }
+.action-btn {
+  flex:1;
+  padding:10px;
+  border:none;
+  border-radius:8px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:.3s ease;
+  font-size:.9rem;
+}
+.lesson-btn {
+  background:linear-gradient(45deg,#9b59b6,#8e44ad);
+  color:#fff;
+}
+.explore-btn {
+  background:linear-gradient(45deg,#16a085,#27ae60);
+  color:#fff;
+}
+.action-btn:hover { transform:scale(1.05); }
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:768px){
+  .lessons-grid{ grid-template-columns:1fr; }
+}
+
+/* ---------- BOTTOM NAV ---------- */
+.bottom-nav {
+  position:fixed;
+  bottom:20px;
+  left:0;
+  width:100%;
+  display:flex;
+  justify-content:space-between;
+  padding:0 40px;
+  z-index:1000;
+}
+
+.nav-btn {
+  padding:14px 28px;
+  border:none;
+  border-radius:12px;
+  font-size:1rem;
+  font-weight:bold;
+  cursor:pointer;
+  color:#fff;
+  transition:.3s ease;
+  backdrop-filter:blur(6px);
+}
+
+.nav-btn.left {
+  background:linear-gradient(45deg,#3498db,#2980b9);
+}
+
+.nav-btn.right {
+  background:linear-gradient(45deg,#f39c12,#e67e22);
+}
+
+.nav-btn:hover {
+  transform:scale(1.08);
+  box-shadow:0 10px 25px rgba(0,0,0,.4);
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="map-container">
+  <div class="map-header">
+    <h1 class="map-title">🧠 Brain Operating System</h1>
+    <p class="map-subtitle">From input → belief → action → learning</p>
+  </div>
+
+  <!-- INPUT -->
+  <div class="map-section input-section">
+    <div class="section-header">
+      <h2 class="section-title">INPUT</h2>
+      <p class="section-description">Raw data enters the system</p>
+    </div>
+    <div class="lessons-grid">
+
+      <div class="lesson-card">
+        <div class="lesson-header"><div class="lesson-icon">👁️</div><div class="lesson-info"><h3>Sensory Input</h3></div></div>
+        <div class="lesson-title">1️⃣ Raw Data Capture</div>
+        <div class="lesson-description">Eyes, ears, skin collect signals.</div>
+        <div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div>
+      </div>
+
+      <div class="lesson-card">
+        <div class="lesson-header"><div class="lesson-icon">⏳</div><div class="lesson-info"><h3>Sensory Memory</h3></div></div>
+        <div class="lesson-title">2️⃣ Temporary Buffer</div>
+        <div class="lesson-description">Holds data for seconds.</div>
+        <div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div>
+      </div>
+
+      <div class="lesson-card">
+        <div class="lesson-header"><div class="lesson-icon">🎯</div><div class="lesson-info"><h3>Attention Filter</h3></div></div>
+        <div class="lesson-title">3️⃣ Focus Selector</div>
+        <div class="lesson-description">Chooses what matters.</div>
+        <div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROCESS -->
+  <div class="map-section process-section">
+    <div class="section-header">
+      <h2 class="section-title">PROCESS</h2>
+      <p class="section-description">Meaning, belief & wisdom</p>
+    </div>
+    <div class="lessons-grid">
+
+      <div class="lesson-card"><h3>4️⃣ Perception</h3><div class="lesson-description">Meaning is constructed.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>5️⃣ Working Memory</h3><div class="lesson-description">Mental RAM.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>6️⃣ Emotional Brain</h3><div class="lesson-description">Threat vs safety.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>7️⃣ Belief System</h3><div class="lesson-description">Experience + Emotion + Repetition.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>8️⃣ Mindset</h3><div class="lesson-description">Interpretation style.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>9️⃣ Identity</h3><div class="lesson-description">Who you think you are.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>🔟 Long-Term Memory</h3><div class="lesson-description">Experience storage.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>1️⃣1️⃣ Logic (PFC)</h3><div class="lesson-description">Reason & planning.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>1️⃣2️⃣ Wisdom</h3><div class="lesson-description">Experience + reflection.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+
+    </div>
+  </div>
+
+  <!-- OUTPUT -->
+  <div class="map-section output-section">
+    <div class="section-header">
+      <h2 class="section-title">OUTPUT</h2>
+      <p class="section-description">Action & learning loop</p>
+    </div>
+    <div class="lessons-grid">
+
+      <div class="lesson-card"><h3>1️⃣3️⃣ Decision</h3><div class="lesson-description">Choice selection.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>1️⃣4️⃣ Reptilian Brain</h3><div class="lesson-description">Instant action.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>1️⃣5️⃣ Habit System</h3><div class="lesson-description">Automation.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+      <div class="lesson-card"><h3>1️⃣6️⃣ Feedback & Learning</h3><div class="lesson-description">Mistake → improvement.</div><div class="lesson-actions"><button class="action-btn lesson-btn">Intro</button><button class="action-btn explore-btn">Explore</button></div></div>
+
+    </div>
+  </div>
+
+</div>
+<!-- BOTTOM NAVIGATION -->
+<div class="bottom-nav">
+  <button class="nav-btn left" onclick="location.href='intro.html'">
+    ⬅️ Back
+  </button>
+
+  <button class="nav-btn right" onclick="location.href='aptitude.html'">
+    Aptitude ➡️
+  </button>
+</div>
+
+</body>
+</html>

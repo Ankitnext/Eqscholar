@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Memory System – EQScholar</title>
+
+  <style>
+    /* ---------- Reset & Base ---------- */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, #000000 0%, #0b0b14 40%, #111827 100%);
+      color: #ecf0f1;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    /* ---------- Layout ---------- */
+    .container {
+      max-width: 1200px;
+      margin: 100px auto 60px;
+      padding: 0 20px;
+    }
+
+    .page-header {
+      text-align: center;
+      margin-bottom: 50px;
+    }
+
+    .page-header h1 {
+      font-size: 3rem;
+      color: #f39c12;
+      margin-bottom: 12px;
+    }
+
+    .page-header p {
+      font-size: 1.2rem;
+      color: #bdc3c7;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    /* ---------- Section ---------- */
+    .section {
+      background: rgba(255,255,255,0.04);
+      border-radius: 18px;
+      padding: 30px;
+      margin-bottom: 40px;
+      border: 1px solid rgba(255,255,255,0.08);
+      backdrop-filter: blur(6px);
+    }
+
+    .section h2 {
+      font-size: 2rem;
+      margin-bottom: 14px;
+      color: #2ecc71;
+    }
+
+    .section p {
+      font-size: 1rem;
+      line-height: 1.6;
+      color: #d1d5db;
+      margin-bottom: 14px;
+    }
+
+    /* ---------- Formula Box ---------- */
+    .formula-box {
+      background: rgba(0,0,0,0.55);
+      border-left: 5px solid #f39c12;
+      padding: 18px 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+      font-size: 1.05rem;
+      color: #f1f5f9;
+    }
+
+    /* ---------- Grid ---------- */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .card {
+      background: rgba(0,0,0,0.45);
+      border-radius: 14px;
+      padding: 22px;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.6);
+    }
+
+    .card h3 {
+      font-size: 1.3rem;
+      margin-bottom: 10px;
+      color: #f39c12;
+    }
+
+    .card p {
+      font-size: 0.95rem;
+      color: #cbd5f5;
+      line-height: 1.5;
+    }
+
+    /* ---------- Buttons ---------- */
+    .actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 18px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      padding: 10px 16px;
+      border-radius: 8px;
+      border: none;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: transform 0.25s ease;
+    }
+
+    .btn:hover { transform: scale(1.05); }
+
+    .btn-back {
+      background: linear-gradient(45deg, #374151, #4b5563);
+      color: #fff;
+    }
+
+    .btn-explore {
+      background: linear-gradient(45deg, #16a085, #27ae60);
+      color: #fff;
+    }
+
+    /* ---------- Footer ---------- */
+    .footer-note {
+      text-align: center;
+      margin-top: 60px;
+      font-size: 0.9rem;
+      color: #9ca3af;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="container">
+
+    <!-- HEADER -->
+    <div class="page-header">
+      <h1>🧠 Memory System</h1>
+      <p>
+        Memory is how the brain stores experience.
+        It decides what you remember, what you forget,
+        and what silently shapes your future behavior.
+      </p>
+    </div>
+
+    <!-- WHAT IS MEMORY -->
+    <div class="section">
+      <h2>What Is Memory?</h2>
+      <p>
+        Memory is not a storage box.
+        It is a <strong>dynamic system</strong> that encodes, stores,
+        and retrieves information based on meaning and emotion.
+      </p>
+
+      <div class="formula-box">
+        Memory = Attention × Meaning × Emotion × Repetition
+      </div>
+
+      <p>
+        What you do not attend to or emotionally tag
+        rarely becomes long-term memory.
+      </p>
+    </div>
+
+    <!-- TYPES OF MEMORY -->
+    <div class="section">
+      <h2>Types of Memory</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Sensory Memory</h3>
+          <p>
+            Ultra-short memory from the five senses.
+            Lasts milliseconds to seconds.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Working Memory</h3>
+          <p>
+            Temporary mental workspace.
+            Used for thinking, calculation, and reasoning.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Short-Term Memory</h3>
+          <p>
+            Holds information for minutes.
+            Easily lost without reinforcement.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Long-Term Memory</h3>
+          <p>
+            Stable storage of knowledge, skills,
+            and life experiences.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DATA TYPES -->
+    <div class="section">
+      <h2>Memory by Data Type</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Numbers & Facts</h3>
+          <p>
+            Best stored through patterns, grouping,
+            and logical structure.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Images & Visual Data</h3>
+          <p>
+            Stored using association, spatial mapping,
+            and mental imagery.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Sounds & Language</h3>
+          <p>
+            Rhythm, tone, and repetition
+            strengthen recall.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Emotional Experiences</h3>
+          <p>
+            Stored deeply due to strong emotional tagging.
+            Harder to forget.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIVE SENSES -->
+    <div class="section">
+      <h2>Memory Through the Five Senses</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>👁 Visual</h3>
+          <p>
+            Diagrams, color, imagery.
+            Strongest channel for most people.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>👂 Auditory</h3>
+          <p>
+            Sound, repetition, explanation aloud.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>✋ Kinesthetic</h3>
+          <p>
+            Movement, writing, doing.
+            Body reinforces memory.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>👃 Olfactory</h3>
+          <p>
+            Smell-linked memories are powerful
+            and emotionally vivid.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>👅 Gustatory</h3>
+          <p>
+            Taste-based memory, strongly tied to emotion
+            and context.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMORY TECHNIQUES -->
+    <div class="section">
+      <h2>Methods to Save Memory Effectively</h2>
+
+      <div class="grid">
+        <div class="card">
+          <h3>Association</h3>
+          <p>
+            Link new data to known ideas.
+            The brain stores networks, not files.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Chunking</h3>
+          <p>
+            Break information into manageable units.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Visualization</h3>
+          <p>
+            Convert abstract data into mental images.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Spaced Repetition</h3>
+          <p>
+            Review information at increasing intervals.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Teaching Others</h3>
+          <p>
+            Explaining strengthens understanding
+            and recall.
+          </p>
+        </div>
+
+        <div class="card">
+          <h3>Emotional Anchoring</h3>
+          <p>
+            Add meaning or feeling to data
+            for deeper storage.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- CONNECTION -->
+    <div class="section">
+      <h2>How Memory Fits Into Your EQ Journey</h2>
+
+      <p>
+        As emotional intelligence grows,
+        memory shifts from reactive storage
+        to conscious encoding.
+      </p>
+
+      <div class="formula-box">
+        Strong Memory = Clear Attention + Right Method
+      </div>
+
+      <div class="actions">
+        <button class="btn btn-back" onclick="location.href='aptitude.html'">
+          ← Back to Aptitude
+        </button>
+        <button class="btn btn-explore" onclick="location.href='journey-map.html'">
+          Explore EQ Journey
+        </button>
+      </div>
+    </div>
+
+    <div class="footer-note">
+      Memory is not fixed.  
+      Train the method, and recall follows.
+    </div>
+
+  </div>
+
+</body>
+</html>

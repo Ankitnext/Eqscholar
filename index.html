@@ -645,7 +645,7 @@ function goMental() {
 }
 
 function goJourney() { 
-    window.location.href = 'journey-map.html'; 
+    window.location.href = 'intro.html'; 
 }
 
 function closeCenterQuote() { 
@@ -1006,10 +1006,9 @@ document.addEventListener('DOMContentLoaded', function(){
   if (primaryCTA) {
     primaryCTA.addEventListener('click', function(e){
       e.preventDefault();
-      const shown = sessionStorage.getItem('eq_unlock_shown');
-      if (!shown) openUnlockModal();
-      else startChoice();
+      window.location.href = 'intro.html';
     });
+
   }
 
   document.addEventListener('keydown', function(ev){

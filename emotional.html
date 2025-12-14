@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>EQScholar – Emotional Processing</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: linear-gradient(135deg,#1c1c2b,#2c2c44,#3a3a5c);
+      color: #fff;
+      min-height: 100vh;
+    }
+
+    .wrap {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 80px 20px;
+    }
+
+    h1 {
+      font-size: 40px;
+      background: linear-gradient(45deg,#e74c3c,#f39c12);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+    }
+
+    .unify {
+      margin-top: 10px;
+      padding-left: 18px;
+      border-left: 3px solid #f39c12;
+      color: #ecf0f1;
+      font-size: 17px;
+      line-height: 1.6;
+      opacity: .95;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.7;
+      color: #ecf0f1;
+      margin-top: 12px;
+    }
+
+    h2 {
+      margin-top: 50px;
+      color: #f39c12;
+    }
+
+    .emotion-box {
+      margin-top: 30px;
+      padding: 24px;
+      border-radius: 16px;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .emotion-box strong {
+      color: #f1c40f;
+    }
+
+    .flow {
+      margin-top: 14px;
+      font-size: 15px;
+      color: #ddd;
+      opacity: .85;
+    }
+
+    .nav-btn {
+      margin-top: 20px;
+      margin-right: 12px;
+      padding: 14px 28px;
+      border-radius: 999px;
+      border: none;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(45deg,#3498db,#9b59b6);
+      color: #fff;
+      transition: transform .2s ease, box-shadow .2s ease;
+    }
+
+    .nav-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(0,0,0,.4);
+    }
+
+    .back-btn {
+      margin-top: 60px;
+      padding: 16px 32px;
+      border-radius: 999px;
+      border: none;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(45deg,#16a085,#27ae60);
+      color: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+    <h1>Emotional Brain</h1>
+
+    <!-- UNIFYING FRAMEWORK -->
+    <div class="unify">
+      Emotions are signals<br />
+      Mental states are patterns<br />
+      Journey modes are levels of mastery
+    </div>
+
+    <!-- <div class="unify" style="margin-top:14px; font-size:16px; opacity:.9;">
+        <strong>Journey Modes</strong> (Lost → God)<br />
+        <strong>Mental States</strong> (Belief, Mindset, Identity…)<br />
+        <strong>Emotions</strong> (Anger, Fear, Joy…)
+    </div> -->
+
+    <!-- NAV BUTTONS -->
+    <button class="nav-btn" onclick="location.href='mental_state.html'">
+      Explore Mental States
+    </button>
+
+    <button class="nav-btn" onclick="location.href='journey-map.html'">
+      Explore Journey Modes
+    </button>
+
+    <p>
+      Emotions are fast decision engines.
+      They guide survival, motivation, and connection.
+      Mastery comes from regulation, not suppression.
+    </p>
+
+    <!-- FEAR -->
+    <div class="emotion-box">
+      <h2>😨 Fear</h2>
+      <p><strong>Trigger:</strong> Threat, uncertainty, loss of control.</p>
+      <p>Fear sharpens focus. When unchecked, it becomes anxiety.</p>
+      <p><strong>Balance:</strong> Replace unknowns with clarity.</p>
+      <div class="flow">Threat → Fear → Protection</div>
+    </div>
+
+    <!-- ANGER -->
+    <div class="emotion-box">
+      <h2>😡 Anger</h2>
+      <p><strong>Trigger:</strong> Injustice, boundary violation.</p>
+      <p>Anger provides energy to defend values.</p>
+      <p><strong>Balance:</strong> Convert reaction into assertive action.</p>
+      <div class="flow">Violation → Anger → Defense</div>
+    </div>
+
+    <!-- SADNESS -->
+    <div class="emotion-box">
+      <h2>😢 Sadness</h2>
+      <p><strong>Trigger:</strong> Loss, disappointment.</p>
+      <p>Sadness allows reflection and recalibration.</p>
+      <p><strong>Balance:</strong> Process, then reconnect.</p>
+      <div class="flow">Loss → Sadness → Reflection</div>
+    </div>
+
+    <!-- JOY -->
+    <div class="emotion-box">
+      <h2>😊 Joy</h2>
+      <p><strong>Trigger:</strong> Reward, safety, connection.</p>
+      <p>Joy reinforces meaningful behavior.</p>
+      <p><strong>Balance:</strong> Enjoy without losing awareness.</p>
+      <div class="flow">Reward → Joy → Motivation</div>
+    </div>
+
+    <!-- DISGUST -->
+    <div class="emotion-box">
+      <h2>🤢 Disgust</h2>
+      <p><strong>Trigger:</strong> Harm, moral violation.</p>
+      <p>Disgust protects from danger.</p>
+      <p><strong>Balance:</strong> Separate instinct from bias.</p>
+      <div class="flow">Rejection → Disgust → Protection</div>
+    </div>
+
+    <button class="back-btn" onclick="location.href='index.html'">
+      ← Back to EQScholar
+    </button>
+  </div>
+</body>
+</html>

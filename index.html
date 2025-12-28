@@ -366,14 +366,18 @@
 
             <!-- Activity dropdown -->
             <div class="dropdown-parent" id="activityDropdown">
-                <a href="#" class="dropdown-link" id="activityLink" aria-haspopup="true" aria-expanded="false">Activity ▾</a>
+                <a href="#" class="dropdown-link" id="activityLink" aria-haspopup="true" aria-expanded="false">
+                    Activity ▾
+                </a>
 
                 <div class="dropdown-menu" id="activityMenu" aria-hidden="true" role="menu">
                     <a href="market.html" role="menuitem">Market</a>
                     <a href="comm.html" role="menuitem">Community</a>
 
                     <div class="has-sub" id="gamesHasSub">
-                        <a href="#" class="sub-toggle" id="gamesToggle" aria-haspopup="true" aria-expanded="false">Games ▸</a>
+                        <a href="#" class="sub-toggle" id="gamesToggle" aria-haspopup="true" aria-expanded="false">
+                            Games ▸
+                        </a>
                         <div class="sub-menu" id="gamesSubMenu" role="menu">
                             <a href="games.html" role="menuitem">All Games</a>
                             <a href="events.html" role="menuitem">Events</a>
@@ -386,11 +390,26 @@
                 </div>
             </div>
 
+            <!-- Language dropdown (NEW) -->
+            <div class="dropdown-parent" id="languageDropdown">
+                <a href="#" class="dropdown-link" aria-haspopup="true">
+                    🌐 Language ▾
+                </a>
+
+                <div class="dropdown-menu" role="menu">
+                    <a href="#" onclick="applyEQLanguage('en')">English</a>
+                    <a href="#" onclick="applyEQLanguage('hi')">हिंदी</a>
+                    <a href="#" onclick="applyEQLanguage('ta')">தமிழ்</a>
+                    <a href="#" onclick="applyEQLanguage('te')">తెలుగు</a>
+                </div>
+            </div>
+
             <a href="mental-check.html">Mental Health</a>
             <a href="journey-map.html">Journey</a>
             <a href="expert.html">Experts</a>
             <a href="index3.html">Profile</a>
         </div>
+
     </nav>
 
     <section class="hero-section" id="home">
@@ -419,7 +438,7 @@
             <!-- Center quote with 2-step CTA -->
             <div class="center-quote" id="centerQuote">
                 <span class="close-btn" onclick="closeCenterQuote()">×</span>
-                <div class="main-quote">UNLOCK YOUR POWER</div>
+                <div class="main-quote" data-i18n="unlock_power">UNLOCK YOUR POWER</div>
                 <div class="sub-quote" id="subQuote">Check your emotional health, then start your EQ Journey.</div>
 
                 <!-- Step 1 button -->
@@ -702,31 +721,29 @@ if (navLinks) {
         if (!link) return;
 
         // Activity toggle clicked (first-level)
-        if (link.classList.contains('dropdown-link')) {
-            if (isMobile()) {
-                e.preventDefault();
-                e.stopPropagation();
-                const isCurrentlyOpen = activityParent.classList.contains('open');
-                
-                if (isCurrentlyOpen) {
-                    activityParent.classList.remove('open');
-                    activityLink.setAttribute('aria-expanded', 'false');
-                    activityMenu.setAttribute('aria-hidden', 'true');
-                    if (gamesHasSub && gamesHasSub.classList.contains('open')) {
-                        gamesHasSub.classList.remove('open');
-                        const gToggle = gamesHasSub.querySelector('.sub-toggle');
-                        if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
-                    }
-                } else {
-                    activityParent.classList.add('open');
-                    activityLink.setAttribute('aria-expanded', 'true');
-                    activityMenu.setAttribute('aria-hidden', 'false');
-                }
-            } else {
-                e.preventDefault();
-            }
-            return;
-        }
+        // Generic dropdown toggle (Activity, Language, future menus)
+if (link.classList.contains('dropdown-link')) {
+    if (isMobile()) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const parent = link.closest('.dropdown-parent');
+        if (!parent) return;
+
+        // Close other dropdowns
+        document.querySelectorAll('.dropdown-parent.open').forEach(dd => {
+            if (dd !== parent) dd.classList.remove('open');
+        });
+
+        // Toggle current dropdown
+        parent.classList.toggle('open');
+
+        return;
+    } else {
+        e.preventDefault();
+    }
+}
+
 
         // Games sub-toggle clicked
         if (link.classList.contains('sub-toggle')) {
@@ -1051,6 +1068,50 @@ document.addEventListener('DOMContentLoaded', function () {
 });
 
     </script>
+    <script>
+/* ========= EQScholar Language Engine ========= */
+
+const EQ_TRANSLATIONS = {
+  en: {
+    unlock_power: "UNLOCK YOUR POWER"
+  },
+  hi: {
+    unlock_power: "अपनी शक्ति को जागृत करें"
+  },
+  ta: {
+    unlock_power: "உங்கள் சக்தியை வெளிப்படுத்துங்கள்"
+  },
+  te: {
+    unlock_power: "మీ శక్తిని వెలికితీయండి"
+  }
+};
+
+function applyEQLanguage(lang) {
+  localStorage.setItem("eq_lang", lang);
+
+  document.querySelectorAll("[data-i18n]").forEach(el => {
+    const key = el.getAttribute("data-i18n");
+    if (EQ_TRANSLATIONS[lang] && EQ_TRANSLATIONS[lang][key]) {
+      el.textContent = EQ_TRANSLATIONS[lang][key];
+    }
+  });
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const savedLang = localStorage.getItem("eq_lang") || "en";
+  const selector = document.getElementById("languageSelect");
+
+  if (selector) {
+    selector.value = savedLang;
+    selector.addEventListener("change", e => {
+      applyEQLanguage(e.target.value);
+    });
+  }
+
+  applyEQLanguage(savedLang);
+});
+</script>
+
 
     <footer class="mt-12 py-8 text-center text-sm text-gray-500">
         © <script>document.write(new Date().getFullYear())</script> EQScholar — Built for focused growth

@@ -18,46 +18,109 @@
             color: white;
         }
         
-        .header {
-            background: rgba(0,0,0,0.9);
-            padding: 20px 30px;
-            backdrop-filter: blur(15px);
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 100;
+        /* =========================
+   CLEAN NAVBAR (OLD CODE SAFE)
+   ========================= */
+
+.header {
+    background: rgba(0,0,0,0.9);
+    padding: 16px 24px;
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+/* Row: logo left, toggle right */
+.header-container {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Logo */
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: #ffd700;
+    white-space: nowrap;
+}
+
+/* Desktop nav */
+.nav-links {
+    display: flex;
+    gap: 30px;
+}
+
+/* Links */
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.nav-links a:hover {
+    color: #ffd700;
+    background: rgba(255,215,0,0.1);
+}
+
+/* Burger */
+.menu-toggle {
+    font-size: 28px;
+    cursor: pointer;
+    color: white;
+    display: none; /* hidden on desktop */
+}
+
+/* =========================
+   MOBILE NAVBAR
+   ========================= */
+@media (max-width: 768px) {
+
+    .menu-toggle {
+        display: block;
+    }
+
+    .nav-links {
+        display: none;
+        flex-direction: column;
+        gap: 14px;
+        position: absolute;
+        top: 64px;
+        left: 0;
+        width: 100%;
+        background: rgba(0,0,0,0.95);
+        padding: 20px 0;
+        text-align: center;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .nav-links.active {
+        display: flex;
+        animation: slideDown 0.25s ease forwards;
+    }
+
+    @keyframes slideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-12px);
         }
-        
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            font-size: 24px;
-            font-weight: bold;
-            color: #ffd700;
+        to {
+            opacity: 1;
+            transform: translateY(0);
         }
-        
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-        
-        .nav-links a {
-            color: white;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            padding: 8px 16px;
-            border-radius: 8px;
-        }
-        
-        .nav-links a:hover {
-            color: #ffd700;
-            background: rgba(255,215,0,0.1);
-        }
+    }
+}
+
         
         .container {
             max-width: 1400px;
@@ -403,213 +466,6 @@
             100% { transform: translateY(-100px) rotate(360deg); }
         }
         
-        @media (max-width: 768px) {
-            .header { 
-                flex-direction: column; 
-                gap: 15px; 
-                padding: 20px;
-            }
-            .nav-links { 
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-            .hero-title { font-size: 32px; }
-            .subcategory-grid { 
-                grid-template-columns: 1fr;
-                padding-left: 0;
-            }
-            .container { padding: 15px; }
-        }
-        @media (max-width: 768px) {
-    /* Header */
-    .header { 
-        flex-direction: column; 
-        gap: 12px; 
-        padding: 15px;
-    }
-
-    .logo {
-        font-size: 18px;
-        gap: 8px;
-    }
-
-    .nav-links { 
-        flex-direction: column;
-        text-align: center;
-        gap: 8px;
-    }
-
-    .nav-links a {
-        font-size: 14px;
-        padding: 6px 10px;
-    }
-
-    /* Hero section */
-    .hero-banner { 
-        padding: 20px; 
-        margin-bottom: 20px; 
-    }
-
-    .hero-title { 
-        font-size: 26px; 
-        line-height: 1.2; 
-    }
-
-    .hero-subtitle { 
-        font-size: 14px; 
-    }
-
-    .search-bar {
-        max-width: 100%;
-        padding: 10px 15px;
-        font-size: 14px;
-    }
-
-    /* Category headers */
-    .category-header { 
-        padding: 12px; 
-        gap: 10px; 
-    }
-
-    .category-icon { 
-        font-size: 28px; 
-        width: 45px; 
-        height: 45px; 
-    }
-
-    .category-info h3 { 
-        font-size: 18px; 
-    }
-
-    .category-info p { 
-        font-size: 12px; 
-    }
-
-    .quiz-count { 
-        font-size: 12px; 
-        padding: 5px 10px; 
-    }
-
-    /* Subcategory grid */
-    .subcategory-grid { 
-        grid-template-columns: 1fr;
-        padding-left: 0;
-        gap: 12px;
-    }
-
-    .subcategory-card {
-        padding: 15px;
-    }
-
-    .subcategory-title { 
-        font-size: 16px; 
-    }
-
-    .subcategory-desc { 
-        font-size: 12px; 
-    }
-
-    .subcategory-icon { 
-        font-size: 24px; 
-    }
-
-    /* Quiz and results */
-    .quiz-section,
-    .result-section {
-        padding: 20px;
-    }
-
-    .question-text { 
-        font-size: 16px; 
-    }
-
-    .answers { 
-        grid-template-columns: 1fr; 
-    }
-
-    .answer-option { 
-        font-size: 14px;
-        padding: 10px; 
-    }
-
-    .score-display { 
-        font-size: 36px; 
-    }
-
-    .back-btn { 
-        padding: 10px 20px; 
-        font-size: 14px; 
-    }
-
-    /* Container */
-    .container { 
-        padding: 10px; 
-    }
-}
-/* Header main styling */
-.header {
-  background: rgba(0,0,0,0.9);
-  padding: 12px 20px;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-/* Flex row for logo + toggle */
-.header-container {
-  display: flex;
-  justify-content: space-between; /* logo left, toggle right */
-  align-items: center;
-  padding: 0 10px; /* small horizontal padding */
-}
-
-.menu-toggle {
-  font-size: 28px;
-  cursor: pointer;
-  color: white;
-  display: none;
-  margin-left: 15px; /* <-- adds space between logo and toggle */
-}
-
-
-
-.logo {
-  font-size: 20px;
-  font-weight: bold;
-  color: #ffd700;
-}
-
-/* Toggle button */
-.menu-toggle {
-  font-size: 28px;
-  cursor: pointer;
-  color: white;
-  display: none; /* hidden on desktop */
-}
-
-/* Nav links desktop */
-.nav-links {
-  display: flex;
-  gap: 25px;
-  justify-content: center;
-  margin-top: 10px;
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  font-weight: 500;
-  padding: 8px 14px;
-  border-radius: 8px;
-  transition: background 0.3s ease;
-}
-
-.nav-links a:hover {
-  background: rgba(255,215,0,0.1);
-  color: #ffd700;
-}
-
 /* Mobile version */
 @media (max-width: 768px) {
   .menu-toggle {
@@ -641,6 +497,78 @@
   }
 }
 
+/* =========================
+   RIGHT SIDE DRAWER
+   ========================= */
+
+.side-drawer {
+  position: fixed;
+  top: 0;
+  right: -280px;          /* hidden */
+  width: 280px;
+  height: 100vh;
+  background: #0b0f1a;
+  padding: 70px 20px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  transition: right 0.3s ease;
+  z-index: 1200;
+}
+
+.side-drawer.active {
+  right: 0;               /* slides from right */
+}
+
+.side-drawer a {
+  color: #fff;
+  text-decoration: none;
+  padding: 10px 14px;
+  border-radius: 8px;
+}
+
+.side-drawer a:hover {
+  background: rgba(255,215,0,0.12);
+  color: #ffd700;
+}
+
+/* Drawer header */
+.drawer-header {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  padding: 14px 18px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0,0,0,0.95);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.close-btn {
+  font-size: 22px;
+  cursor: pointer;
+  color: #fff;
+}
+
+/* Overlay */
+.drawer-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1100;
+}
+
+.drawer-overlay.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
     </style>
 </head>
 <body>
@@ -665,6 +593,22 @@
     <a href="Index3.html">👤 Profile</a>
   </nav>
 </header>
+<!-- RIGHT SIDE DRAWER -->
+<nav class="side-drawer" id="sideDrawer">
+  <div class="drawer-header">
+    <div class="logo">🧠 EQ Quiz Platform</div>
+    <div class="close-btn" id="closeDrawer">✕</div>
+  </div>
+
+  <a href="index.html">🏠 Home</a>
+  <a href="#dashboard">📊 Community</a>
+  <a href="leaderboard.html">🏆 Leaderboard</a>
+  <a href="#rewards">💰 Rewards</a>
+  <a href="Index3.html">👤 Profile</a>
+</nav>
+
+<div class="drawer-overlay" id="drawerOverlay"></div>
+
 
     <div class="container">
         <!-- Hero Banner -->
@@ -1330,19 +1274,22 @@ function searchQuizzes(searchTerm) {
 // MOBILE MENU TOGGLE
 // ==================================================
 const menuToggle = document.getElementById("menu-toggle");
-const navLinks = document.getElementById("nav-links");
+const drawer = document.getElementById("sideDrawer");
+const overlay = document.getElementById("drawerOverlay");
+const closeBtn = document.getElementById("closeDrawer");
 
 menuToggle.addEventListener("click", () => {
-    navLinks.classList.toggle("active");
-    menuToggle.textContent = navLinks.classList.contains("active") ? "✖" : "☰";
+  drawer.classList.add("active");
+  overlay.classList.add("active");
 });
 
-document.querySelectorAll(".nav-links a").forEach(link => {
-    link.addEventListener("click", () => {
-        navLinks.classList.remove("active");
-        menuToggle.textContent = "☰";
-    });
-});
+closeBtn.addEventListener("click", closeDrawer);
+overlay.addEventListener("click", closeDrawer);
+
+function closeDrawer() {
+  drawer.classList.remove("active");
+  overlay.classList.remove("active");
+}
 
 
 </script>

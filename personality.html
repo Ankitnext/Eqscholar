@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ Scholar – Personality</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+    min-height:100vh;
+    overflow-x:hidden;
+    color:white;
+    padding-top:88px;
+}
+
+/* ================= NAVBAR (SAME AS EXPERT) ================= */
+.nav-bar{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:rgba(0,0,0,0.9);
+    backdrop-filter:blur(10px);
+    padding:14px 20px;
+    z-index:1600;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
+.logo{
+    font-size:20px;
+    font-weight:bold;
+    display:flex;
+    gap:8px;
+}
+
+.nav-links{
+    display:flex;
+    gap:18px;
+    align-items:center;
+}
+.nav-links a,
+.nav-links .dropdown-link{
+    color:white;
+    text-decoration:none;
+    font-weight:500;
+    cursor:pointer;
+    padding:6px 8px;
+}
+.nav-links a:hover,
+.nav-links .dropdown-link:hover{color:#f39c12;}
+
+#menuToggle{
+    display:none;
+    width:28px;
+    height:22px;
+    flex-direction:column;
+    gap:6px;
+    cursor:pointer;
+}
+#menuToggle span{
+    width:100%;
+    height:3px;
+    background:#fff;
+    border-radius:999px;
+}
+#menuToggle.open span:first-child{transform:translateY(4px) rotate(35deg);}
+#menuToggle.open span:last-child{transform:translateY(-4px) rotate(-35deg);}
+
+/* Dropdown desktop */
+.dropdown-parent{position:relative;}
+.dropdown-menu{
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    min-width:220px;
+    background:#1a1a2e;
+    border-radius:6px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    padding:6px 0;
+}
+.dropdown-menu a{
+    padding:10px 16px;
+    display:block;
+}
+.dropdown-parent:hover>.dropdown-menu{display:block;}
+
+/* ================= PAGE ================= */
+.page-title{
+    text-align:center;
+    margin:30px 16px;
+}
+.page-title h1{
+    font-size:40px;
+    color:#00ffcc;
+}
+.page-title p{opacity:.9;margin-top:10px;}
+
+.section-title{
+    font-size:28px;
+    margin:40px 0 16px 24px;
+    color:#ffd86b;
+    font-weight:bold;
+}
+
+.card-row{
+    display:flex;
+    gap:20px;
+    padding:16px 24px;
+    overflow-x:auto;
+}
+.card{
+    width:260px;
+    min-width:260px;
+    background:rgba(255,255,255,0.12);
+    border-radius:16px;
+    padding:20px;
+    text-align:center;
+    border:1px solid rgba(255,255,255,0.2);
+    backdrop-filter:blur(10px);
+    transition:.3s;
+}
+.card:hover{
+    transform:translateY(-8px);
+    border-color:#00ffcc;
+}
+.card-icon{font-size:56px;margin-bottom:14px;}
+.card-title{color:#00ffcc;font-weight:bold;font-size:20px;}
+.card-desc{font-size:14px;margin:12px 0;}
+.card-btn{
+    padding:10px 22px;
+    border-radius:30px;
+    border:none;
+    background:linear-gradient(45deg,#e74c3c,#f39c12);
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+/* ===== PRO LOCK (FIXED) ===== */
+.pro-card.locked {
+    position: relative;
+    overflow: hidden;
+}
+
+.pro-card.locked::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35); /* lighter overlay */
+    backdrop-filter: blur(2px);
+    z-index: 1;
+}
+
+/* ensure content stays above overlay */
+.pro-card.locked > * {
+    position: relative;
+    z-index: 2;
+}
+
+/* lock badge */
+.lock-badge {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: rgba(0,0,0,0.85);
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    color: #ffd86b;
+    font-weight: bold;
+    z-index: 3;
+}
+
+/* keep CTA strong */
+.pro-card.locked .card-btn {
+    background: linear-gradient(45deg, #f39c12, #e67e22);
+}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+    #menuToggle{display:flex;}
+    .nav-links{
+        position:fixed;
+        top:56px;
+        right:0;
+        width:260px;
+        height:calc(100vh - 56px);
+        background:rgba(0,0,0,0.96);
+        flex-direction:column;
+        align-items:flex-start;
+        padding:14px;
+        transform:translateX(100%);
+        transition:.28s;
+    }
+    .nav-links.open{transform:translateX(0);}
+    .dropdown-parent{width:100%;}
+    .dropdown-menu{
+        position:static;
+        display:none;
+        background:transparent;
+        box-shadow:none;
+        padding-left:12px;
+    }
+    .dropdown-parent.open>.dropdown-menu{display:block;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<!-- ================= HEADER ================= -->
+<nav class="nav-bar">
+    <div class="logo">🧠 EQ Scholar</div>
+
+    <div id="menuToggle">
+        <span></span><span></span>
+    </div>
+
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="leaderboard.html">Leaderboard</a>
+
+        <div class="dropdown-parent" id="activityDropdown">
+            <a class="dropdown-link" id="activityLink">Activity ▾</a>
+            <div class="dropdown-menu" id="activityMenu">
+                <a href="market.html">Market</a>
+                <a href="comm.html">Community</a>
+            </div>
+        </div>
+
+        <div class="dropdown-parent" id="mentalDropdown">
+            <a class="dropdown-link" id="mentalLink">Checkup ▾</a>
+            <div class="dropdown-menu" id="mentalMenu">
+                <a href="mental-check.html">Mental Health</a>
+                <a href="personality.html">Personality</a>
+                <a href="pro.html">Pro</a>
+            </div>
+        </div>
+
+        <a href="journey-map.html">Journey</a>
+        <a href="expert.html">Experts</a>
+        <a href="index3.html">Profile</a>
+    </div>
+</nav>
+
+<!-- ================= TITLE ================= -->
+<div class="page-title">
+    <h1>Your Personality Dashboard</h1>
+    <p>Daily mirrors, weekly patterns, and monthly self-truth</p>
+</div>
+
+<!-- ================= DAILY ================= -->
+<div class="section-title">☀️ Daily Check-ins</div>
+<div class="card-row">
+
+    <div class="card">
+        <div class="card-icon">🌤️</div>
+        <div class="card-title">Mood Tracker</div>
+        <div class="card-meta">Emotional Weather</div>
+        <div class="card-desc">How you feel today, without overthinking.</div>
+        <button class="card-btn">Check Today</button>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">⏱️</div>
+        <div class="card-title">Time Waste</div>
+        <div class="card-meta">Productivity Leak</div>
+        <div class="card-desc">Where yesterday disappeared.</div>
+        <button class="card-btn">Analyze</button>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">💪</div>
+        <div class="card-title">Energy Level</div>
+        <div class="card-meta">Daily Capacity</div>
+        <div class="card-desc">Know what kind of day this is.</div>
+        <button class="card-btn">Check</button>
+    </div>
+
+</div>
+
+<!-- ================= WEEKLY ================= -->
+<div class="section-title">📅 Weekly Insights</div>
+<div class="card-row">
+
+    <div class="card">
+        <div class="card-icon">🧠</div>
+        <div class="card-title">Personality Pattern</div>
+        <div class="card-desc">Your emotional behavior over 7 days.</div>
+        <button class="card-btn">View</button>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🔁</div>
+        <div class="card-title">Habit Fixing</div>
+        <div class="card-desc">What to reinforce and what to stop.</div>
+        <button class="card-btn">Fix</button>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Career Direction</div>
+        <div class="card-desc">Surface-level Ikigai clarity.</div>
+        <button class="card-btn">Explore</button>
+    </div>
+
+</div>
+
+<!-- ================= MONTHLY ================= -->
+<div class="section-title">📊 Monthly Overview</div>
+<div class="card-row">
+
+    <div class="card">
+        <div class="card-icon">🧬</div>
+        <div class="card-title">Personality Snapshot</div>
+        <div class="card-desc">High-level emotional traits.</div>
+        <button class="card-btn">View</button>
+    </div>
+
+    <div class="card">
+        <div class="card-icon">📈</div>
+        <div class="card-title">Progress Score</div>
+        <div class="card-desc">How you changed this month.</div>
+        <button class="card-btn">Compare</button>
+    </div>
+
+</div>
+
+<!-- ================= PRO ================= -->
+<div class="section-title">🔒 PRO Insights</div>
+<div class="card-row">
+
+    <div class="card pro-card locked">
+        <div class="lock-badge">🔒 PRO</div>
+        <div class="card-icon">🪞</div>
+        <div class="card-title">Life Pattern Report</div>
+        <div class="card-desc">Why life keeps repeating.</div>
+        <button class="card-btn" onclick="location.href='pro.html'">Unlock Pro</button>
+    </div>
+
+    <div class="card pro-card locked">
+        <div class="lock-badge">🔒 PRO</div>
+        <div class="card-icon">🎯</div>
+        <div class="card-title">Career Intelligence</div>
+        <div class="card-desc">Why your career feels wrong.</div>
+        <button class="card-btn" onclick="location.href='pro.html'">Unlock Pro</button>
+    </div>
+
+    <div class="card pro-card locked">
+        <div class="lock-badge">🔒 PRO</div>
+        <div class="card-icon">⚖️</div>
+        <div class="card-title">Decision Clarity</div>
+        <div class="card-desc">Choose without regret.</div>
+        <button class="card-btn" onclick="location.href='pro.html'">Unlock Pro</button>
+    </div>
+
+</div>
+
+</body>
+<script>
+(function(){
+    const menuToggle=document.getElementById('menuToggle');
+    const navLinks=document.getElementById('navLinks');
+    const activity=document.getElementById('activityDropdown');
+    const mental=document.getElementById('mentalDropdown');
+
+    menuToggle.onclick=()=>navLinks.classList.toggle('open');
+
+    navLinks.onclick=e=>{
+        const link=e.target.closest('.dropdown-link');
+        if(!link) return;
+        e.preventDefault();
+        link.parentElement.classList.toggle('open');
+    };
+
+    document.onclick=e=>{
+        if(!navLinks.contains(e.target)&&!menuToggle.contains(e.target)){
+            navLinks.classList.remove('open');
+            activity.classList.remove('open');
+            mental.classList.remove('open');
+        }
+    };
+})();
+</script>
+</html>

@@ -255,7 +255,20 @@
                 </div>
             </div>
 
-            <a href="mental-check.html">Mental Health</a>
+            <!-- <a href="mental-check.html">Mental Health</a> -->
+             <!-- Mental Health dropdown -->
+            <div class="dropdown-parent" id="mentalDropdown">
+                <a href="#" class="dropdown-link" id="mentalLink" aria-haspopup="true" aria-expanded="false">
+                    Checkup ▾
+                </a>
+
+                <div class="dropdown-menu" id="mentalMenu" aria-hidden="true" role="menu">
+                    <a href="mental-check.html" role="menuitem">Mental Health</a>
+                    <a href="personality.html" role="menuitem">Personality Pattern</a>
+                    <a href="pro.html" role="menuitem">Pro</a>
+                </div>
+            </div>
+
             <a href="journey-map.html">Journey</a>
             <a href="expert.html">Experts</a>
             <a href="index3.html">Profile</a>
@@ -353,12 +366,21 @@
         (function(){
             const menuToggle = document.getElementById('menuToggle');
             const navLinks = document.getElementById('navLinks');
+
             const activityParent = document.getElementById('activityDropdown');
             const activityLink = document.getElementById('activityLink');
             const activityMenu = document.getElementById('activityMenu');
             const gamesHasSub = document.getElementById('gamesHasSub');
 
-            function isMobile() { return window.matchMedia('(max-width:768px)').matches; }
+            /* ===== ADDED: Mental Health dropdown refs ===== */
+            const mentalParent = document.getElementById('mentalDropdown');
+            const mentalLink = document.getElementById('mentalLink');
+            const mentalMenu = document.getElementById('mentalMenu');
+            /* ============================================ */
+
+            function isMobile() { 
+                return window.matchMedia('(max-width:768px)').matches; 
+            }
 
             // mobile off-canvas nav open/close
             if (menuToggle && navLinks) {
@@ -379,25 +401,35 @@
                     if (!link) return;
 
                     // Activity toggle clicked
-                    if (link.classList.contains('dropdown-link')) {
+                    if (link === activityLink) {
                         if (isMobile()) {
                             e.preventDefault();
-                            e.stopPropagation();
-                            const open = activityParent.classList.toggle('open');
-                            activityLink.setAttribute('aria-expanded', open ? 'true' : 'false');
-                            activityMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
 
-                            // collapse games when activity is toggled open
-                            if (open && gamesHasSub && gamesHasSub.classList.contains('open')) {
+                            const isOpen = activityParent.classList.contains('open');
+
+                            // TOGGLE
+                            activityParent.classList.toggle('open');
+                            activityLink.setAttribute('aria-expanded', isOpen ? 'false' : 'true');
+                            activityMenu.setAttribute('aria-hidden', isOpen ? 'true' : 'false');
+
+                            // Close games submenu when closing activity
+                            if (isOpen && gamesHasSub && gamesHasSub.classList.contains('open')) {
                                 gamesHasSub.classList.remove('open');
                                 const gToggle = gamesHasSub.querySelector('.sub-toggle');
                                 if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
+                            }
+
+                            // IMPORTANT: only stop propagation when OPENING
+                            if (!isOpen) {
+                                e.stopPropagation();
                             }
                         } else {
                             e.preventDefault();
                         }
                         return;
                     }
+
+
 
                     // Games sub-toggle clicked
                     if (link.classList.contains('sub-toggle')) {
@@ -408,7 +440,7 @@
                             if (!hasSub) return;
                             const nowOpen = hasSub.classList.toggle('open');
                             link.setAttribute('aria-expanded', nowOpen ? 'true' : 'false');
-                            // ensure activity menu open so submenu is visible inline
+
                             if (!activityParent.classList.contains('open')) {
                                 activityParent.classList.add('open');
                                 activityLink.setAttribute('aria-expanded', 'true');
@@ -420,9 +452,25 @@
                         return;
                     }
 
-                    // Otherwise it's a real navigation link: close mobile nav if open
+                    /* ===== ADDED: Mental Health dropdown toggle ===== */
+                    if (link.classList.contains('dropdown-link') && link === mentalLink) {
+                        if (isMobile()) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            const open = mentalParent.classList.toggle('open');
+                            mentalLink.setAttribute('aria-expanded', open ? 'true' : 'false');
+                            mentalMenu.setAttribute('aria-hidden', open ? 'false' : 'true');
+                        } else {
+                            e.preventDefault();
+                        }
+                        return;
+                    }
+                    /* ============================================== */
+
+                    // Normal navigation link
                     const href = link.getAttribute('href');
                     const isPlaceholder = !href || href === '#';
+
                     if (!isPlaceholder) {
                         if (navLinks.classList.contains('open')) {
                             navLinks.classList.remove('open');
@@ -430,17 +478,26 @@
                             if (menuToggle) menuToggle.setAttribute('aria-expanded', 'false');
                             navLinks.setAttribute('aria-hidden', 'true');
                         }
-                        // collapse activity/games
+
                         if (activityParent && activityParent.classList.contains('open')) {
                             activityParent.classList.remove('open');
                             activityLink.setAttribute('aria-expanded', 'false');
                             activityMenu.setAttribute('aria-hidden', 'true');
                         }
+
                         if (gamesHasSub && gamesHasSub.classList.contains('open')) {
                             gamesHasSub.classList.remove('open');
                             const gToggle = gamesHasSub.querySelector('.sub-toggle');
                             if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
                         }
+
+                        /* ===== ADDED: close mental dropdown ===== */
+                        if (mentalParent && mentalParent.classList.contains('open')) {
+                            mentalParent.classList.remove('open');
+                            mentalLink.setAttribute('aria-expanded', 'false');
+                            mentalMenu.setAttribute('aria-hidden', 'true');
+                        }
+                        /* ====================================== */
                     }
                 });
             }
@@ -448,6 +505,7 @@
             // Click outside to close nav & dropdowns
             document.addEventListener('click', function(e) {
                 const t = e.target;
+
                 if (navLinks && navLinks.classList.contains('open')) {
                     if (!navLinks.contains(t) && !(menuToggle && menuToggle.contains(t))) {
                         navLinks.classList.remove('open');
@@ -456,37 +514,59 @@
                         navLinks.setAttribute('aria-hidden', 'true');
                     }
                 }
+
                 if (activityParent && activityParent.classList.contains('open') && !activityParent.contains(t)) {
                     activityParent.classList.remove('open');
-                    if (activityLink) activityLink.setAttribute('aria-expanded','false');
-                    if (activityMenu) activityMenu.setAttribute('aria-hidden','true');
+                    activityLink.setAttribute('aria-expanded','false');
+                    activityMenu.setAttribute('aria-hidden','true');
                 }
+
                 if (gamesHasSub && gamesHasSub.classList.contains('open') && !gamesHasSub.contains(t)) {
                     gamesHasSub.classList.remove('open');
                     const gToggle = gamesHasSub.querySelector('.sub-toggle');
                     if (gToggle) gToggle.setAttribute('aria-expanded','false');
                 }
+
+                /* ===== ADDED: outside click close mental ===== */
+                if (mentalParent && mentalParent.classList.contains('open') && !mentalParent.contains(t)) {
+                    mentalParent.classList.remove('open');
+                    mentalLink.setAttribute('aria-expanded','false');
+                    mentalMenu.setAttribute('aria-hidden','true');
+                }
+                /* ========================================== */
             });
 
-            // Clear mobile-only open states on resize to desktop
+            // Clear mobile-only open states on resize
             window.addEventListener('resize', function() {
                 if (window.matchMedia('(min-width:769px)').matches) {
+
                     if (navLinks && navLinks.classList.contains('open')) navLinks.classList.remove('open');
                     if (menuToggle && menuToggle.classList.contains('open')) menuToggle.classList.remove('open');
+
                     if (activityParent && activityParent.classList.contains('open')) {
                         activityParent.classList.remove('open');
-                        if (activityLink) activityLink.setAttribute('aria-expanded','false');
-                        if (activityMenu) activityMenu.setAttribute('aria-hidden','true');
+                        activityLink.setAttribute('aria-expanded','false');
+                        activityMenu.setAttribute('aria-hidden','true');
                     }
+
                     if (gamesHasSub && gamesHasSub.classList.contains('open')) {
                         gamesHasSub.classList.remove('open');
                         const gToggle = gamesHasSub.querySelector('.sub-toggle');
                         if (gToggle) gToggle.setAttribute('aria-expanded','false');
                     }
+
+                    /* ===== ADDED: reset mental dropdown ===== */
+                    if (mentalParent && mentalParent.classList.contains('open')) {
+                        mentalParent.classList.remove('open');
+                        mentalLink.setAttribute('aria-expanded','false');
+                        mentalMenu.setAttribute('aria-hidden','true');
+                    }
+                    /* ======================================= */
                 }
             });
         })();
     </script>
+
 
 </body>
 </html>

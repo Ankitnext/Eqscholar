@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ Scholar – Pro Reports</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+    font-family:'Inter',sans-serif;
+    background:linear-gradient(135deg,#0f2027,#203a43,#2c5364);
+    min-height:100vh;
+    color:#ffffff;
+    padding-top:88px; /* space for fixed header */
+}
+
+/* ================= NAVBAR (SAME AS EXPERT) ================= */
+.nav-bar{
+    position:fixed;
+    top:0;
+    width:100%;
+    background:rgba(0,0,0,0.9);
+    backdrop-filter:blur(10px);
+    padding:14px 20px;
+    z-index:1600;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+}
+.logo{
+    font-size:20px;
+    font-weight:bold;
+    display:flex;
+    align-items:center;
+    gap:8px;
+}
+
+.nav-links{
+    display:flex;
+    gap:18px;
+    align-items:center;
+}
+.nav-links a,
+.nav-links .dropdown-link{
+    color:white;
+    text-decoration:none;
+    font-weight:500;
+    cursor:pointer;
+    padding:6px 8px;
+}
+.nav-links a:hover,
+.nav-links .dropdown-link:hover{color:#f39c12;}
+
+#menuToggle{
+    display:none;
+    width:28px;
+    height:22px;
+    flex-direction:column;
+    gap:6px;
+    cursor:pointer;
+}
+#menuToggle span{
+    width:100%;
+    height:3px;
+    background:#fff;
+    border-radius:999px;
+    transition:.25s;
+}
+#menuToggle.open span:first-child{transform:translateY(4px) rotate(35deg);}
+#menuToggle.open span:last-child{transform:translateY(-4px) rotate(-35deg);}
+
+/* dropdown desktop */
+.dropdown-parent{position:relative;}
+.dropdown-menu{
+    display:none;
+    position:absolute;
+    top:100%;
+    left:0;
+    min-width:220px;
+    background:#1a1a2e;
+    border-radius:6px;
+    box-shadow:0 10px 30px rgba(0,0,0,0.25);
+    padding:6px 0;
+}
+.dropdown-menu a{
+    padding:10px 16px;
+    display:block;
+}
+.dropdown-parent:hover>.dropdown-menu{display:block;}
+
+/* ================= PRO PAGE STYLES ================= */
+.pro-header{
+    text-align:center;
+    padding:60px 20px 40px;
+}
+.pro-header h1{
+    font-size:42px;
+    color:#00ffcc;
+}
+.pro-header p{
+    max-width:720px;
+    margin:16px auto 0;
+    font-size:18px;
+    opacity:0.9;
+}
+
+.pro-section{margin:50px 0 20px;}
+.pro-section h2{
+    font-size:28px;
+    margin-left:24px;
+    color:#ffd86b;
+}
+
+.pro-row{
+    display:flex;
+    gap:24px;
+    padding:20px 24px;
+    overflow-x:auto;
+}
+.pro-card{
+    min-width:300px;
+    width:300px;
+    background:rgba(255,255,255,0.08);
+    border-radius:18px;
+    padding:24px;
+    border:1px solid rgba(255,255,255,0.15);
+    backdrop-filter:blur(12px);
+    transition:.3s;
+}
+.pro-card:hover{
+    transform:translateY(-8px);
+    border-color:#00ffcc;
+    box-shadow:0 18px 40px rgba(0,0,0,0.4);
+}
+.pro-icon{font-size:54px;margin-bottom:16px;}
+.pro-title{font-size:22px;font-weight:bold;color:#00ffcc;}
+.pro-desc{font-size:15px;margin:14px 0;line-height:1.6;}
+.pro-points{font-size:14px;opacity:0.85;}
+.pro-points li{margin-bottom:6px;}
+
+.cta-box{
+    text-align:center;
+    margin:60px 20px 80px;
+    padding:40px 24px;
+    background:rgba(255,255,255,0.08);
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,0.15);
+}
+.cta-box h3{font-size:30px;color:#00ffcc;}
+.cta-box p{
+    margin:16px auto 24px;
+    max-width:700px;
+    font-size:17px;
+    opacity:0.9;
+}
+.cta-btn{
+    padding:14px 34px;
+    border-radius:40px;
+    border:none;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+    background:linear-gradient(45deg,#f39c12,#e74c3c);
+    color:white;
+}
+.cta-btn:hover{transform:scale(1.06);}
+
+/* ================= MOBILE ================= */
+@media(max-width:768px){
+    #menuToggle{display:flex;}
+    .nav-links{
+        position:fixed;
+        top:56px;
+        right:0;
+        width:260px;
+        height:calc(100vh - 56px);
+        background:rgba(0,0,0,0.96);
+        flex-direction:column;
+        align-items:flex-start;
+        padding:14px;
+        transform:translateX(100%);
+        transition:.28s;
+    }
+    .nav-links.open{transform:translateX(0);}
+    .dropdown-parent{width:100%;}
+    .dropdown-menu{
+        position:static;
+        display:none;
+        background:transparent;
+        box-shadow:none;
+        padding-left:12px;
+    }
+    .dropdown-parent.open>.dropdown-menu{display:block;}
+    .pro-header h1{font-size:34px;}
+    .pro-card{min-width:260px;width:260px;}
+}
+</style>
+</head>
+
+<body>
+
+<!-- ================= HEADER ================= -->
+<nav class="nav-bar">
+    <div class="logo">🧠 EQ Scholar</div>
+
+    <div id="menuToggle">
+        <span></span><span></span>
+    </div>
+
+    <div class="nav-links" id="navLinks">
+        <a href="index.html">Home</a>
+        <a href="leaderboard.html">Leaderboard</a>
+
+        <div class="dropdown-parent" id="activityDropdown">
+            <a class="dropdown-link">Activity ▾</a>
+            <div class="dropdown-menu">
+                <a href="market.html">Market</a>
+                <a href="comm.html">Community</a>
+            </div>
+        </div>
+
+        <div class="dropdown-parent" id="mentalDropdown">
+            <a class="dropdown-link">Checkup ▾</a>
+            <div class="dropdown-menu">
+                <a href="mental-check.html">Mental Health</a>
+                <a href="personality.html">Personality</a>
+                <a href="pro.html">Pro</a>
+            </div>
+        </div>
+
+        <a href="journey-map.html">Journey</a>
+        <a href="expert.html">Experts</a>
+        <a href="index3.html">Profile</a>
+    </div>
+</nav>
+
+<!-- ================= PAGE CONTENT ================= -->
+<div class="pro-header">
+    <h1>EQ Pro Reports</h1>
+    <p>
+        This is not entertainment.  
+        These reports are designed to help you make <b>clear decisions</b> about your life, career, emotions, and direction.
+    </p>
+</div>
+
+<!-- LIFE PATTERNS -->
+<div class="pro-section">
+    <h2>🧬 Life Pattern Intelligence</h2>
+    <div class="pro-row">
+        <div class="pro-card">
+            <div class="pro-icon">🪞</div>
+            <div class="pro-title">Life Pattern Report</div>
+            <div class="pro-desc">Understand why situations repeat.</div>
+            <ul class="pro-points">
+                <li>Emotional trigger map</li>
+                <li>Self-sabotage loops</li>
+                <li>Blind spots</li>
+            </ul>
+        </div>
+
+        <div class="pro-card">
+            <div class="pro-icon">🧠</div>
+            <div class="pro-title">Deep Personality Archetype</div>
+            <div class="pro-desc">How you behave under stress.</div>
+            <ul class="pro-points">
+                <li>Core archetype</li>
+                <li>Stress vs calm</li>
+                <li>Work tendencies</li>
+            </ul>
+        </div>
+
+        <div class="pro-card">
+            <div class="pro-icon">🔢</div>
+            <div class="pro-title">Numerology Personality Map</div>
+            <div class="pro-desc">
+                Decode your life path, emotional tendencies, and karmic lessons using numerology.
+            </div>
+            <ul class="pro-points">
+                <li>Life Path Number</li>
+                <li>Emotional strengths</li>
+                <li>Karmic challenges</li>
+                <li>Natural talents</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+
+<!-- CAREER -->
+<div class="pro-section">
+    <h2>💼 Career & Purpose Clarity</h2>
+    <div class="pro-row">
+
+        <div class="pro-card">
+            <div class="pro-icon">🎯</div>
+            <div class="pro-title">Career Intelligence Report</div>
+            <div class="pro-desc">
+                Identify whether you should switch, stay, or redesign your current career path.
+            </div>
+            <ul class="pro-points">
+                <li>Ikigai + personality alignment</li>
+                <li>Career mismatch diagnosis</li>
+                <li>Energy vs income conflict</li>
+                <li>Top 3 realistic directions</li>
+            </ul>
+        </div>
+
+        <div class="pro-card">
+            <div class="pro-icon">⚖️</div>
+            <div class="pro-title">Decision Clarity Engine</div>
+            <div class="pro-desc">
+                Reduce fear and overthinking when making major life decisions.
+            </div>
+            <ul class="pro-points">
+                <li>Option A vs Option B clarity</li>
+                <li>Fear vs intuition separation</li>
+                <li>Emotional cost prediction</li>
+                <li>Confidence score</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<!-- GUIDANCE -->
+<div class="pro-section">
+    <h2>🔥 Guided Action & Growth</h2>
+    <div class="pro-row">
+
+        <div class="pro-card">
+            <div class="pro-icon">🧭</div>
+            <div class="pro-title">Guided Action Plans</div>
+            <div class="pro-desc">
+                Insight alone doesn’t change life. Direction does.
+            </div>
+            <ul class="pro-points">
+                <li>7-day emotional reset</li>
+                <li>14-day habit correction</li>
+                <li>Career clarity roadmap</li>
+                <li>Stress recovery protocol</li>
+            </ul>
+        </div>
+
+        <div class="pro-card">
+            <div class="pro-icon">📈</div>
+            <div class="pro-title">Progress Comparison</div>
+            <div class="pro-desc">
+                Track how your mindset, habits, and emotional control evolve over time.
+            </div>
+            <ul class="pro-points">
+                <li>Month-to-month comparison</li>
+                <li>Emotional stability trend</li>
+                <li>Growth visibility</li>
+                <li>Relapse detection</li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-box">
+    <h3>Ready for Real Clarity?</h3>
+    <p>
+        EQ Pro is for people who want guidance, not guesses.
+    </p>
+    <button class="cta-btn">Unlock EQ Pro</button>
+</div>
+
+<!-- ================= JS ================= -->
+<script>
+(function(){
+    const menuToggle=document.getElementById('menuToggle');
+    const navLinks=document.getElementById('navLinks');
+
+    menuToggle.onclick=()=>navLinks.classList.toggle('open');
+
+    navLinks.onclick=e=>{
+        const link=e.target.closest('.dropdown-link');
+        if(!link) return;
+        e.preventDefault();
+        link.parentElement.classList.toggle('open');
+    };
+
+    document.onclick=e=>{
+        if(!navLinks.contains(e.target)&&!menuToggle.contains(e.target)){
+            navLinks.classList.remove('open');
+            document.querySelectorAll('.dropdown-parent').forEach(d=>d.classList.remove('open'));
+        }
+    };
+})();
+</script>
+
+</body>
+</html>

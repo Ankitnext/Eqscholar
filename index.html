@@ -404,7 +404,20 @@
                 </div>
             </div>
 
-            <a href="mental-check.html">Mental Health</a>
+            <!-- <a href="mental-check.html">Mental Health</a> -->
+             <!-- Checkup dropdown -->
+            <div class="dropdown-parent" id="mentalDropdown">
+                <a href="#" class="dropdown-link" id="mentalLink" aria-haspopup="true" aria-expanded="false">
+                    Checkup ▾
+                </a>
+
+                <div class="dropdown-menu" id="mentalMenu" aria-hidden="true" role="menu">
+                    <a href="mental-check.html" role="menuitem">Mental Health</a>
+                    <a href="personality.html" role="menuitem">Personality Pattern</a>
+                    <a href="pro.html" role="menuitem">Pro</a>
+                </div>
+            </div>
+
             <a href="journey-map.html">Journey</a>
             <a href="expert.html">Experts</a>
             <a href="index3.html">Profile</a>
@@ -697,6 +710,11 @@ const activityLink = document.getElementById('activityLink');
 const activityMenu = document.getElementById('activityMenu');
 const gamesHasSub = document.getElementById('gamesHasSub');
 
+const mentalParent = document.getElementById('mentalDropdown');
+const mentalLink = document.getElementById('mentalLink');
+const mentalMenu = document.getElementById('mentalMenu');
+
+
 function isMobile() { 
     return window.matchMedia('(max-width:768px)').matches; 
 }
@@ -793,6 +811,12 @@ if (link.classList.contains('dropdown-link')) {
                 const gToggle = gamesHasSub.querySelector('.sub-toggle');
                 if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
             }
+            if (mentalParent && mentalParent.classList.contains('open')) {
+                mentalParent.classList.remove('open');
+                mentalLink.setAttribute('aria-expanded', 'false');
+                mentalMenu.setAttribute('aria-hidden', 'true');
+            }
+
         }
     });
 }
@@ -821,6 +845,12 @@ document.addEventListener('click', function(e) {
         const gToggle = gamesHasSub.querySelector('.sub-toggle');
         if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
     }
+    if (mentalParent && mentalParent.classList.contains('open') && !mentalParent.contains(e.target)) {
+        mentalParent.classList.remove('open');
+        mentalLink.setAttribute('aria-expanded', 'false');
+        mentalMenu.setAttribute('aria-hidden', 'true');
+    }
+
 });
 
 
@@ -842,6 +872,11 @@ window.addEventListener('resize', function() {
             gamesHasSub.classList.remove('open');
             const gToggle = gamesHasSub.querySelector('.sub-toggle');
             if (gToggle) gToggle.setAttribute('aria-expanded', 'false');
+        }
+        if (mentalParent && mentalParent.classList.contains('open')) {
+            mentalParent.classList.remove('open');
+            mentalLink.setAttribute('aria-expanded','false');
+            mentalMenu.setAttribute('aria-hidden','true');
         }
     }
 });
@@ -1023,7 +1058,7 @@ document.addEventListener('DOMContentLoaded', function(){
   if (primaryCTA) {
     primaryCTA.addEventListener('click', function(e){
       e.preventDefault();
-      window.location.href = 'intro.html';
+      window.location.href = 'unlock-power.html';
     });
 
   }

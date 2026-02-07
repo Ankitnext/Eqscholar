@@ -226,7 +226,10 @@
                 min-width: auto !important;
                 width: 100% !important;
             }
+            /* Disable sticky touch-hover opening on mobile; use click/open state only */
+            .dropdown-parent:hover > .dropdown-menu { display: none; }
             .dropdown-parent.open > .dropdown-menu { display: block; }
+            .dropdown-parent.open:hover > .dropdown-menu { display: block; }
 
             /* Submenus inline, more indented. Force static width so they do not float. */
             .dropdown-menu .has-sub { position: static !important; width: 100% !important; }

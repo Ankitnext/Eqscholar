@@ -193,7 +193,10 @@ body{
         box-shadow:none;
         padding-left:12px;
     }
+    /* Disable sticky touch-hover opening on mobile; use click/open state only */
+    .dropdown-parent:hover>.dropdown-menu{display:none;}
     .dropdown-parent.open>.dropdown-menu{display:block;}
+    .dropdown-parent.open:hover>.dropdown-menu{display:block;}
     .pro-header h1{font-size:34px;}
     .pro-card{min-width:260px;width:260px;}
 }

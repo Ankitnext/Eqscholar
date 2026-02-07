@@ -193,7 +193,10 @@
             /* mobile dropdown inline */
             .dropdown-parent { width:100%; display:block; position:relative; }
             .dropdown-parent .dropdown-menu { position: static !important; display: none; width:100% !important; padding-left:12px; margin-top:6px; background: transparent !important; box-shadow:none !important; }
+            /* Disable sticky touch-hover opening on mobile; use click/open state only */
+            .dropdown-parent:hover > .dropdown-menu { display: none; }
             .dropdown-parent.open > .dropdown-menu { display:block; }
+            .dropdown-parent.open:hover > .dropdown-menu { display: block; }
             .dropdown-menu .has-sub { position: static !important; width:100% !important; }
             .dropdown-menu .has-sub > .sub-menu { display:none; padding-left:12px; margin-top:6px; position:static !important; width:100% !important; background:transparent !important; box-shadow:none !important; }
             .dropdown-menu .has-sub.open > .sub-menu { display:block; }

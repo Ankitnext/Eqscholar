@@ -1,0 +1,117 @@
+﻿node : (node:24784) 
+[DEP0169] 
+DeprecationWarning: 
+`url.parse()` behavior is 
+not standardized and prone 
+to errors that have 
+security implications. Use 
+the WHATWG URL API 
+instead. CVEs are not 
+issued for `url.parse()` 
+vulnerabilities.
+At line:1 char:1
++ node dist/main.js > 
+backend_crash11.log 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo         
+     : NotSpecifi    ed: 
+((node:24784)     
+[D...ulnerabilitie    
+s.:String) [], Rem    
+oteException
+    + FullyQualifiedEr    
+rorId : NativeComm    
+andError
+ 
+(Use `node 
+--trace-deprecation ...` 
+to show where the warning 
+was created)
+[32m[Nest] 24784  - [39m04/03/2026, 6:25:45 pm [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 24784  - [39m04/03/2026, 6:25:45 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +112ms[39m
+[32m[Nest] 24784  - [39m04/03/2026, 6:25:45 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 24784  - [39m04/03/2026, 6:25:45 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24784  - [39m04/03/2026, 6:25:45 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24784  - [39m04/03/2026, 6:25:45 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 24784  - [39m04/03/2026, 6:25:45 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+(node:24784) 
+DeprecationWarning: 
+Calling client.query() 
+when the client is already 
+executing a query is 
+deprecated and will be 
+removed in pg@9.0. Use 
+asycn/await or an external 
+async flow control 
+mechanism instead.
+[31m[Nest] 24784  - 
+[39m04/03/2026, 6:26:00 
+pm [31m  ERROR[39m 
+[38;5;3m[TypeOrmModule] 
+[39m[31mUnable to 
+connect to the database. 
+Retrying (1)...[39m
+QueryFailedError: cannot 
+drop constraint users_pkey 
+on table users because 
+other objects depend on it
+    at 
+PostgresQueryRunner.query (
+D:\Eq-scholar\Eqscholar\bac
+kend\node_modules\typeorm\d
+river\postgres\PostgresQuer
+yRunner.js:216:19)
+    at process.processTicks
+AndRejections (node:interna
+l/process/task_queues:103:5
+)
+    at async PostgresQueryR
+unner.executeQueries (D:\Eq
+-scholar\Eqscholar\backend\
+node_modules\typeorm\query-
+runner\BaseQueryRunner.js:4
+41:13)
+    at async PostgresQueryR
+unner.dropColumn (D:\Eq-sch
+olar\Eqscholar\backend\node
+_modules\typeorm\driver\pos
+tgres\PostgresQueryRunner.j
+s:1218:9)
+    at async PostgresQueryR
+unner.changeColumn (D:\Eq-s
+cholar\Eqscholar\backend\no
+de_modules\typeorm\driver\p
+ostgres\PostgresQueryRunner
+.js:753:13)
+    at async PostgresQueryR
+unner.changeColumns (D:\Eq-
+scholar\Eqscholar\backend\n
+ode_modules\typeorm\driver\
+postgres\PostgresQueryRunne
+r.js:1115:13)
+    at async RdbmsSchemaBui
+lder.updateExistColumns (D:
+\Eq-scholar\Eqscholar\backe
+nd\node_modules\typeorm\sch
+ema-builder\RdbmsSchemaBuil
+der.js:637:13)
+    at async RdbmsSchemaBui
+lder.executeSchemaSyncOpera
+tionsInProperOrder (D:\Eq-s
+cholar\Eqscholar\backend\no
+de_modules\typeorm\schema-b
+uilder\RdbmsSchemaBuilder.j
+s:171:9)
+    at async 
+RdbmsSchemaBuilder.build (D
+:\Eq-scholar\Eqscholar\back
+end\node_modules\typeorm\sc
+hema-builder\RdbmsSchemaBui
+lder.js:66:13)
+    at async 
+DataSource.synchronize (D:\
+Eq-scholar\Eqscholar\backen
+d\node_modules\typeorm\data
+-source\DataSource.js:212:9
+)

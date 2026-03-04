@@ -1,0 +1,440 @@
+﻿node : (node:19868) 
+[DEP0169] 
+DeprecationWarning: 
+`url.parse()` behavior 
+is not standardized 
+and prone to errors 
+that have security 
+implications. Use the 
+WHATWG URL API 
+instead. CVEs are not 
+issued for 
+`url.parse()` 
+vulnerabilities.
+At line:1 char:1
++ node dist/main.js > 
+backend_crash3.log 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: ((node:19868)    
+ [D...ulnerabilitie    
+s.:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+(Use `node 
+--trace-deprecation 
+...` to show where the 
+warning was created)
+[32m[Nest] 19868  - [39m04/03/2026, 5:55:08 pm [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 19868  - [39m04/03/2026, 5:55:08 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +80ms[39m
+[32m[Nest] 19868  - [39m04/03/2026, 5:55:08 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 19868  - [39m04/03/2026, 5:55:08 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 19868  - [39m04/03/2026, 5:55:08 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 19868  - [39m04/03/2026, 5:55:08 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 19868  - [39m04/03/2026, 5:55:08 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[31m[Nest] 19868  - 
+[39m04/03/2026, 
+5:55:10 pm [31m  
+ERROR[39m [38;5;3m[Ty
+peOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(1)...[39m
+TypeORMError: Index 
+contains column that 
+is missing in the 
+entity (GameResult): 
+createdAt
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata\
+IndexMetadata.js:125:23
+    at Array.map 
+(<anonymous>)
+    at 
+IndexMetadata.build (D:
+\Eq-scholar\Eqscholar\b
+ackend\node_modules\typ
+eorm\metadata\IndexMeta
+data.js:111:18)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:61
+    at Array.forEach 
+(<anonymous>)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:36
+    at Array.forEach 
+(<anonymous>)
+    at EntityMetadataBu
+ilder.build (D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\typeorm\met
+adata-builder\EntityMet
+adataBuilder.js:215:25)
+    at ConnectionMetada
+taBuilder.buildEntityMe
+tadatas (D:\Eq-scholar\
+Eqscholar\backend\node_
+modules\typeorm\connect
+ion\ConnectionMetadataB
+uilder.js:66:150)
+    at async DataSource
+.buildMetadatas (D:\Eq-
+scholar\Eqscholar\backe
+nd\node_modules\typeorm
+\data-source\DataSource
+.js:483:33)
+[31m[Nest] 19868  - 
+[39m04/03/2026, 
+5:55:15 pm [31m  
+ERROR[39m [38;5;3m[Ty
+peOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(2)...[39m
+TypeORMError: Index 
+contains column that 
+is missing in the 
+entity (GameResult): 
+createdAt
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata\
+IndexMetadata.js:125:23
+    at Array.map 
+(<anonymous>)
+    at 
+IndexMetadata.build (D:
+\Eq-scholar\Eqscholar\b
+ackend\node_modules\typ
+eorm\metadata\IndexMeta
+data.js:111:18)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:61
+    at Array.forEach 
+(<anonymous>)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:36
+    at Array.forEach 
+(<anonymous>)
+    at EntityMetadataBu
+ilder.build (D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\typeorm\met
+adata-builder\EntityMet
+adataBuilder.js:215:25)
+    at ConnectionMetada
+taBuilder.buildEntityMe
+tadatas (D:\Eq-scholar\
+Eqscholar\backend\node_
+modules\typeorm\connect
+ion\ConnectionMetadataB
+uilder.js:66:150)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:103:5)
+[31m[Nest] 19868  - 
+[39m04/03/2026, 
+5:55:20 pm [31m  
+ERROR[39m [38;5;3m[Ty
+peOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(3)...[39m
+TypeORMError: Index 
+contains column that 
+is missing in the 
+entity (GameResult): 
+createdAt
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata\
+IndexMetadata.js:125:23
+    at Array.map 
+(<anonymous>)
+    at 
+IndexMetadata.build (D:
+\Eq-scholar\Eqscholar\b
+ackend\node_modules\typ
+eorm\metadata\IndexMeta
+data.js:111:18)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:61
+    at Array.forEach 
+(<anonymous>)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:36
+    at Array.forEach 
+(<anonymous>)
+    at EntityMetadataBu
+ilder.build (D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\typeorm\met
+adata-builder\EntityMet
+adataBuilder.js:215:25)
+    at ConnectionMetada
+taBuilder.buildEntityMe
+tadatas (D:\Eq-scholar\
+Eqscholar\backend\node_
+modules\typeorm\connect
+ion\ConnectionMetadataB
+uilder.js:66:150)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:103:5)
+[31m[Nest] 19868  - 
+[39m04/03/2026, 
+5:55:25 pm [31m  
+ERROR[39m [38;5;3m[Ty
+peOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(4)...[39m
+TypeORMError: Index 
+contains column that 
+is missing in the 
+entity (GameResult): 
+createdAt
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata\
+IndexMetadata.js:125:23
+    at Array.map 
+(<anonymous>)
+    at 
+IndexMetadata.build (D:
+\Eq-scholar\Eqscholar\b
+ackend\node_modules\typ
+eorm\metadata\IndexMeta
+data.js:111:18)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:61
+    at Array.forEach 
+(<anonymous>)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:36
+    at Array.forEach 
+(<anonymous>)
+    at EntityMetadataBu
+ilder.build (D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\typeorm\met
+adata-builder\EntityMet
+adataBuilder.js:215:25)
+    at ConnectionMetada
+taBuilder.buildEntityMe
+tadatas (D:\Eq-scholar\
+Eqscholar\backend\node_
+modules\typeorm\connect
+ion\ConnectionMetadataB
+uilder.js:66:150)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:103:5)
+[31m[Nest] 19868  - 
+[39m04/03/2026, 
+5:55:30 pm [31m  
+ERROR[39m [38;5;3m[Ty
+peOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(5)...[39m
+TypeORMError: Index 
+contains column that 
+is missing in the 
+entity (GameResult): 
+createdAt
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata\
+IndexMetadata.js:125:23
+    at Array.map 
+(<anonymous>)
+    at 
+IndexMetadata.build (D:
+\Eq-scholar\Eqscholar\b
+ackend\node_modules\typ
+eorm\metadata\IndexMeta
+data.js:111:18)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:61
+    at Array.forEach 
+(<anonymous>)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:36
+    at Array.forEach 
+(<anonymous>)
+    at EntityMetadataBu
+ilder.build (D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\typeorm\met
+adata-builder\EntityMet
+adataBuilder.js:215:25)
+    at ConnectionMetada
+taBuilder.buildEntityMe
+tadatas (D:\Eq-scholar\
+Eqscholar\backend\node_
+modules\typeorm\connect
+ion\ConnectionMetadataB
+uilder.js:66:150)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:103:5)
+[31m[Nest] 19868  - 
+[39m04/03/2026, 
+5:55:35 pm [31m  
+ERROR[39m [38;5;3m[Ty
+peOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(6)...[39m
+TypeORMError: Index 
+contains column that 
+is missing in the 
+entity (GameResult): 
+createdAt
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata\
+IndexMetadata.js:125:23
+    at Array.map 
+(<anonymous>)
+    at 
+IndexMetadata.build (D:
+\Eq-scholar\Eqscholar\b
+ackend\node_modules\typ
+eorm\metadata\IndexMeta
+data.js:111:18)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:61
+    at Array.forEach 
+(<anonymous>)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:36
+    at Array.forEach 
+(<anonymous>)
+    at EntityMetadataBu
+ilder.build (D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\typeorm\met
+adata-builder\EntityMet
+adataBuilder.js:215:25)
+    at ConnectionMetada
+taBuilder.buildEntityMe
+tadatas (D:\Eq-scholar\
+Eqscholar\backend\node_
+modules\typeorm\connect
+ion\ConnectionMetadataB
+uilder.js:66:150)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:103:5)
+[31m[Nest] 19868  - 
+[39m04/03/2026, 
+5:55:40 pm [31m  
+ERROR[39m [38;5;3m[Ty
+peOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(7)...[39m
+TypeORMError: Index 
+contains column that 
+is missing in the 
+entity (GameResult): 
+createdAt
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata\
+IndexMetadata.js:125:23
+    at Array.map 
+(<anonymous>)
+    at 
+IndexMetadata.build (D:
+\Eq-scholar\Eqscholar\b
+ackend\node_modules\typ
+eorm\metadata\IndexMeta
+data.js:111:18)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:61
+    at Array.forEach 
+(<anonymous>)
+    at D:\Eq-scholar\Eq
+scholar\backend\node_mo
+dules\typeorm\metadata-
+builder\EntityMetadataB
+uilder.js:216:36
+    at Array.forEach 
+(<anonymous>)
+    at EntityMetadataBu
+ilder.build (D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\typeorm\met
+adata-builder\EntityMet
+adataBuilder.js:215:25)
+    at ConnectionMetada
+taBuilder.buildEntityMe
+tadatas (D:\Eq-scholar\
+Eqscholar\backend\node_
+modules\typeorm\connect
+ion\ConnectionMetadataB
+uilder.js:66:150)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:103:5)

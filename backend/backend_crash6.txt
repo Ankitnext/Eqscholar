@@ -1,0 +1,146 @@
+﻿node : (node:416) 
+[DEP0169] 
+DeprecationWarning: 
+`url.parse()` behavior 
+is not standardized 
+and prone to errors 
+that have security 
+implications. Use the 
+WHATWG URL API 
+instead. CVEs are not 
+issued for 
+`url.parse()` 
+vulnerabilities.
+At line:1 char:1
++ node dist/main.js > 
+backend_crash5.log 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo     
+         : NotSpecifi  
+  ed: ((node:416) [D   
+ EP...ulnerabilitie    
+s.:String) [], Rem    
+oteException
+    + FullyQualifiedEr 
+   rorId : NativeComm  
+  andError
+ 
+(Use `node 
+--trace-deprecation 
+...` to show where the 
+warning was created)
+[32m[Nest] 416  - [39m04/03/2026, 6:03:14 pm [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:14 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +101ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:14 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:14 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:14 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:14 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:14 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmCoreModule dependencies initialized[39m[38;5;3m +2768ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mUsersModule dependencies initialized[39m[38;5;3m +2ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mGamesModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mLessonsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mMarketModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAchievementsModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAuthModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAuthController {/api/auth}:[39m[38;5;3m +46ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/register, POST} route[39m[38;5;3m +3ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/login, POST} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/auth/me, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mUsersController {/api/users}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/me/progress, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/leaderboard, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/tiers, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/users/:userId/public-profile, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mGamesController {/api/games}:[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/games/results, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/games/results, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/games/results/:modeId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mLessonsController {/api/lessons}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/lessons, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/lessons/:slug, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/lessons/mode/:modeId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/lessons/user/my-lessons, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/lessons/:lessonId/start, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/lessons/:lessonId/progress, PATCH} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mMarketController {/api/market}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/market/items, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/market/items/:itemId, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/market/inventory, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/market/purchase/:itemId, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RoutesResolver] [39m[32mAchievementsController {/api/achievements}:[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/achievements, GET} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/achievements/user, GET} route[39m[38;5;3m +1ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[RouterExplorer] [39m[32mMapped {/api/achievements/unlock/:slug, POST} route[39m[38;5;3m +0ms[39m
+[32m[Nest] 416  - [39m04/03/2026, 6:03:17 pm [32m    LOG[39m [38;5;3m[NestApplication] [39m[32mNest application successfully started[39m[38;5;3m +2ms[39m
+≡ƒÜÇ Server is running on http://localhost:3001/api
+[31m[Nest] 416  - 
+[39m04/03/2026, 
+6:03:43 pm [31m  
+ERROR[39m [38;5;3m[Ex
+ceptionsHandler] 
+[39m[31mcolumn 
+User.username does not 
+exist[39m
+QueryFailedError: 
+column User.username 
+does not exist
+    at PostgresQueryRun
+ner.query (D:\Eq-schola
+r\Eqscholar\backend\nod
+e_modules\typeorm\drive
+r\postgres\PostgresQuer
+yRunner.js:216:19)
+    at process.processT
+icksAndRejections (node
+:internal/process/task_
+queues:103:5)
+    at async SelectQuer
+yBuilder.loadRawResults
+ (D:\Eq-scholar\Eqschol
+ar\backend\node_modules
+\typeorm\query-builder\
+SelectQueryBuilder.js:2
+231:25)
+    at async SelectQuer
+yBuilder.executeEntitie
+sAndRawResults (D:\Eq-s
+cholar\Eqscholar\backen
+d\node_modules\typeorm\
+query-builder\SelectQue
+ryBuilder.js:2079:26)
+    at async SelectQuer
+yBuilder.getRawAndEntit
+ies (D:\Eq-scholar\Eqsc
+holar\backend\node_modu
+les\typeorm\query-build
+er\SelectQueryBuilder.j
+s:684:29)
+    at async SelectQuer
+yBuilder.getOne (D:\Eq-
+scholar\Eqscholar\backe
+nd\node_modules\typeorm
+\query-builder\SelectQu
+eryBuilder.js:711:25)
+    at async 
+AuthService.register (D
+:\Eq-scholar\Eqscholar\
+backend\dist\modules\au
+th\auth.service.js:63:3
+0)
+    at async D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\@nestjs\cor
+e\router\router-executi
+on-context.js:46:28
+    at async D:\Eq-scho
+lar\Eqscholar\backend\n
+ode_modules\@nestjs\cor
+e\router\router-proxy.j
+s:9:17

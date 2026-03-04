@@ -1,0 +1,25 @@
+﻿
+Running 1 test using 1 worker
+
+  Γ£ÿ  1 [chromium] ΓÇ║ tests\auth.spec.ts:3:5 ΓÇ║ user registration and login flow (94ms)
+
+
+  1) [chromium] ΓÇ║ tests\auth.spec.ts:3:5 ΓÇ║ user registration and login flow ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+    Error: page.waitForURL: net::ERR_ABORTED; maybe frame was detached?
+    =========================== logs ===========================
+    waiting for navigation until "load"
+    ============================================================
+
+      39 |   test.step('Verify redirection or successful login', async () => {
+      40 |     // Wait for either the dashboard, home page, or login page redirection
+    > 41 |     await page.waitForURL(/.*(dashboard|login|\/)$/, { timeout: 10000 });
+         |                ^
+      42 |     
+      43 |     if (page.url().includes('login')) {
+      44 |       // If redirected to login, perform login
+        at D:\Eq-scholar\Eqscholar\frontend\tests\auth.spec.ts:41:16
+        at D:\Eq-scholar\Eqscholar\frontend\tests\auth.spec.ts:39:8
+
+  1 failed
+    [chromium] ΓÇ║ tests\auth.spec.ts:3:5 ΓÇ║ user registration and login flow ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ

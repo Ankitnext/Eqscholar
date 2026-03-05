@@ -1,0 +1,280 @@
+﻿node : (node:14688) 
+[DEP0169] 
+DeprecationWarning: 
+`url.parse()` behavior 
+is not standardized and 
+prone to errors that 
+have security 
+implications. Use the 
+WHATWG URL API instead. 
+CVEs are not issued for 
+`url.parse()` 
+vulnerabilities.
+At line:1 char:1
++ node dist/main.js > 
+backend_crash13.log 2>&1
++ ~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo      
+        : NotSpecified  
+  : ((node:14688) [D.   
+ ..ulnerabilities.:S    
+tring) [], RemoteEx    
+ception
+    + FullyQualifiedErr 
+   orId : NativeComman  
+  dError
+ 
+(Use `node 
+--trace-deprecation 
+...` to show where the 
+warning was created)
+[32m[Nest] 14688  - [39m04/03/2026, 9:03:46 pm [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
+[32m[Nest] 14688  - [39m04/03/2026, 9:03:46 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +93ms[39m
+[32m[Nest] 14688  - [39m04/03/2026, 9:03:46 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +1ms[39m
+[32m[Nest] 14688  - [39m04/03/2026, 9:03:46 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 14688  - [39m04/03/2026, 9:03:46 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 14688  - [39m04/03/2026, 9:03:46 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +0ms[39m
+[32m[Nest] 14688  - [39m04/03/2026, 9:03:46 pm [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
+(node:14688) 
+DeprecationWarning: 
+Calling client.query() 
+when the client is 
+already executing a 
+query is deprecated and 
+will be removed in 
+pg@9.0. Use asycn/await 
+or an external async 
+flow control mechanism 
+instead.
+[31m[Nest] 14688  - 
+[39m04/03/2026, 
+9:04:08 pm [31m  
+ERROR[39m [38;5;3m[Typ
+eOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(1)...[39m
+QueryFailedError: 
+cannot drop constraint 
+users_pkey on table 
+users because other 
+objects depend on it
+    at PostgresQueryRunn
+er.query (D:\Eq-scholar\
+Eqscholar\backend\node_m
+odules\typeorm\driver\po
+stgres\PostgresQueryRunn
+er.js:216:19)
+    at process.processTi
+cksAndRejections (node:i
+nternal/process/task_que
+ues:103:5)
+    at async PostgresQue
+ryRunner.executeQueries 
+(D:\Eq-scholar\Eqscholar
+\backend\node_modules\ty
+peorm\query-runner\BaseQ
+ueryRunner.js:441:13)
+    at async PostgresQue
+ryRunner.dropColumn (D:\
+Eq-scholar\Eqscholar\bac
+kend\node_modules\typeor
+m\driver\postgres\Postgr
+esQueryRunner.js:1218:9)
+    at async PostgresQue
+ryRunner.changeColumn (D
+:\Eq-scholar\Eqscholar\b
+ackend\node_modules\type
+orm\driver\postgres\Post
+gresQueryRunner.js:753:1
+3)
+    at async PostgresQue
+ryRunner.changeColumns (
+D:\Eq-scholar\Eqscholar\
+backend\node_modules\typ
+eorm\driver\postgres\Pos
+tgresQueryRunner.js:1115
+:13)
+    at async RdbmsSchema
+Builder.updateExistColum
+ns (D:\Eq-scholar\Eqscho
+lar\backend\node_modules
+\typeorm\schema-builder\
+RdbmsSchemaBuilder.js:63
+7:13)
+    at async RdbmsSchema
+Builder.executeSchemaSyn
+cOperationsInProperOrder
+ (D:\Eq-scholar\Eqschola
+r\backend\node_modules\t
+ypeorm\schema-builder\Rd
+bmsSchemaBuilder.js:171:
+9)
+    at async RdbmsSchema
+Builder.build (D:\Eq-sch
+olar\Eqscholar\backend\n
+ode_modules\typeorm\sche
+ma-builder\RdbmsSchemaBu
+ilder.js:66:13)
+    at async 
+DataSource.synchronize (
+D:\Eq-scholar\Eqscholar\
+backend\node_modules\typ
+eorm\data-source\DataSou
+rce.js:212:9)
+[31m[Nest] 14688  - 
+[39m04/03/2026, 
+9:04:35 pm [31m  
+ERROR[39m [38;5;3m[Typ
+eOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(2)...[39m
+QueryFailedError: 
+cannot drop constraint 
+users_pkey on table 
+users because other 
+objects depend on it
+    at PostgresQueryRunn
+er.query (D:\Eq-scholar\
+Eqscholar\backend\node_m
+odules\typeorm\driver\po
+stgres\PostgresQueryRunn
+er.js:216:19)
+    at process.processTi
+cksAndRejections (node:i
+nternal/process/task_que
+ues:103:5)
+    at async PostgresQue
+ryRunner.executeQueries 
+(D:\Eq-scholar\Eqscholar
+\backend\node_modules\ty
+peorm\query-runner\BaseQ
+ueryRunner.js:441:13)
+    at async PostgresQue
+ryRunner.dropColumn (D:\
+Eq-scholar\Eqscholar\bac
+kend\node_modules\typeor
+m\driver\postgres\Postgr
+esQueryRunner.js:1218:9)
+    at async PostgresQue
+ryRunner.changeColumn (D
+:\Eq-scholar\Eqscholar\b
+ackend\node_modules\type
+orm\driver\postgres\Post
+gresQueryRunner.js:753:1
+3)
+    at async PostgresQue
+ryRunner.changeColumns (
+D:\Eq-scholar\Eqscholar\
+backend\node_modules\typ
+eorm\driver\postgres\Pos
+tgresQueryRunner.js:1115
+:13)
+    at async RdbmsSchema
+Builder.updateExistColum
+ns (D:\Eq-scholar\Eqscho
+lar\backend\node_modules
+\typeorm\schema-builder\
+RdbmsSchemaBuilder.js:63
+7:13)
+    at async RdbmsSchema
+Builder.executeSchemaSyn
+cOperationsInProperOrder
+ (D:\Eq-scholar\Eqschola
+r\backend\node_modules\t
+ypeorm\schema-builder\Rd
+bmsSchemaBuilder.js:171:
+9)
+    at async RdbmsSchema
+Builder.build (D:\Eq-sch
+olar\Eqscholar\backend\n
+ode_modules\typeorm\sche
+ma-builder\RdbmsSchemaBu
+ilder.js:66:13)
+    at async 
+DataSource.synchronize (
+D:\Eq-scholar\Eqscholar\
+backend\node_modules\typ
+eorm\data-source\DataSou
+rce.js:212:9)
+[31m[Nest] 14688  - 
+[39m04/03/2026, 
+9:05:00 pm [31m  
+ERROR[39m [38;5;3m[Typ
+eOrmModule] 
+[39m[31mUnable to 
+connect to the 
+database. Retrying 
+(3)...[39m
+QueryFailedError: 
+cannot drop constraint 
+users_pkey on table 
+users because other 
+objects depend on it
+    at PostgresQueryRunn
+er.query (D:\Eq-scholar\
+Eqscholar\backend\node_m
+odules\typeorm\driver\po
+stgres\PostgresQueryRunn
+er.js:216:19)
+    at process.processTi
+cksAndRejections (node:i
+nternal/process/task_que
+ues:103:5)
+    at async PostgresQue
+ryRunner.executeQueries 
+(D:\Eq-scholar\Eqscholar
+\backend\node_modules\ty
+peorm\query-runner\BaseQ
+ueryRunner.js:441:13)
+    at async PostgresQue
+ryRunner.dropColumn (D:\
+Eq-scholar\Eqscholar\bac
+kend\node_modules\typeor
+m\driver\postgres\Postgr
+esQueryRunner.js:1218:9)
+    at async PostgresQue
+ryRunner.changeColumn (D
+:\Eq-scholar\Eqscholar\b
+ackend\node_modules\type
+orm\driver\postgres\Post
+gresQueryRunner.js:753:1
+3)
+    at async PostgresQue
+ryRunner.changeColumns (
+D:\Eq-scholar\Eqscholar\
+backend\node_modules\typ
+eorm\driver\postgres\Pos
+tgresQueryRunner.js:1115
+:13)
+    at async RdbmsSchema
+Builder.updateExistColum
+ns (D:\Eq-scholar\Eqscho
+lar\backend\node_modules
+\typeorm\schema-builder\
+RdbmsSchemaBuilder.js:63
+7:13)
+    at async RdbmsSchema
+Builder.executeSchemaSyn
+cOperationsInProperOrder
+ (D:\Eq-scholar\Eqschola
+r\backend\node_modules\t
+ypeorm\schema-builder\Rd
+bmsSchemaBuilder.js:171:
+9)
+    at async RdbmsSchema
+Builder.build (D:\Eq-sch
+olar\Eqscholar\backend\n
+ode_modules\typeorm\sche
+ma-builder\RdbmsSchemaBu
+ilder.js:66:13)
+    at async 
+DataSource.synchronize (
+D:\Eq-scholar\Eqscholar\
+backend\node_modules\typ
+eorm\data-source\DataSou
+rce.js:212:9)

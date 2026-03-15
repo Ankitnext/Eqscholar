@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Modern Teachings — EQ Academy</title>
+<style>
+:root{--bg1:#0f1b2a;--bg2:#12263a;--accent:#2ecc71;--muted:#bdc3c7}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Segoe UI,Arial;background:linear-gradient(135deg,var(--bg1),var(--bg2));color:#ecf0f1;padding:22px}
+.header{display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto 20px}
+.container{max-width:1100px;margin:0 auto}
+.panel{background:rgba(255,255,255,0.03);padding:18px;border-radius:12px}
+.section-title{color:var(--accent);font-weight:700}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.card{padding:12px;border-radius:10px;background:rgba(0,0,0,0.32);cursor:pointer;border:1px solid rgba(255,255,255,0.03)}
+.card:hover{transform:translateY(-6px)}
+.btn{padding:10px 12px;border-radius:10px;border:none;background:linear-gradient(45deg,#2ecc71,#27ae60);color:white;cursor:pointer}
+.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center}
+.box{background:linear-gradient(135deg,#1f3945,#233243);padding:18px;border-radius:12px;width:92%;max-width:720px}
+</style>
+</head>
+<body>
+<header class="header"><div class="brand"><h1 style="color:#2ecc71">Modern Teachings</h1></div><nav><a href="lesson3.html">Back</a></nav></header>
+<main class="container">
+<section class="panel">
+  <h2 class="section-title">Contemporary insights & psychology</h2>
+  <p class="kicker">Simplified teachings from modern psychology, neuroscience and adapted scriptures.</p>
+  <div class="grid" style="margin-top:12px">
+    <div class="card" onclick="open('Cognitive Reframe','Practical reframes to change interpretations')"><h4>Cognitive Reframing</h4><p class="kicker">Short exercises to shift perspective.</p></div>
+    <div class="card" onclick="open('Habit Design','Tiny habits & routines')"><h4>Habit Design</h4><p class="kicker">Build momentum with easy micro-habits.</p></div>
+    <div class="card" onclick="open('Mindful Tech','Using devices mindfully')"><h4>Mindful Tech</h4><p class="kicker">Balance attention in a noisy world.</p></div>
+    <div class="card" onclick="open('Compassion Practices','Modern empathy training')"><h4>Compassion Practices</h4><p class="kicker">Short rituals to expand care.</p></div>
+  </div>
+  <div style="margin-top:16px"><button class="btn" onclick="open('Quiz','Quick 3-question assessment')">Take Quiz</button></div>
+</section>
+</main>
+
+<div id="m" class="modal" onclick="if(event.target===this) closeM()"><div class="box"><div style="display:flex;justify-content:space-between;align-items:center"><h3 id="mt"></h3><span style="cursor:pointer" onclick="closeM()">✕</span></div><div id="mb" style="margin-top:12px;color:#bdc3c7"></div></div></div>
+<script>
+const m=document.getElementById('m'),mt=document.getElementById('mt'),mb=document.getElementById('mb');
+function open(title,desc){mt.textContent=title;mb.innerHTML=`<p>${desc}</p><div style="margin-top:12px"><button class="btn" onclick="alert('Start exercise')">Start</button></div>`;m.style.display='flex'}
+function closeM(){m.style.display='none'}
+</script>
+</body>
+</html>

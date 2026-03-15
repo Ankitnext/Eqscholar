@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Storm Mode – EQ Journey Hub</title>
+
+  <!-- Shared Game UI -->
+  <link rel="stylesheet" href="../shared/game-ui.css" />
+
+  <!-- Core + Modal + Mode JS -->
+  <script src="../../js/eq-core.js"></script>
+  <script src="../shared/modal.js" defer></script>
+  <script src="storm.js" defer></script>
+
+  <style>
+    :root {
+      --storm-accent: #4dabff;
+      --storm-bg: #02060f;
+      --storm-card: rgba(4, 15, 32, 0.9);
+      --storm-border: rgba(255, 255, 255, 0.08);
+      --pill-bg: rgba(255, 255, 255, 0.08);
+      --good-green: #2ecc71;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #203a6b 0, #02060f 55%, #010309 100%);
+      color: #ecf0f1;
+      min-height: 100vh;
+    }
+
+    .nav-bar {
+      background: rgba(2, 10, 25, 0.96);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mode-wrapper {
+      max-width: 1100px;
+      margin: 110px auto 60px;
+      padding: 0 18px 40px;
+    }
+
+    /* HERO */
+    .mode-hero {
+      background: linear-gradient(145deg, rgba(5, 18, 42, 0.96), rgba(13, 35, 74, 0.96));
+      border-radius: 24px;
+      padding: 26px 24px;
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8);
+    }
+
+    .mode-title {
+      font-size: 2.4rem;
+      color: var(--storm-accent);
+      margin-bottom: 6px;
+    }
+
+    .mode-subtitle {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+
+    .mode-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 4px;
+    }
+
+    .pill-chip {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: var(--pill-bg);
+      font-size: 0.8rem;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .mode-hero-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      text-align: right;
+    }
+
+    .state-tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(41, 128, 185, 0.25);
+      border: 1px solid rgba(41, 128, 185, 0.7);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .hero-stat-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      width: 100%;
+      max-width: 270px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+
+    .btn-soft,
+    .btn-primary {
+      border-radius: 999px;
+      padding: 9px 18px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .btn-soft {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ecf0f1;
+    }
+
+    .btn-soft:hover {
+      background: rgba(255, 255, 255, 0.14);
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #4dabff, #1abc9c);
+      color: #111;
+      box-shadow: 0 10px 30px rgba(77, 171, 255, 0.4);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 36px rgba(77, 171, 255, 0.6);
+    }
+
+    /* SECTIONS */
+    .mode-section {
+      margin-top: 32px;
+      background: var(--storm-card);
+      border-radius: 20px;
+      padding: 22px 20px 18px;
+      border: 1px solid var(--storm-border);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.75);
+    }
+
+    .mode-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: var(--storm-accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-section p.section-lead {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 14px;
+    }
+
+    .section-grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+      gap: 18px;
+    }
+
+    .bullet-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .bullet-card ul {
+      padding-left: 18px;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .note-box {
+      background: radial-gradient(circle at top left, rgba(52, 152, 219, 0.25), rgba(0, 0, 0, 0.28));
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(52, 152, 219, 0.6);
+    }
+
+    /* OBJECTIVES */
+    .objective-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .objective-item {
+      display: flex;
+      gap: 10px;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .objective-icon {
+      font-size: 1.1rem;
+      margin-top: 1px;
+    }
+
+    /* SKILLS */
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .skill-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 12px 13px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .skill-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* METHODS */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .method-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 12px 14px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .method-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .method-steps {
+      margin-left: 16px;
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+
+    /* CHAIN REACTION */
+    .chain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .chain-column {
+      background: rgba(0, 0, 0, 0.23);
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .chain-heading-bad {
+      color: #e74c3c;
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chain-heading-good {
+      color: var(--good-green);
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chain-step {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 8px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      margin-top: 8px;
+      position: relative;
+    }
+
+    .chain-step-header {
+      font-weight: 600;
+      font-size: 0.86rem;
+      margin-bottom: 3px;
+    }
+
+    .chain-step-body {
+      font-size: 0.83rem;
+      opacity: 0.9;
+    }
+
+    .chain-arrow {
+      text-align: center;
+      font-size: 1.1rem;
+      opacity: 0.65;
+      margin-top: 2px;
+    }
+
+    .chain-note {
+      font-size: 0.82rem;
+      opacity: 0.9;
+      margin-top: 8px;
+    }
+
+    /* GAMES */
+    .games-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .game-card {
+      flex: 1 1 220px;
+      max-width: 260px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 18px;
+      padding: 16px 14px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .game-pill {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 0.7rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .game-icon {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .game-name {
+      font-weight: 700;
+      color: #f9c74f;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .game-desc {
+      font-size: 0.86rem;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+
+    .play-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(120deg, #4dabff, #1abc9c);
+      color: #111;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* NEXT STEPS */
+    .next-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .next-steps a {
+      text-decoration: none;
+    }
+
+    @media (max-width: 880px) {
+      .mode-hero {
+        grid-template-columns: 1fr;
+      }
+      .mode-hero-right {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Top Nav -->
+  <nav class="nav-bar">
+    <div class="logo">⛈️ Storm Mode Hub</div>
+    <div class="nav-links">
+      <a href="../../journey-map.html">Journey Map</a>
+      <a href="../../index.html">Home</a>
+      <a href="../../games.html">Game Arcade</a>
+    </div>
+  </nav>
+
+  <main class="mode-wrapper">
+    <!-- HERO -->
+    <section class="mode-hero">
+      <div>
+        <div class="mode-title">Storm Mode – 300–399 EQ</div>
+        <div class="mode-subtitle">
+          Anger, jealousy, and emotional storms hit fast. This league trains
+          you to cool the body, clear the mind, and respond without regret.
+        </div>
+
+        <div class="mode-pills">
+          <span class="pill-chip">League: Storm</span>
+          <span class="pill-chip">Key Emotions: Anger · Jealousy · Resentment</span>
+          <span class="pill-chip">Goal: Cool Power</span>
+        </div>
+      </div>
+
+      <div class="mode-hero-right">
+        <div class="state-tag">⛈ Emotional Storm Control</div>
+        <div class="hero-stat-box">
+          <strong>On this page you will:</strong>
+          <ul style="margin-left:18px; margin-top:6px; font-size:0.85rem;">
+            <li>Understand how storms start in body & mind</li>
+            <li>Learn 3 cooling methods</li>
+            <li>Play games to train pause, breath & reframing</li>
+          </ul>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-soft" onclick="startLesson('storm-mode')">
+            Read Intro Lesson
+          </button>
+          <button class="btn-primary" onclick="document.getElementById('games-section').scrollIntoView({behavior:'smooth'})">
+            Jump to Games
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. WHERE YOU ARE -->
+    <section class="mode-section">
+      <h2>🛰 Where You Are in Storm Mode</h2>
+      <p class="section-lead">
+        Storm Mode means you <strong>feel deeply</strong> and react quickly.
+        The problem is not the emotion itself, but how fast it explodes.
+      </p>
+
+      <div class="section-grid-2">
+        <div class="bullet-card">
+          <strong>Typical Storm signals:</strong>
+          <ul>
+            <li>Sudden anger from “small” comments or delays</li>
+            <li>Jealousy seeing others win while you feel stuck</li>
+            <li>Sharp words, slammed doors, rage texts</li>
+            <li>Feeling guilty or embarrassed once you calm down</li>
+          </ul>
+        </div>
+
+        <div class="note-box">
+          <strong>Important:</strong>
+          <p style="margin-top:6px;">
+            Storm Mode is <em>raw power</em>. Shiva’s teaching is not “kill the emotion” –
+            it is to <strong>hold the lightning</strong> in a stable hand.
+            Here you learn to channel the storm into focused action and truth-telling
+            without damage.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. WHAT YOU'LL LEARN -->
+    <section class="mode-section">
+      <h2>🎯 What You Will Learn in Storm Mode</h2>
+      <p class="section-lead">
+        This league is about turning fire into fuel – learning how to cool down without
+        going numb or fake.
+      </p>
+
+      <div class="objective-list">
+        <div class="objective-item">
+          <div class="objective-icon">🌡️</div>
+          <div>Track early body signs of anger and jealousy before they explode.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">⏸</div>
+          <div>Build a reliable pause routine (breath, grounding, delay) before reacting.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🧠</div>
+          <div>Reframe jealous thoughts into inspiration and self-respect.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🗣️</div>
+          <div>Express anger cleanly – firm truth without abuse or self-harm.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SKILLS -->
+    <section class="mode-section">
+      <h2>🧠 Skills You Unlock</h2>
+      <p class="section-lead">
+        Storm Mode doesn’t ask you to become “calm like a rock”. It trains you to stay
+        powerful <em>and</em> responsible.
+      </p>
+
+      <div class="skill-grid">
+        <div class="skill-card">
+          <div class="skill-title">🌡 Body Thermometer</div>
+          <p>Notice heat in chest, face, jaw, and fists as the first warning signs.</p>
+          <span class="skill-tag">Micro habit: Rate storm 1–10</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">⏳ Delay Switch</div>
+          <p>Create a rule: no heavy decisions or messages while above “Storm Level 6”.</p>
+          <span class="skill-tag">Rule: “I respond after I cool down.”</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🌀 Jealousy Reframe</div>
+          <p>Turn jealousy from “they don’t deserve it” → “this shows what I value”.</p>
+          <span class="skill-tag">Question: “What does this show I want?”</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🛡 Clean Anger Expression</div>
+          <p>Speak in “I feel / I need” language instead of attacks & blame.</p>
+          <span class="skill-tag">Script: “When X happens, I feel Y, I need Z.”</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. METHODS / PRACTICES -->
+    <section class="mode-section">
+      <h2>🕉 Cooling Methods (Shiva-Style Storm Control)</h2>
+      <p class="section-lead">
+        Use these methods <strong>inside the storm</strong> – not only when you are calm.
+      </p>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-title">🧊 3-Step Cool Down</div>
+          <p>Use in the first 60 seconds when anger spikes.</p>
+          <ul class="method-steps">
+            <li>Step 1: Feel your feet pressing into the floor.</li>
+            <li>Step 2: Inhale through nose 4 counts, exhale through mouth 8 counts.</li>
+            <li>Step 3: Say inside: “I can respond later. I don’t need to explode now.”</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-title">🪞 Jealousy Mirror Question</div>
+          <p>Use whenever you feel jealous of someone’s success.</p>
+          <ul class="method-steps">
+            <li>Write: “I feel jealous because ___ has ___.”</li>
+            <li>Ask: “What does this show I want more of in my own life?”</li>
+            <li>Convert jealousy into a 10-minute action step.</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-title">🛡 The “I-Message” Script</div>
+          <p>Use when you finally talk to the person.</p>
+          <ul class="method-steps">
+            <li>“When you ___ (event), I felt ___ (emotion).”</li>
+            <li>“I need / I wish we could ___ (need/boundary).”</li>
+            <li>Stop before you start character attacks (“you always…”, “you are…”).</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CHAIN REACTIONS -->
+    <section class="mode-section">
+      <h2>⚠ Chain Reactions of Storm Mode</h2>
+      <p class="section-lead">
+        Storms are dangerous because they create strong <strong>identity stories</strong>.
+        Here is how the chain can go wrong or right.
+      </p>
+
+      <div class="chain-grid">
+        <!-- NEGATIVE -->
+        <div class="chain-column">
+          <div class="chain-heading-bad">❌ If you let the storm drive</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">1. Trigger</div>
+            <div class="chain-step-body">
+              Someone ignores your message, criticises you, or gets what you wanted.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">2. Body Explosion</div>
+            <div class="chain-step-body">
+              Heart races, face hot, muscles tense. Breath becomes sharp and shallow.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">3. Story in Mind</div>
+            <div class="chain-step-body">
+              Thoughts like “They don’t respect me”, “I’m a joke”, or “Life is unfair”.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">4. Behaviour</div>
+            <div class="chain-step-body">
+              Shouting, blocking, rage-typing, revenge moves, self-harm thoughts, or throwing things.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">5. Identity Story</div>
+            <div class="chain-step-body">
+              After repeated storms, brain concludes: “I am dangerous / out of control / unlovable.”
+            </div>
+          </div>
+
+          <p class="chain-note">
+            One un-controlled storm can damage trust that took months or years to build.
+          </p>
+        </div>
+
+        <!-- POSITIVE -->
+        <div class="chain-column">
+          <div class="chain-heading-good">✅ If you channel the storm</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">1. Trigger</div>
+            <div class="chain-step-body">
+              Same situation: someone ignores, criticises, or wins before you.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">2. Early Alarm</div>
+            <div class="chain-step-body">
+              You notice jaw clenching, breath shortening, fists tightening – your Storm Level reaches 5.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">3. Cooling Ritual</div>
+            <div class="chain-step-body">
+              You step away, do 3–5 cooling breaths, maybe splash water or walk for 2 minutes.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">4. Chosen Response</div>
+            <div class="chain-step-body">
+              You text later, speak with boundaries, or redirect energy into work/training.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">5. New Identity Story</div>
+            <div class="chain-step-body">
+              Brain updates: “I feel storms, but I don’t destroy with them. I can hold my fire.”
+            </div>
+          </div>
+
+          <p class="chain-note">
+            Same emotion, different chain – this is Storm mastery. Each cooled storm is a +1% upgrade to nervous system strength.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. GAMES -->
+    <section class="mode-section" id="games-section">
+      <h2>🎮 Storm Mode – Training Games</h2>
+      <p class="section-lead">
+        These games make your cooling skills automatic. Play them when calm so your brain
+        can use them when angry.
+      </p>
+
+      <div class="games-row">
+        <!-- 1: Storm Thermometer -->
+        <div class="game-card">
+          <div class="game-pill">Body awareness</div>
+          <div class="game-icon">🌡️</div>
+          <div class="game-name">Storm Thermometer</div>
+          <div class="game-desc">
+            Tap how intense the storm feels and match body sensations with levels.
+          </div>
+          <button class="play-btn" data-game="stormThermo">Play</button>
+        </div>
+
+        <!-- 2: Breath Warrior (Storm) -->
+        <div class="game-card">
+          <div class="game-pill">Cooling breath</div>
+          <div class="game-icon">🌬️</div>
+          <div class="game-name">Breath Warrior – Storm</div>
+          <div class="game-desc">
+            Follow inhale–hold–exhale patterns to cool your nervous system under pressure.
+          </div>
+          <button class="play-btn" data-game="stormBreath">Play</button>
+        </div>
+
+        <!-- 3: Anger Reframe Arena -->
+        <div class="game-card">
+          <div class="game-pill">Thought reframing</div>
+          <div class="game-icon">🧠</div>
+          <div class="game-name">Anger Reframe Arena</div>
+          <div class="game-desc">
+            Convert rage thoughts into clear “I feel / I need” statements.
+          </div>
+          <button class="play-btn" data-game="stormReframe">Play</button>
+        </div>
+
+        <!-- 4: Jealousy Alchemy -->
+        <div class="game-card">
+          <div class="game-pill">Jealousy → fuel</div>
+          <div class="game-icon">🧪</div>
+          <div class="game-name">Jealousy Alchemy</div>
+          <div class="game-desc">
+            Turn jealousy into action steps instead of self-hate or attacks.
+          </div>
+          <button class="play-btn" data-game="stormJealousy">Play</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. NEXT STEPS -->
+    <section class="mode-section">
+      <h2>🚀 After Storm Mode – What Next?</h2>
+      <p class="section-lead">
+        When you can feel storms fully but not destroy with them, you’re ready for higher
+        leagues: Shadow Walker → Seeker → Monk.
+      </p>
+      <div class="next-steps">
+        <a href="../../journey-map.html">
+          <button class="btn-soft">⬅ Back to EQ Journey Map</button>
+        </a>
+        <a href="../../games.html">
+          <button class="btn-soft">🎮 Explore All Games</button>
+        </a>
+        <a href="../../index5.html">
+          <button class="btn-primary">📝 Take Storm Mode Quiz</button>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- GAME MODAL (used by modal.js + storm.js) -->
+  <div id="game-modal">
+    <div id="game-box">
+      <div id="game-header">
+        <div>
+          <div id="game-title">Game</div>
+        </div>
+        <button id="game-close">&times;</button>
+      </div>
+      <div id="game-area"></div>
+    </div>
+  </div>
+</body>
+</html>

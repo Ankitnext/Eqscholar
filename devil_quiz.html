@@ -1,0 +1,790 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Devil’s Puzzle – 1,000,000 Mind Coins</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family:'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      min-height:100vh;
+      background: radial-gradient(circle at top, #8b0000 0%, #000000 55%, #130f1a 100%);
+      color:#fff;
+      overflow-x:hidden;
+    }
+    a { color:inherit; text-decoration:none; }
+
+    /* NAVBAR (similar to other pages, mobile friendly) */
+    .nav-bar {
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(0,0,0,0.9);
+      backdrop-filter:blur(10px);
+      padding:14px 20px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .logo {
+      font-weight:800;
+      font-size:20px;
+      display:flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .nav-links {
+      display:flex;
+      gap:18px;
+      font-size:14px;
+      flex-wrap:wrap;
+      align-items:center;
+    }
+    .nav-links a {
+      padding:4px 2px;
+      font-weight:500;
+      white-space:nowrap;
+    }
+    .nav-links a:hover { color:#f39c12; }
+
+    /* hamburger icon */
+    #menuToggle {
+      display:none;
+      width:26px;
+      height:20px;
+      flex-direction:column;
+      justify-content:center;
+      gap:5px;
+      cursor:pointer;
+    }
+    #menuToggle span {
+      display:block;
+      width:100%;
+      height:3px;
+      border-radius:999px;
+      background:#fff;
+      transition:transform .3s, opacity .3s;
+    }
+    #menuToggle.open span:first-child {
+      transform:translateY(4px) rotate(35deg);
+    }
+    #menuToggle.open span:last-child {
+      transform:translateY(-4px) rotate(-35deg);
+    }
+    @media (max-width:768px){
+      .nav-bar { padding:12px 16px; }
+      .nav-links {
+        position:fixed;
+        top:52px;
+        right:0;
+        flex-direction:column;
+        align-items:flex-start;
+        gap:14px;
+        padding:14px 16px;
+        width:240px;
+        background:rgba(0,0,0,0.96);
+        border-left:1px solid rgba(255,255,255,0.12);
+        transform:translateX(100%);
+        transition:transform .3s ease;
+        max-height:calc(100vh - 52px);
+        overflow:auto;
+      }
+      .nav-links.open { transform:translateX(0); }
+      #menuToggle { display:flex; }
+    }
+
+    /* LAYOUT */
+    .page-wrap {
+      padding:32px 18px 40px;
+      max-width:1000px;
+      margin:0 auto;
+    }
+    .hero-header {
+      text-align:center;
+      margin-bottom:22px;
+    }
+    .hero-pill {
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.12);
+      background:rgba(0,0,0,0.5);
+      font-size:12px;
+      margin-bottom:10px;
+    }
+    .hero-title {
+      font-size:32px;
+      font-weight:800;
+      letter-spacing:1px;
+      background:linear-gradient(45deg,#ff4b2b,#f39c12,#e74c3c);
+      -webkit-background-clip:text;
+      -webkit-text-fill-color:transparent;
+      margin-bottom:8px;
+    }
+    .hero-sub {
+      font-size:14px;
+      max-width:620px;
+      margin:0 auto;
+      opacity:0.9;
+    }
+    @media (max-width:600px){
+      .page-wrap { padding:24px 14px 30px; }
+      .hero-title { font-size:24px; }
+      .hero-sub { font-size:13px; }
+    }
+
+    /* WARNING BOX */
+    .warning-box {
+      margin:18px auto 24px;
+      max-width:720px;
+      padding:10px 14px;
+      border-radius:12px;
+      background:rgba(0,0,0,0.7);
+      border:1px solid rgba(255,255,255,0.16);
+      font-size:12px;
+      line-height:1.5;
+      display:flex;
+      gap:10px;
+      align-items:flex-start;
+    }
+    .warning-icon { font-size:18px; margin-top:2px; }
+
+    /* PROGRESS */
+    .progress-wrap {
+      max-width:720px;
+      margin:0 auto 18px;
+    }
+    .progress-top {
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      font-size:13px;
+      margin-bottom:6px;
+    }
+    .progress-bar {
+      width:100%;
+      height:10px;
+      border-radius:999px;
+      overflow:hidden;
+      background:rgba(255,255,255,0.08);
+    }
+    .progress-fill {
+      height:100%;
+      width:0%;
+      background:linear-gradient(90deg,#e74c3c,#f39c12);
+      transition:width .4s ease;
+    }
+
+    /* PUZZLE CARD */
+    .puzzle-card {
+      max-width:720px;
+      margin:0 auto;
+      padding:18px 16px 16px;
+      border-radius:18px;
+      background:linear-gradient(135deg, rgba(231,76,60,0.16), rgba(52,73,94,0.85));
+      border:1px solid rgba(255,255,255,0.16);
+      box-shadow:0 18px 35px rgba(0,0,0,0.55);
+      position:relative;
+      overflow:hidden;
+    }
+    .step-label {
+      font-size:12px;
+      opacity:0.9;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:4px;
+    }
+    .step-title {
+      font-size:18px;
+      font-weight:700;
+      margin-bottom:6px;
+      color:#f39c12;
+    }
+    .step-story {
+      font-size:14px;
+      line-height:1.6;
+      margin-bottom:12px;
+      opacity:0.96;
+    }
+    .money-line {
+      font-size:13px;
+      opacity:0.9;
+      margin-bottom:10px;
+    }
+
+    /* OPTIONS */
+    .options-grid {
+      display:grid;
+      grid-template-columns:1fr;
+      gap:10px;
+      margin-top:6px;
+    }
+    .option-btn {
+      width:100%;
+      text-align:left;
+      padding:10px 12px;
+      font-size:14px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.2);
+      background:rgba(0,0,0,0.45);
+      color:#fff;
+      cursor:pointer;
+      display:flex;
+      gap:8px;
+      align-items:flex-start;
+      transition:transform .12s ease, box-shadow .12s ease, border-color .12s ease, background .12s ease;
+    }
+    .option-btn span {
+      font-size:12px;
+      opacity:0.9;
+    }
+    .option-btn strong { font-size:13px; }
+    .option-btn:hover {
+      transform:translateY(-1px);
+      box-shadow:0 10px 22px rgba(0,0,0,0.4);
+      border-color:#f39c12;
+      background:rgba(0,0,0,0.7);
+    }
+    .option-btn.selected-devil {
+      border-color:#e74c3c;
+      background:rgba(231,76,60,0.25);
+    }
+    .option-btn.selected-god {
+      border-color:#2ecc71;
+      background:rgba(39,174,96,0.25);
+    }
+
+    /* FEEDBACK */
+    .feedback-box {
+      margin-top:12px;
+      padding:10px 12px;
+      border-radius:12px;
+      border:1px solid rgba(255,255,255,0.18);
+      background:rgba(0,0,0,0.6);
+      font-size:13px;
+      line-height:1.5;
+      display:none;
+    }
+    .feedback-label {
+      font-weight:700;
+      margin-bottom:4px;
+    }
+
+    /* ACTIONS */
+    .card-actions {
+      margin-top:14px;
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      flex-wrap:wrap;
+      font-size:13px;
+    }
+    .nav-buttons {
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+    .btn {
+      padding:8px 12px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.24);
+      background:transparent;
+      color:#fff;
+      font-size:13px;
+      font-weight:600;
+      cursor:pointer;
+      white-space:nowrap;
+    }
+    .btn-primary {
+      background:linear-gradient(45deg,#e74c3c,#f39c12);
+      border:none;
+      box-shadow:0 10px 22px rgba(231,76,60,0.5);
+    }
+    .btn[disabled] {
+      opacity:0.4;
+      cursor:not-allowed;
+      box-shadow:none;
+    }
+
+    /* RESULT CARD */
+    .result-card {
+      max-width:720px;
+      margin:20px auto 0;
+      padding:18px 16px 16px;
+      border-radius:18px;
+      background:rgba(0,0,0,0.75);
+      border:1px solid rgba(255,255,255,0.16);
+      font-size:14px;
+      line-height:1.6;
+      display:none;
+    }
+    .result-title {
+      font-size:20px;
+      font-weight:800;
+      color:#f39c12;
+      margin-bottom:6px;
+    }
+    .result-tag {
+      font-size:12px;
+      opacity:0.9;
+      text-transform:uppercase;
+      letter-spacing:1px;
+      margin-bottom:4px;
+    }
+    .result-badges {
+      margin:8px 0 6px;
+      display:flex;
+      flex-wrap:wrap;
+      gap:6px;
+    }
+    .badge {
+      font-size:11px;
+      padding:3px 8px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,0.2);
+      background:rgba(255,255,255,0.05);
+    }
+
+    /* FOOTER */
+    footer {
+      padding:24px 12px 28px;
+      text-align:center;
+      font-size:12px;
+      opacity:0.7;
+    }
+  </style>
+</head>
+<body>
+  <!-- NAV -->
+  <nav class="nav-bar">
+    <div class="logo">😈 Devil’s Puzzle – EQScholar</div>
+
+    <div id="menuToggle" aria-label="Toggle menu" aria-expanded="false" role="button" tabindex="0">
+      <span></span>
+      <span></span>
+    </div>
+
+    <div class="nav-links" id="navLinks" aria-hidden="true">
+      <a href="index.html">Home</a>
+      <a href="devil-mode.html">Devil Mode Map</a>
+      <a href="god-mode.html">God Mode</a>
+      <a href="journey-map.html">EQ Journey</a>
+      <a href="mental-check.html">Mental Checkup</a>
+    </div>
+  </nav>
+
+  <main class="page-wrap">
+    <header class="hero-header">
+      <div class="hero-pill">
+        <span>Dark Ethics Puzzle</span> · <span>For Awareness Only</span>
+      </div>
+      <h1 class="hero-title">1,000,000 Mind Coins – Devil’s Offer</h1>
+      <p class="hero-sub">
+        You are offered <strong>₹10,00,000 “Devil Money”</strong> in your imagination.  
+        At every step you choose: shortcut for money (Devil) or conscience and long-term peace (God).  
+        At the end, you see which side your mind really serves when big rewards appear.
+      </p>
+    </header>
+
+    <section class="warning-box">
+      <div class="warning-icon">⚠️</div>
+      <div>
+        <strong>Trigger warning:</strong> This puzzle uses stories of crime, betrayal and corruption
+        for <u>education only</u>. No real money, no real crime. If any story feels too heavy,
+        stop, breathe, and move to God Mode / Mental Checkup.
+      </div>
+    </section>
+
+    <!-- PROGRESS -->
+    <section class="progress-wrap" aria-label="Puzzle progress">
+      <div class="progress-top">
+        <div id="progressStepLabel">Step 1 of 7</div>
+        <div id="progressScoreLabel">Devil Score: 0 · God Score: 0</div>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill"></div>
+      </div>
+    </section>
+
+    <!-- PUZZLE CARD -->
+    <section class="puzzle-card" aria-live="polite">
+      <div class="step-label" id="stepDayLabel">Day 1 Key</div>
+      <div class="step-title" id="stepTitle"></div>
+      <p class="step-story" id="stepStory"></p>
+      <p class="money-line" id="stepMoneyLine"></p>
+
+      <div class="options-grid" id="optionsGrid">
+        <!-- options injected by JS -->
+      </div>
+
+      <div class="feedback-box" id="feedbackBox">
+        <div class="feedback-label" id="feedbackLabel"></div>
+        <div id="feedbackText"></div>
+      </div>
+
+      <div class="card-actions">
+        <div class="nav-buttons">
+          <button class="btn" id="prevBtn">← Back</button>
+          <button class="btn btn-primary" id="nextBtn" disabled>Next Step →</button>
+        </div>
+        <button class="btn" id="dayHintBtn">💡 How to use this for 7 days</button>
+      </div>
+    </section>
+
+    <!-- RESULT -->
+    <section class="result-card" id="resultCard">
+      <div class="result-tag" id="resultTag"></div>
+      <div class="result-title" id="resultTitle"></div>
+      <p id="resultSummary"></p>
+
+      <div class="result-badges" id="resultBadges"></div>
+
+      <p style="margin-top:10px;">
+        To build a <strong>7-day return loop</strong> for yourself:
+      </p>
+      <ul style="margin-left:18px; margin-top:4px; font-size:13px; line-height:1.5;">
+        <li>Do <strong>max 1–2 steps per day</strong>, note your choices in a journal.</li>
+        <li>Each morning, re-read yesterday’s choice and ask:
+          “What real situation in my life looks like this trap?”</li>
+        <li>Use the God-choice as a <strong>tiny habit</strong> to practice in one real moment.</li>
+      </ul>
+
+      <div style="margin-top:12px; display:flex; flex-wrap:wrap; gap:8px;">
+        <button class="btn btn-primary" onclick="window.location.href='god-mode.html'">
+          😇 Learn opposite patterns (God Mode)
+        </button>
+        <button class="btn" onclick="window.location.href='journey-map.html'">
+          🧭 Continue EQ Journey
+        </button>
+        <button class="btn" onclick="window.location.href='mental-check.html'">
+          🧪 Talk about my pattern
+        </button>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    © <script>document.write(new Date().getFullYear())</script> EQScholar · Devil’s Puzzle
+  </footer>
+
+  <script>
+    // Mobile nav toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    if (menuToggle && navLinks) {
+      menuToggle.addEventListener('click', () => {
+        const open = navLinks.classList.toggle('open');
+        menuToggle.classList.toggle('open', open);
+        menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+        navLinks.setAttribute('aria-hidden', open ? 'false' : 'true');
+      });
+    }
+
+    // Puzzle data (7 steps)
+    const puzzleSteps = [
+      {
+        dayLabel: 'Day 1 Key',
+        title: 'Office Shortcut – Bribe for Promotion',
+        story: 'You are underpaid and stuck. A contractor offers you ₹2,00,000 if you push one fake bill and sign it. No one will “officially” know. Promotion chances increase.',
+        moneyLine: 'Devil offer: Take the bribe now, gain quick money and influence.',
+        options: [
+          {
+            label: '😈 Take the money, sign the paper quietly.',
+            type: 'devil',
+            feedbackTitle: 'Devil Path – First Crack in Integrity',
+            feedback: 'You win money but lose invisible trust: with law, with God, and with your future self. Next time a bigger crime feels easier.'
+          },
+          {
+            label: '😇 Refuse, even if you stay stuck longer.',
+            type: 'god',
+            feedbackTitle: 'God Path – Slow but Clean',
+            feedback: 'You delay your reward but protect your spine. Growth may be slower, but you stay strong enough to carry real success later.'
+          }
+        ]
+      },
+      {
+        dayLabel: 'Day 2 Key',
+        title: 'Exam Leak – Help a Friend Cheat',
+        story: 'Your close friend is failing exams and begs you to share leaked answers. “Just this once, bro. I will fail without you.”',
+        moneyLine: 'Devil offer: Save your friend’s marks today, ignore long-term damage.',
+        options: [
+          {
+            label: '😈 Share the leak to “save” the friendship.',
+            type: 'devil',
+            feedbackTitle: 'Devil Path – Friendship Built on Lies',
+            feedback: 'You protect their marks, not their character. Later they may fall harder without skills, and you also learn that love = cheating rules.'
+          },
+          {
+            label: '😇 Refuse and help them study honestly.',
+            type: 'god',
+            feedbackTitle: 'God Path – Tough Love',
+            feedback: 'You risk temporary anger to save them from becoming dependent on shortcuts. Real care often feels harsh in the moment.'
+          }
+        ]
+      },
+      {
+        dayLabel: 'Day 3 Key',
+        title: 'Secret Relationship – Betrayal for Excitement',
+        story: 'You are committed to someone, but a new person gives you intense attention and flirtation. No one would find out easily.',
+        moneyLine: 'Devil offer: Unlimited excitement without “getting caught”.',
+        options: [
+          {
+            label: '😈 Start the secret chat and hide it.',
+            type: 'devil',
+            feedbackTitle: 'Devil Path – Teaching Your Mind to Betray',
+            feedback: 'You train your own brain that love = lying. Later you will find it difficult to trust even honest partners, because you know how easily you crossed the line.'
+          },
+          {
+            label: '😇 Close the door, protect your current bond.',
+            type: 'god',
+            feedbackTitle: 'God Path – Protecting Sacred Space',
+            feedback: 'You lose some ego boost now but you protect a deeper safety. Relationships grow when temptation is answered with loyalty.'
+          }
+        ]
+      },
+      {
+        dayLabel: 'Day 4 Key',
+        title: 'Gambling Night – Quick Double or Nothing',
+        story: 'Friends invite you to “just one night” of high-stakes gambling. You could double ₹50,000 in one shot.',
+        moneyLine: 'Devil offer: Big money + status in one night.',
+        options: [
+          {
+            label: '😈 Join, risk everything for the thrill.',
+            type: 'devil',
+            feedbackTitle: 'Devil Path – Addictive Rollercoaster',
+            feedback: 'Even if you win once, your brain learns to chase that high. Losses later can wipe not only money but your peace and family trust.'
+          },
+          {
+            label: '😇 Say no, keep your money boring.',
+            type: 'god',
+            feedbackTitle: 'God Path – Boring Wins Long-Term',
+            feedback: 'Slow, disciplined investing looks boring but builds stability. You protect present and future instead of playing with them as a game.'
+          }
+        ]
+      },
+      {
+        dayLabel: 'Day 5 Key',
+        title: 'Revenge Post – Publicly Humiliate an Enemy',
+        story: 'Someone insulted you online. You have screenshots that could destroy their reputation if you post them with a spicy caption.',
+        moneyLine: 'Devil offer: Instant power and public revenge.',
+        options: [
+          {
+            label: '😈 Post it, let them burn.',
+            type: 'devil',
+            feedbackTitle: 'Devil Path – Poison that Stays in You',
+            feedback: 'You win the comment war but fill your mind with hate. The world sees your revenge more than their mistake. Anger becomes your brand.'
+          },
+          {
+            label: '😇 Confront privately or calmly report.',
+            type: 'god',
+            feedbackTitle: 'God Path – Strength with Restraint',
+            feedback: 'You look “soft” to some people but you choose self-respect over drama. Power is not what you can destroy, but what you can control.'
+          }
+        ]
+      },
+      {
+        dayLabel: 'Day 6 Key',
+        title: 'Fake Lifestyle – Showing Off a Life You Don’t Have',
+        story: 'You can easily fake luxury trips, designer items and a “millionaire” life on social media using edits and borrowed things.',
+        moneyLine: 'Devil offer: Instant status, followers and admiration.',
+        options: [
+          {
+            label: '😈 Build a fake image and chase likes.',
+            type: 'devil',
+            feedbackTitle: 'Devil Path – Heavy Costume, Empty Self',
+            feedback: 'The more people love the mask, the more alone you feel behind it. Anxiety grows: “If they see the real me, they will leave.”'
+          },
+          {
+            label: '😇 Show real progress, even if small.',
+            type: 'god',
+            feedbackTitle: 'God Path – Authentic Growth',
+            feedback: 'Your numbers may grow slower but your inner and outer life match. That alignment is the foundation of real confidence.'
+          }
+        ]
+      },
+      {
+        dayLabel: 'Day 7 Key',
+        title: 'Final Deal – 1,000,000 for One Lifetime Cheat',
+        story: 'A powerful person offers you ₹10,00,000 to do one big illegal action. He promises: “After this, you are set. No one will ever know.”',
+        moneyLine: 'Devil offer: Lifetime money, one invisible crime.',
+        options: [
+          {
+            label: '😈 Take the deal. One time, big reward.',
+            type: 'devil',
+            feedbackTitle: 'Devil Path – Selling Your Inner Voice',
+            feedback: 'You may buy comfort for the body but you put your soul on EMI. Every nice thing you buy will silently whisper: “Price = your integrity.”'
+          },
+          {
+            label: '😇 Refuse, even if you stay average outside.',
+            type: 'god',
+            feedbackTitle: 'God Path – Priceless Conscience',
+            feedback: 'You choose to be rich in a currency the devil can’t touch: self-respect and spiritual credit. That wealth supports you on the day when money cannot.'
+          }
+        ]
+      }
+    ];
+
+    let currentStep = 0;
+    let devilScore = 0;
+    let godScore = 0;
+    let lastChoiceType = null;
+
+    const stepDayLabel = document.getElementById('stepDayLabel');
+    const stepTitle = document.getElementById('stepTitle');
+    const stepStory = document.getElementById('stepStory');
+    const stepMoneyLine = document.getElementById('stepMoneyLine');
+    const optionsGrid = document.getElementById('optionsGrid');
+    const feedbackBox = document.getElementById('feedbackBox');
+    const feedbackLabel = document.getElementById('feedbackLabel');
+    const feedbackText = document.getElementById('feedbackText');
+    const progressFill = document.getElementById('progressFill');
+    const progressStepLabel = document.getElementById('progressStepLabel');
+    const progressScoreLabel = document.getElementById('progressScoreLabel');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const dayHintBtn = document.getElementById('dayHintBtn');
+
+    const resultCard = document.getElementById('resultCard');
+    const resultTag = document.getElementById('resultTag');
+    const resultTitle = document.getElementById('resultTitle');
+    const resultSummary = document.getElementById('resultSummary');
+    const resultBadges = document.getElementById('resultBadges');
+
+    function renderStep() {
+      const step = puzzleSteps[currentStep];
+      lastChoiceType = null;
+      feedbackBox.style.display = 'none';
+      nextBtn.disabled = true;
+
+      stepDayLabel.textContent = step.dayLabel;
+      stepTitle.textContent = step.title;
+      stepStory.textContent = step.story;
+      stepMoneyLine.textContent = step.moneyLine;
+
+      // progress
+      const total = puzzleSteps.length;
+      const perc = ((currentStep) / total) * 100;
+      progressFill.style.width = `${Math.max(5, perc)}%`;
+      progressStepLabel.textContent = `Step ${currentStep + 1} of ${total}`;
+      progressScoreLabel.textContent = `Devil Score: ${devilScore} · God Score: ${godScore}`;
+
+      // buttons
+      prevBtn.disabled = currentStep === 0;
+      nextBtn.textContent = currentStep === total - 1 ? 'See Result →' : 'Next Step →';
+
+      // render options
+      optionsGrid.innerHTML = '';
+      step.options.forEach((opt, index) => {
+        const btn = document.createElement('button');
+        btn.className = 'option-btn';
+        btn.innerHTML = `<span>${opt.type === 'devil' ? 'DEVIL' : 'GOD'}</span><strong>${opt.label}</strong>`;
+        btn.addEventListener('click', () => handleChoice(opt.type, opt.feedbackTitle, opt.feedback, btn));
+        optionsGrid.appendChild(btn);
+      });
+    }
+
+    function handleChoice(type, title, text, clickedBtn) {
+      // remove old selection styles
+      document.querySelectorAll('.option-btn').forEach(b => {
+        b.classList.remove('selected-devil','selected-god');
+      });
+
+      if (type === 'devil') {
+        clickedBtn.classList.add('selected-devil');
+      } else {
+        clickedBtn.classList.add('selected-god');
+      }
+
+      // update scores only if changing choice
+      if (lastChoiceType) {
+        if (lastChoiceType === 'devil') devilScore--;
+        else godScore--;
+      }
+      if (type === 'devil') devilScore++;
+      else godScore++;
+      lastChoiceType = type;
+
+      progressScoreLabel.textContent = `Devil Score: ${devilScore} · God Score: ${godScore}`;
+
+      feedbackLabel.textContent = title;
+      feedbackText.textContent = text;
+      feedbackBox.style.display = 'block';
+      nextBtn.disabled = false;
+    }
+
+    function showResult() {
+      const total = puzzleSteps.length;
+      const devilRatio = devilScore / total;
+      resultCard.style.display = 'block';
+
+      resultBadges.innerHTML = '';
+
+      if (devilRatio <= 0.2) {
+        resultTag.textContent = 'Profile: Conscience Guardian';
+        resultTitle.textContent = 'You refused the shiny chains.';
+        resultSummary.textContent =
+          'Your answers show a strong inner compass. Temptation talks, but you don\'t easily sell your values. Your risk is pride – stay humble, keep learning and help others out of devil-mode loops.';
+        resultBadges.innerHTML = `
+          <span class="badge">Low devil score</span>
+          <span class="badge">High integrity bias</span>
+          <span class="badge">Good for leadership roles</span>
+        `;
+      } else if (devilRatio <= 0.5) {
+        resultTag.textContent = 'Profile: Negotiator with the Devil';
+        resultTitle.textContent = 'You bargain between comfort and conscience.';
+        resultSummary.textContent =
+          'Sometimes you stand strong, sometimes you trade a bit of truth for short-term gain. This is the most common human pattern. Notice which traps you fall for most – money, status, revenge or excitement – and work on those in God Mode.';
+        resultBadges.innerHTML = `
+          <span class="badge">Medium devil score</span>
+          <span class="badge">Flexible morals under pressure</span>
+          <span class="badge">Big growth potential</span>
+        `;
+      } else {
+        resultTag.textContent = 'Profile: High-Risk Mind for Devil Loops';
+        resultTitle.textContent = 'Temptation speaks in your mother tongue.';
+        resultSummary.textContent =
+          'Many of your choices went towards shortcuts, excitement or revenge. This doesn\'t make you “bad” – it means your pain + environment trained you this way. You need strong structure, accountability and spiritual practice to break these patterns.';
+        resultBadges.innerHTML = `
+          <span class="badge">High devil score</span>
+          <span class="badge">High temptation sensitivity</span>
+          <span class="badge">Needs strong guardrails</span>
+        `;
+      }
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (currentStep === 0) return;
+      currentStep--;
+      renderStep();
+    });
+
+    nextBtn.addEventListener('click', () => {
+      const total = puzzleSteps.length;
+      if (currentStep < total - 1) {
+        currentStep++;
+        renderStep();
+        window.scrollTo({ top:0, behavior:'smooth' });
+      } else {
+        // final
+        progressFill.style.width = '100%';
+        showResult();
+        window.scrollTo({ top:0, behavior:'smooth' });
+      }
+    });
+
+    dayHintBtn.addEventListener('click', () => {
+      alert(
+        '7-day loop idea:\\n\\nDay 1: Do step 1 only, journal your choice.\\nDay 2: Re-read Day 1, then do step 2.\\nRepeat until Day 7.\\n\\nEach day, spot one real situation in your life that looks like that step and practice the God-choice once.'
+      );
+    });
+
+    // initial render
+    renderStep();
+  </script>
+</body>
+</html>

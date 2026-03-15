@@ -1,0 +1,1535 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Journey Games</title>
+
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        /* Navbar */
+        .nav-bar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
+            padding: 20px 50px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo { color: white; font-size: 24px; font-weight: bold; }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .nav-links a:hover { color: #f39c12; }
+
+        /* Title */
+        .page-title {
+            margin-top: 130px;
+            text-align: center;
+        }
+        .page-title h1 {
+            font-size: 42px;
+            color: #f9c74f;
+            text-shadow: 0 2px 6px rgba(0,0,0,0.4);
+        }
+        .page-title p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-top: 10px;
+        }
+
+        .section-title {
+            font-size: 26px;
+            margin: 40px 0 15px 30px;
+            color: #ffd86b;
+            font-weight: bold;
+        }
+        .section-sub {
+            margin: -10px 0 10px 30px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+
+        .game-row {
+            display: flex;
+            overflow-x: auto;
+            padding: 20px 30px;
+            gap: 20px;
+            scroll-behavior: smooth;
+        }
+        .game-row::-webkit-scrollbar {
+            height: 8px;
+        }
+        .game-row::-webkit-scrollbar-thumb {
+            background: rgba(255,255,255,0.4);
+            border-radius: 10px;
+        }
+
+        .game-card {
+            background: rgba(255,255,255,0.08);
+            width: 260px;
+            min-width: 260px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.18);
+            backdrop-filter: blur(10px);
+            padding: 20px 18px 18px;
+            text-align: left;
+            transition: 0.3s;
+            position: relative;
+        }
+        .game-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 28px rgba(0,0,0,0.45);
+        }
+
+        .mode-pill {
+            position: absolute;
+            top: 12px;
+            right: 14px;
+            font-size: 11px;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(0,0,0,0.35);
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .game-icon {
+            font-size: 40px;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+        @keyframes float {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+
+        .game-name {
+            font-size: 19px;
+            color: #f9c74f;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .game-tagline {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+        .game-desc {
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .skill-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 12px;
+        }
+        .skill-label span {
+            font-weight: 600;
+            color: #00ffcc;
+        }
+
+        .play-btn {
+            background: linear-gradient(45deg, #e74c3c, #f39c12);
+            border: none;
+            padding: 8px 18px;
+            border-radius: 40px;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .play-btn:hover { transform: scale(1.08); }
+
+        @media (max-width: 600px) {
+            .nav-bar { padding: 14px 16px; }
+            .nav-links { display: none; }
+            .page-title h1 { font-size: 30px; }
+        }
+
+        /* GAME MODAL */
+        #game-modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+        }
+        #game-box {
+            width: 95%;
+            max-width: 900px;
+            height: 85vh;
+            background: radial-gradient(circle at top, #845ec2 0, #2b2b52 60%, #191933 100%);
+            border-radius: 22px;
+            border: 1px solid rgba(255,255,255,0.18);
+            box-shadow: 0 20px 50px rgba(0,0,0,0.7);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            color: #fff;
+        }
+        #game-header {
+            padding: 14px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0,0,0,0.35);
+        }
+        #game-title {
+            font-size: 18px;
+            font-weight: 600;
+        }
+        #game-close {
+            border: none;
+            background: transparent;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+        }
+        #game-meta {
+            font-size: 12px;
+            opacity: 0.85;
+        }
+        #game-area {
+            flex: 1;
+            padding: 16px 20px 20px;
+            overflow: auto;
+        }
+
+        .game-info-line {
+            font-size: 13px;
+            opacity: 0.85;
+            margin-bottom: 8px;
+        }
+
+        /* generic mini-ui stuff for games */
+        .btn {
+            padding: 8px 16px;
+            border-radius: 999px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            background: linear-gradient(45deg,#00c9ff,#92fe9d);
+            color: #111;
+            margin: 4px;
+        }
+        .btn-secondary {
+            background: rgba(255,255,255,0.16);
+            color: #fff;
+        }
+        .pill {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(0,0,0,0.35);
+            font-size: 11px;
+            margin-right: 6px;
+        }
+        .grid {
+            display: grid;
+            gap: 4px;
+        }
+        .cell {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .cell-hidden {
+            background: rgba(255,255,255,0.02);
+        }
+        .cell-visible {
+            background: rgba(255,255,255,0.2);
+        }
+        .cell-player {
+            background: #00ffcc;
+            color: #111;
+            font-weight: 700;
+        }
+        .cell-goal {
+            background: #f9c74f;
+            color: #111;
+            font-weight: 700;
+        }
+
+        .bar-container {
+            width: 100%;
+            height: 18px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.18);
+            overflow: hidden;
+            margin: 10px 0;
+        }
+        .bar-fill {
+            height: 100%;
+            width: 0;
+            background: linear-gradient(90deg,#00ffcc,#f9c74f);
+        }
+    </style>
+    <script src="eq-core.js"></script>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="nav-bar">
+        <div class="logo">🎮 EQ Games</div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="leaderboard.html">Leaderboard</a>
+            <a href="index3.html">Profile</a>
+            <a href="market.html">Market</a>
+            <a href="comm.html">Community</a>
+            <a href="events.html">Events</a>
+            <a href="lesson2.html">Lessons</a>
+            <a href="index5.html">Take Quiz</a>
+            <a href="maps.html">Map</a>
+        </div>
+    </nav>
+
+    <!-- Header -->
+    <div class="page-title">
+        <h1>EQ Journey Game Arcade</h1>
+        <p>Play mode-based mini games that heal emotions & level up your EQ League Tier.</p>
+    </div>
+
+    <!-- STRUGGLE MODES -->
+    <div class="section-title">🌑 Struggle Modes</div>
+    <div class="section-sub">Games that help when you feel lost, stuck, anxious or distracted.</div>
+
+    <div class="game-row">
+        <div class="game-card">
+            <div class="mode-pill">Lost Mode</div>
+            <div class="game-icon">🧭</div>
+            <div class="game-name">Find the North Star</div>
+            <div class="game-tagline">See only the next step, not the whole map.</div>
+            <div class="game-desc">
+                Navigate a foggy maze where only one tile ahead is visible.
+                Learn to move with clarity one micro-step at a time.
+            </div>
+            <div class="skill-label">Builds: <span>Micro-step clarity</span></div>
+            <button class="play-btn" data-game="northStar">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Storm / Overwhelmed</div>
+            <div class="game-icon">🌧️</div>
+            <div class="game-name">Task Dropper</div>
+            <div class="game-tagline">You can’t catch everything.</div>
+            <div class="game-desc">
+                Tasks appear quickly. You must choose only a few to keep
+                and let the rest go.
+            </div>
+            <div class="skill-label">Builds: <span>Prioritisation</span></div>
+            <button class="play-btn" data-game="taskDropper">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Chaotic / Anxious</div>
+            <div class="game-icon">💓</div>
+            <div class="game-name">Breath Rhythm Warrior</div>
+            <div class="game-tagline">Tap in rhythm with your breath.</div>
+            <div class="game-desc">
+                Follow inhale–hold–exhale rhythm with perfect timing
+                to cool down anxiety.
+            </div>
+            <div class="skill-label">Builds: <span>Breath control</span></div>
+            <button class="play-btn" data-game="breathWarrior">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Addiction / Stuck</div>
+            <div class="game-icon">🧱</div>
+            <div class="game-name">Break the Loop</div>
+            <div class="game-tagline">Change the method, not the mission.</div>
+            <div class="game-desc">
+                Your character is failing in a loop. Change the strategy
+                to finally progress.
+            </div>
+            <div class="skill-label">Builds: <span>Adaptation</span></div>
+            <button class="play-btn" data-game="breakLoop">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Shadow / Distracted</div>
+            <div class="game-icon">🎯</div>
+            <div class="game-name">Focus Line</div>
+            <div class="game-tagline">Tap exactly when the marker hits the zone.</div>
+            <div class="game-desc">
+                A marker slides left-right. Timing your tap trains your
+                prefrontal focus.
+            </div>
+            <div class="skill-label">Builds: <span>Deep focus</span></div>
+            <button class="play-btn" data-game="focusLine">Play</button>
+        </div>
+    </div>
+
+    <!-- TRANSITION -->
+    <div class="section-title">🌘 Transition Modes</div>
+    <div class="section-sub">Games for awareness, learning and exploring new paths.</div>
+
+    <div class="game-row">
+        <div class="game-card">
+            <div class="mode-pill">Awareness Mode</div>
+            <div class="game-icon">☁️</div>
+            <div class="game-name">Thought Clouds</div>
+            <div class="game-tagline">Not every cloud is a storm.</div>
+            <div class="game-desc">
+                Label bubbles as thoughts, feelings or fears to reduce
+                their emotional weight.
+            </div>
+            <div class="skill-label">Builds: <span>Meta-awareness</span></div>
+            <button class="play-btn" data-game="thoughtClouds">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Balanced / Learner</div>
+            <div class="game-icon">🏗️</div>
+            <div class="game-name">Skill Builder Towers</div>
+            <div class="game-tagline">Stack slowly or the tower falls.</div>
+            <div class="game-desc">
+                Place blocks with patience. Clicking too fast makes
+                everything collapse.
+            </div>
+            <div class="skill-label">Builds: <span>Deep learning</span></div>
+            <button class="play-btn" data-game="skillTower">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Seeker Mode</div>
+            <div class="game-icon">🛣️</div>
+            <div class="game-name">One Path Challenge</div>
+            <div class="game-tagline">Pick one road and stay with it.</div>
+            <div class="game-desc">
+                Many paths glow, but real reward comes from staying
+                with just one.
+            </div>
+            <div class="skill-label">Builds: <span>Commitment</span></div>
+            <button class="play-btn" data-game="onePath">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Explorer Mode</div>
+            <div class="game-icon">🗺️</div>
+            <div class="game-name">Finish-It Quest</div>
+            <div class="game-tagline">Start many, but finish at least one.</div>
+            <div class="game-desc">
+                Choose a quest and push it to 100% instead of
+                jumping between.
+            </div>
+            <div class="skill-label">Builds: <span>Completion muscle</span></div>
+            <button class="play-btn" data-game="finishQuest">Play</button>
+        </div>
+    </div>
+
+    <!-- HIGHER -->
+    <div class="section-title">🌕 Higher Modes</div>
+    <div class="section-sub">Games for creation, mastery, flow and compassion.</div>
+
+    <div class="game-row">
+        <div class="game-card">
+            <div class="mode-pill">Healer / Creator</div>
+            <div class="game-icon">🎨</div>
+            <div class="game-name">Rapid Draft</div>
+            <div class="game-tagline">Create first, perfect later.</div>
+            <div class="game-desc">
+                You get 30 seconds to create whatever you want. No
+                deleting, only raw expression.
+            </div>
+            <div class="skill-label">Builds: <span>Creative flow</span></div>
+            <button class="play-btn" data-game="rapidDraft">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Empath / Performer</div>
+            <div class="game-icon">🎤</div>
+            <div class="game-name">Stage Presence Pulse</div>
+            <div class="game-tagline">Stay calm while you shine.</div>
+            <div class="game-desc">
+                Keep the heartbeat in a safe zone using breathing taps
+                while “on stage”.
+            </div>
+            <div class="skill-label">Builds: <span>Calm under pressure</span></div>
+            <button class="play-btn" data-game="stagePulse">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Monk / Mastery</div>
+            <div class="game-icon">📈</div>
+            <div class="game-name">2% Harder</div>
+            <div class="game-tagline">Tiny stretch, massive growth.</div>
+            <div class="game-desc">
+                Hit the reaction target. Each round gets a little bit
+                tighter.
+            </div>
+            <div class="skill-label">Builds: <span>Progress discipline</span></div>
+            <button class="play-btn" data-game="twoPercent">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">Sage / Flow</div>
+            <div class="game-icon">🎼</div>
+            <div class="game-name">Timing Symphony</div>
+            <div class="game-tagline">Tap with the rhythm of focus.</div>
+            <div class="game-desc">
+                Tap in sync with the pulsing beat bar to stay inside
+                the flow window.
+            </div>
+            <div class="skill-label">Builds: <span>Flow entry</span></div>
+            <button class="play-btn" data-game="timingSymphony">Play</button>
+        </div>
+
+        <div class="game-card">
+            <div class="mode-pill">God / Enlightened</div>
+            <div class="game-icon">🕊️</div>
+            <div class="game-name">Silent Compassion</div>
+            <div class="game-tagline">No score. Just presence.</div>
+            <div class="game-desc">
+                Send silent compassion to shadowy figures and watch
+                their aura soften.
+            </div>
+            <div class="skill-label">Builds: <span>Empathy & peace</span></div>
+            <button class="play-btn" data-game="silentCompassion">Play</button>
+        </div>
+    </div>
+
+    <!-- GAME MODAL -->
+    <div id="game-modal">
+        <div id="game-box">
+            <div id="game-header">
+                <div>
+                    <div id="game-title">Game</div>
+                    <div id="game-meta"></div>
+                </div>
+                <button id="game-close">&times;</button>
+            </div>
+            <div id="game-area"></div>
+        </div>
+    </div>
+
+    <script>
+        const modal = document.getElementById('game-modal');
+        const gameArea = document.getElementById('game-area');
+        const gameTitle = document.getElementById('game-title');
+        const gameMeta = document.getElementById('game-meta');
+        const closeBtn = document.getElementById('game-close');
+        let activeInterval = null;
+        let activeTimeouts = [];
+
+        function clearTimers() {
+            if (activeInterval) {
+                clearInterval(activeInterval);
+                activeInterval = null;
+            }
+            activeTimeouts.forEach(t => clearTimeout(t));
+            activeTimeouts = [];
+        }
+
+        function openGame(name, subtitle) {
+            clearTimers();
+            gameArea.innerHTML = '';
+            gameTitle.textContent = name;
+            gameMeta.textContent = subtitle || '';
+            modal.style.display = 'flex';
+        }
+
+        closeBtn.addEventListener('click', () => {
+            clearTimers();
+            modal.style.display = 'none';
+        });
+
+        window.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                clearTimers();
+                modal.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.play-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const g = btn.dataset.game;
+                startGame(g);
+            });
+        });
+
+        function startGame(id) {
+            const map = {
+                northStar: initGameNorthStar,
+                taskDropper: initGameTaskDropper,
+                breathWarrior: initGameBreathWarrior,
+                breakLoop: initGameBreakLoop,
+                focusLine: initGameFocusLine,
+                thoughtClouds: initGameThoughtClouds,
+                skillTower: initGameSkillTower,
+                onePath: initGameOnePath,
+                finishQuest: initGameFinishQuest,
+                rapidDraft: initGameRapidDraft,
+                stagePulse: initGameStagePulse,
+                twoPercent: initGameTwoPercent,
+                timingSymphony: initGameTimingSymphony,
+                silentCompassion: initGameSilentCompassion
+            };
+            if (map[id]) map[id]();
+        }
+
+        /* ---------- 1. Find the North Star (grid maze) ---------- */
+        function initGameNorthStar() {
+            openGame('Find the North Star', 'Use arrow keys / WASD. Reach the ⭐ by taking one small step at a time.');
+
+            const size = 7;
+            let player = {x: 0, y: size - 1};
+            let goal = {x: size - 1, y: 0};
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Move slowly. Only nearby tiles are visible.';
+            gameArea.appendChild(info);
+
+            const movesSpan = document.createElement('span');
+            movesSpan.className = 'pill';
+            movesSpan.textContent = 'Moves: 0';
+            gameArea.appendChild(movesSpan);
+
+            const grid = document.createElement('div');
+            grid.className = 'grid';
+            grid.style.gridTemplateColumns = `repeat(${size}, 30px)`;
+            grid.style.marginTop = '12px';
+            gameArea.appendChild(grid);
+
+            let moves = 0;
+
+            function render() {
+                grid.innerHTML = '';
+                for (let y = 0; y < size; y++) {
+                    for (let x = 0; x < size; x++) {
+                        const cell = document.createElement('div');
+                        cell.classList.add('cell');
+                        const dist = Math.abs(x - player.x) + Math.abs(y - player.y);
+                        if (x === player.x && y === player.y) {
+                            cell.classList.add('cell-player');
+                            cell.textContent = '🙂';
+                        } else if (x === goal.x && y === goal.y && dist <= 1) {
+                            cell.classList.add('cell-goal');
+                            cell.textContent = '⭐';
+                        } else if (dist <= 1) {
+                            cell.classList.add('cell-visible');
+                        } else {
+                            cell.classList.add('cell-hidden');
+                        }
+                        grid.appendChild(cell);
+                    }
+                }
+            }
+            render();
+
+            function handleMove(dx, dy) {
+                const nx = player.x + dx;
+                const ny = player.y + dy;
+                if (nx < 0 || ny < 0 || nx >= size || ny >= size) return;
+                moves++;
+                player = {x: nx, y: ny};
+                movesSpan.textContent = 'Moves: ' + moves;
+                render();
+                if (player.x === goal.x && player.y === goal.y) {
+                    const msg = document.createElement('div');
+                    msg.className = 'game-info-line';
+                    msg.style.marginTop = '10px';
+                    msg.textContent = 'You found the North Star by taking small steps. This is how we handle “lost mode”.';
+                    gameArea.appendChild(msg);
+                    window.removeEventListener('keydown', keyHandler);
+                }
+            }
+
+            function keyHandler(e) {
+                if (e.key === 'ArrowUp' || e.key === 'w') handleMove(0, -1);
+                if (e.key === 'ArrowDown' || e.key === 's') handleMove(0, 1);
+                if (e.key === 'ArrowLeft' || e.key === 'a') handleMove(-1, 0);
+                if (e.key === 'ArrowRight' || e.key === 'd') handleMove(1, 0);
+            }
+            window.addEventListener('keydown', keyHandler);
+        }
+
+        /* ---------- 2. Task Dropper (prioritisation) ---------- */
+        function initGameTaskDropper() {
+            openGame('Task Dropper', 'Choose only the most important tasks. Let the rest go.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'You can keep ONLY 3 tasks. Click “Keep” or “Drop” quickly as they appear.';
+            gameArea.appendChild(info);
+
+            const status = document.createElement('div');
+            status.className = 'pill';
+            status.textContent = 'Kept: 0 / 3';
+            gameArea.appendChild(status);
+
+            const list = document.createElement('div');
+            list.style.marginTop = '12px';
+            gameArea.appendChild(list);
+
+            const tasks = [
+                {name: 'Exam tomorrow', priority: 'high'},
+                {name: 'Scroll social media', priority: 'low'},
+                {name: 'Project deadline', priority: 'high'},
+                {name: 'Clean room', priority: 'medium'},
+                {name: 'Random YouTube', priority: 'low'},
+                {name: 'Talk to family', priority: 'high'},
+                {name: 'Game with friends', priority: 'medium'},
+                {name: 'Check notifications again', priority: 'low'}
+            ];
+
+            let index = 0;
+            let kept = 0;
+            let score = 0;
+
+            function nextTask() {
+                if (index >= tasks.length) {
+                    list.innerHTML = '';
+                    const end = document.createElement('div');
+                    end.className = 'game-info-line';
+                    end.innerHTML = `Game over. You focused on <b>${score}</b> truly important tasks. This is how we defeat overwhelm.`;
+                    gameArea.appendChild(end);
+                    return;
+                }
+                list.innerHTML = '';
+
+                const t = tasks[index++];
+                const card = document.createElement('div');
+                card.style.padding = '12px';
+                card.style.borderRadius = '12px';
+                card.style.background = 'rgba(0,0,0,0.25)';
+                card.style.marginBottom = '10px';
+
+                const title = document.createElement('div');
+                title.style.fontWeight = '600';
+                title.textContent = t.name;
+                card.appendChild(title);
+
+                const tag = document.createElement('div');
+                tag.style.fontSize = '12px';
+                tag.style.opacity = '0.8';
+                tag.textContent = 'Priority: ' + t.priority.toUpperCase();
+                card.appendChild(tag);
+
+                const btnKeep = document.createElement('button');
+                btnKeep.className = 'btn';
+                btnKeep.textContent = 'Keep';
+                const btnDrop = document.createElement('button');
+                btnDrop.className = 'btn btn-secondary';
+                btnDrop.textContent = 'Drop';
+
+                const row = document.createElement('div');
+                row.style.marginTop = '10px';
+                row.appendChild(btnKeep);
+                row.appendChild(btnDrop);
+                card.appendChild(row);
+
+                list.appendChild(card);
+
+                btnKeep.onclick = () => {
+                    if (kept >= 3) {
+                        alert('You already kept 3 tasks. You must drop this one.');
+                        return;
+                    }
+                    kept++;
+                    if (t.priority === 'high') score++;
+                    status.textContent = `Kept: ${kept} / 3`;
+                    nextTask();
+                };
+                btnDrop.onclick = () => {
+                    nextTask();
+                };
+            }
+
+            nextTask();
+        }
+
+        /* ---------- 3. Breath Rhythm Warrior ---------- */
+        function initGameBreathWarrior() {
+            openGame('Breath Rhythm Warrior', 'Follow the INHALE → HOLD → EXHALE rhythm by tapping at the right moment.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Tap the button when the phase text glows green. Inhale 4s, Hold 2s, Exhale 6s.';
+            gameArea.appendChild(info);
+
+            const phaseLabel = document.createElement('div');
+            phaseLabel.style.fontSize = '22px';
+            phaseLabel.style.marginTop = '16px';
+            phaseLabel.style.textAlign = 'center';
+            phaseLabel.textContent = 'Get Ready';
+            gameArea.appendChild(phaseLabel);
+
+            const bar = document.createElement('div');
+            bar.className = 'bar-container';
+            bar.style.marginTop = '16px';
+            const fill = document.createElement('div');
+            fill.className = 'bar-fill';
+            bar.appendChild(fill);
+            gameArea.appendChild(bar);
+
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = 'Tap with Rhythm';
+            btn.style.display = 'block';
+            btn.style.margin = '16px auto 0';
+            gameArea.appendChild(btn);
+
+            const scoreLine = document.createElement('div');
+            scoreLine.className = 'game-info-line';
+            scoreLine.style.marginTop = '10px';
+            scoreLine.textContent = 'Score: 0';
+            gameArea.appendChild(scoreLine);
+
+            const phases = [
+                {name: 'INHALE', duration: 4000},
+                {name: 'HOLD', duration: 2000},
+                {name: 'EXHALE', duration: 6000}
+            ];
+            let index = 0;
+            let phaseStart = Date.now();
+            let score = 0;
+            let clickable = false;
+
+            function setPhase(i) {
+                index = i % phases.length;
+                const p = phases[index];
+                phaseLabel.textContent = p.name;
+                phaseLabel.style.color = '#fff';
+                clickable = true;
+                phaseStart = Date.now();
+            }
+
+            setPhase(0);
+
+            btn.onclick = () => {
+                if (!clickable) return;
+                const p = phases[index];
+                const elapsed = Date.now() - phaseStart;
+                const diff = Math.abs(elapsed - p.duration);
+                if (diff < 600) {
+                    score += 2;
+                    phaseLabel.style.color = '#00ffcc';
+                } else if (diff < 1500) {
+                    score += 1;
+                    phaseLabel.style.color = '#f9c74f';
+                } else {
+                    phaseLabel.style.color = '#ff6b6b';
+                }
+                scoreLine.textContent = 'Score: ' + score;
+                clickable = false;
+            };
+
+            activeInterval = setInterval(() => {
+                const p = phases[index];
+                const elapsed = Date.now() - phaseStart;
+                const ratio = Math.min(1, elapsed / p.duration);
+                fill.style.width = (ratio * 100) + '%';
+                if (elapsed >= p.duration) {
+                    setPhase(index + 1);
+                }
+            }, 50);
+        }
+
+        /* ---------- 4. Break the Loop ---------- */
+        function initGameBreakLoop() {
+            openGame('Break the Loop', 'Change strategies instead of repeating the same failing action.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Your character keeps hitting the same wall. Try different strategies to escape the loop.';
+            gameArea.appendChild(info);
+
+            const loopText = document.createElement('div');
+            loopText.style.marginTop = '20px';
+            loopText.style.fontSize = '18px';
+            loopText.style.textAlign = 'center';
+            loopText.textContent = '🚶‍♂️ ... bonk! (tries same thing again)';
+            gameArea.appendChild(loopText);
+
+            const btnRow = document.createElement('div');
+            btnRow.style.textAlign = 'center';
+            btnRow.style.marginTop = '18px';
+            gameArea.appendChild(btnRow);
+
+            const strategies = [
+                'Ask for help',
+                'Change direction',
+                'Try smaller step',
+                'Change tool',
+                'Pause & reflect'
+            ];
+            let used = 0;
+
+            strategies.forEach(s => {
+                const b = document.createElement('button');
+                b.className = 'btn';
+                b.textContent = s;
+                b.onclick = () => {
+                    used++;
+                    loopText.textContent = 'You tried: ' + s + ' ✅';
+                    if (used >= 3) {
+                        const msg = document.createElement('div');
+                        msg.className = 'game-info-line';
+                        msg.style.marginTop = '16px';
+                        msg.textContent = 'You broke the loop by changing the method. This is how stuck mode is solved.';
+                        gameArea.appendChild(msg);
+                        btnRow.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                    }
+                };
+                btnRow.appendChild(b);
+            });
+        }
+
+        /* ---------- 5. Focus Line ---------- */
+        function initGameFocusLine() {
+            openGame('Focus Line', 'Tap when the marker enters the focus zone.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Tap the button when the sliding dot is inside the central highlight.';
+            gameArea.appendChild(info);
+
+            const bar = document.createElement('div');
+            bar.style.position = 'relative';
+            bar.style.height = '24px';
+            bar.style.marginTop = '20px';
+            bar.style.borderRadius = '999px';
+            bar.style.background = 'rgba(255,255,255,0.18)';
+            gameArea.appendChild(bar);
+
+            const zone = document.createElement('div');
+            zone.style.position = 'absolute';
+            zone.style.left = '40%';
+            zone.style.width = '20%';
+            zone.style.top = '3px';
+            zone.style.bottom = '3px';
+            zone.style.borderRadius = '999px';
+            zone.style.background = 'rgba(0,255,204,0.35)';
+            bar.appendChild(zone);
+
+            const dot = document.createElement('div');
+            dot.style.position = 'absolute';
+            dot.style.width = '18px';
+            dot.style.height = '18px';
+            dot.style.borderRadius = '50%';
+            dot.style.top = '3px';
+            dot.style.left = '0';
+            dot.style.background = '#f9c74f';
+            bar.appendChild(dot);
+
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = 'Tap';
+            btn.style.marginTop = '16px';
+            gameArea.appendChild(btn);
+
+            const scoreLine = document.createElement('div');
+            scoreLine.className = 'game-info-line';
+            scoreLine.style.marginTop = '10px';
+            scoreLine.textContent = 'Score: 0 / 10';
+            gameArea.appendChild(scoreLine);
+
+            let pos = 0;
+            let dir = 1;
+            let score = 0;
+
+            activeInterval = setInterval(() => {
+                pos += dir * 0.01;
+                if (pos >= 1) { pos = 1; dir = -1; }
+                if (pos <= 0) { pos = 0; dir = 1; }
+                dot.style.left = (pos * 100 * 0.94 + 3) + '%';
+            }, 16);
+
+            btn.onclick = () => {
+                if (pos >= 0.4 && pos <= 0.6) {
+                    score++;
+                    scoreLine.textContent = 'Score: ' + score + ' / 10';
+                    scoreLine.style.color = '#00ffcc';
+                } else {
+                    scoreLine.style.color = '#ff6b6b';
+                }
+                if (score >= 10) {
+                    const msg = document.createElement('div');
+                    msg.className = 'game-info-line';
+                    msg.style.marginTop = '12px';
+                    msg.textContent = 'Nice focus streak. This is the same muscle used to beat distractions.';
+                    gameArea.appendChild(msg);
+                    btn.disabled = true;
+                }
+            };
+        }
+
+        /* ---------- 6. Thought Clouds ---------- */
+        function initGameThoughtClouds() {
+            openGame('Thought Clouds', 'Label bubbles as thoughts, feelings, fears or memories.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Just label. There is no “wrong”, the power comes from naming.';
+            gameArea.appendChild(info);
+
+            const bubbleArea = document.createElement('div');
+            bubbleArea.style.marginTop = '16px';
+            bubbleArea.style.display = 'flex';
+            bubbleArea.style.flexWrap = 'wrap';
+            bubbleArea.style.gap = '10px';
+            gameArea.appendChild(bubbleArea);
+
+            const log = document.createElement('div');
+            log.className = 'game-info-line';
+            log.style.marginTop = '16px';
+            log.textContent = 'Labeled: 0';
+            gameArea.appendChild(log);
+
+            const items = [
+                'What if I fail?', 'I miss my old life', 'They might judge me',
+                'I am proud of myself', 'Today felt heavy', 'I remember that day',
+                'This could be fun', 'Nobody understands me'
+            ];
+            let count = 0;
+
+            items.forEach(text => {
+                const b = document.createElement('button');
+                b.textContent = text;
+                b.style.borderRadius = '20px';
+                b.style.border = 'none';
+                b.style.padding = '8px 12px';
+                b.style.background = 'rgba(0,0,0,0.35)';
+                b.style.color = '#fff';
+                b.style.fontSize = '12px';
+                b.onclick = () => showLabelMenu(b, text);
+                bubbleArea.appendChild(b);
+            });
+
+            function showLabelMenu(btn, text) {
+                const menu = document.createElement('div');
+                menu.style.marginTop = '6px';
+
+                ['Thought', 'Feeling', 'Fear', 'Memory'].forEach(type => {
+                    const tbtn = document.createElement('button');
+                    tbtn.className = 'btn btn-secondary';
+                    tbtn.textContent = type;
+                    tbtn.style.fontSize = '11px';
+                    tbtn.onclick = () => {
+                        btn.textContent = text + ' (' + type + ')';
+                        btn.style.background = 'rgba(0,255,204,0.25)';
+                        menu.remove();
+                        count++;
+                        log.textContent = 'Labeled: ' + count;
+                        if (count === items.length) {
+                            const end = document.createElement('div');
+                            end.className = 'game-info-line';
+                            end.style.marginTop = '12px';
+                            end.textContent = 'Great. Naming your inner content like this reduces its emotional charge.';
+                            gameArea.appendChild(end);
+                        }
+                    };
+                    menu.appendChild(tbtn);
+                });
+                btn.insertAdjacentElement('afterend', menu);
+            }
+        }
+
+        /* ---------- 7. Skill Builder Towers ---------- */
+        function initGameSkillTower() {
+            openGame('Skill Builder Towers', 'Stack blocks patiently. Clicking too fast breaks the tower.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Click “Place Block” but not faster than once every 600 ms.';
+            gameArea.appendChild(info);
+
+            const tower = document.createElement('div');
+            tower.style.margin = '20px auto 0';
+            tower.style.width = '120px';
+            tower.style.height = '260px';
+            tower.style.borderRadius = '14px';
+            tower.style.border = '1px solid rgba(255,255,255,0.3)';
+            tower.style.display = 'flex';
+            tower.style.flexDirection = 'column-reverse';
+            tower.style.alignItems = 'center';
+            tower.style.justifyContent = 'flex-start';
+            tower.style.paddingBottom = '6px';
+            gameArea.appendChild(tower);
+
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = 'Place Block';
+            btn.style.display = 'block';
+            btn.style.margin = '16px auto 0';
+            gameArea.appendChild(btn);
+
+            const status = document.createElement('div');
+            status.className = 'game-info-line';
+            status.style.marginTop = '10px';
+            status.textContent = 'Blocks: 0';
+            gameArea.appendChild(status);
+
+            let lastTime = 0;
+            let count = 0;
+
+            btn.onclick = () => {
+                const now = Date.now();
+                if (lastTime && now - lastTime < 600) {
+                    tower.innerHTML = '';
+                    count = 0;
+                    status.textContent = 'Too fast! Tower collapsed. Try slower.';
+                    status.style.color = '#ff6b6b';
+                } else {
+                    const block = document.createElement('div');
+                    block.style.width = '90px';
+                    block.style.height = '16px';
+                    block.style.borderRadius = '8px';
+                    block.style.marginTop = '3px';
+                    block.style.background = 'linear-gradient(90deg,#00ffcc,#f9c74f)';
+                    tower.appendChild(block);
+                    count++;
+                    status.textContent = 'Blocks: ' + count;
+                    status.style.color = '#fff';
+                    if (count === 10) {
+                        const end = document.createElement('div');
+                        end.className = 'game-info-line';
+                        end.style.marginTop = '8px';
+                        end.textContent = 'You built a stable tower by going slow. This is how deep learning works.';
+                        gameArea.appendChild(end);
+                        btn.disabled = true;
+                    }
+                }
+                lastTime = now;
+            };
+        }
+
+        /* ---------- 8. One Path Challenge ---------- */
+        function initGameOnePath() {
+            openGame('One Path Challenge', 'Choose one path and stay on it for 12 steps.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Switching paths resets your streak. Seeker mode becomes powerful when you commit.';
+            gameArea.appendChild(info);
+
+            const row = document.createElement('div');
+            row.style.marginTop = '20px';
+            row.style.textAlign = 'center';
+            gameArea.appendChild(row);
+
+            const paths = ['Blue Path', 'Gold Path', 'Purple Path'];
+            let chosen = null;
+            let streak = 0;
+
+            const streakSpan = document.createElement('div');
+            streakSpan.className = 'game-info-line';
+            streakSpan.style.marginTop = '10px';
+            streakSpan.textContent = 'Streak: 0 / 12';
+            gameArea.appendChild(streakSpan);
+
+            paths.forEach(name => {
+                const b = document.createElement('button');
+                b.className = 'btn';
+                b.textContent = name;
+                b.onclick = () => {
+                    if (!chosen) chosen = name;
+                    if (name === chosen) {
+                        streak++;
+                    } else {
+                        streak = 1;
+                        chosen = name;
+                    }
+                    streakSpan.textContent = 'Streak: ' + streak + ' / 12 (on ' + chosen + ')';
+                    if (streak >= 12) {
+                        const end = document.createElement('div');
+                        end.className = 'game-info-line';
+                        end.style.marginTop = '12px';
+                        end.textContent = 'You stayed with one path. This is how seekers turn into masters.';
+                        gameArea.appendChild(end);
+                        row.querySelectorAll('button').forEach(btn => btn.disabled = true);
+                    }
+                };
+                row.appendChild(b);
+            });
+        }
+
+        /* ---------- 9. Finish-It Quest ---------- */
+        function initGameFinishQuest() {
+            openGame('Finish-It Quest', 'Pick one quest and take it to 100%.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Explorers start many things but rarely finish. Choose ONE quest bar and fill it completely.';
+            gameArea.appendChild(info);
+
+            const quests = [
+                'Health Quest',
+                'Study Quest',
+                'Relationship Quest'
+            ];
+
+            const container = document.createElement('div');
+            container.style.marginTop = '18px';
+            gameArea.appendChild(container);
+
+            let chosenIndex = null;
+            let progresses = [0, 0, 0];
+
+            quests.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.style.marginBottom = '12px';
+                card.style.padding = '10px';
+                card.style.borderRadius = '12px';
+                card.style.background = 'rgba(0,0,0,0.35)';
+
+                const title = document.createElement('div');
+                title.style.fontWeight = '600';
+                title.textContent = q;
+                card.appendChild(title);
+
+                const bar = document.createElement('div');
+                bar.className = 'bar-container';
+                bar.style.marginTop = '8px';
+                const fill = document.createElement('div');
+                fill.className = 'bar-fill';
+                bar.appendChild(fill);
+                card.appendChild(bar);
+
+                const btn = document.createElement('button');
+                btn.className = 'btn';
+                btn.textContent = 'Work on this quest';
+                btn.onclick = () => {
+                    if (chosenIndex === null) chosenIndex = idx;
+                    if (idx !== chosenIndex) {
+                        chosenIndex = idx;
+                        progresses = progresses.map(() => 0);
+                        container.querySelectorAll('.bar-fill').forEach(f => f.style.width = '0');
+                    }
+                    progresses[idx] += 10;
+                    if (progresses[idx] > 100) progresses[idx] = 100;
+                    fill.style.width = progresses[idx] + '%';
+                    if (progresses[idx] === 100) {
+                        const end = document.createElement('div');
+                        end.className = 'game-info-line';
+                        end.style.marginTop = '8px';
+                        end.textContent = 'You fully finished one quest. Completion creates confidence.';
+                        gameArea.appendChild(end);
+                        container.querySelectorAll('button').forEach(b => b.disabled = true);
+                    }
+                };
+                card.appendChild(btn);
+
+                container.appendChild(card);
+            });
+        }
+
+        /* ---------- 10. Rapid Draft ---------- */
+        function initGameRapidDraft() {
+            openGame('Rapid Draft', 'You have 30 seconds to create without editing.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Write anything that appears in your mind. When the timer ends, you stop. No deleting.';
+            gameArea.appendChild(info);
+
+            const timer = document.createElement('div');
+            timer.className = 'pill';
+            timer.textContent = 'Time left: 30s';
+            gameArea.appendChild(timer);
+
+            const textarea = document.createElement('textarea');
+            textarea.style.width = '100%';
+            textarea.style.height = '230px';
+            textarea.style.marginTop = '16px';
+            textarea.style.borderRadius = '12px';
+            textarea.style.border = 'none';
+            textarea.style.padding = '10px';
+            textarea.style.fontFamily = 'inherit';
+            textarea.style.fontSize = '14px';
+            textarea.style.background = 'rgba(0,0,0,0.35)';
+            textarea.style.color = '#fff';
+            gameArea.appendChild(textarea);
+
+            let remaining = 30;
+            activeInterval = setInterval(() => {
+                remaining--;
+                timer.textContent = 'Time left: ' + remaining + 's';
+                if (remaining <= 0) {
+                    clearInterval(activeInterval);
+                    textarea.disabled = true;
+                    timer.textContent = 'Time left: 0s';
+                    const end = document.createElement('div');
+                    end.className = 'game-info-line';
+                    end.style.marginTop = '10px';
+                    end.textContent = 'Draft complete. See how much you created when perfectionism was blocked.';
+                    gameArea.appendChild(end);
+                }
+            }, 1000);
+        }
+
+        /* ---------- 11. Stage Presence Pulse ---------- */
+        function initGameStagePulse() {
+            openGame('Stage Presence Pulse', 'Keep your heartbeat in the calm zone while on stage.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Click “Breathe” to slowly lower the pulse, but not too low. Ideal zone: 60–90.';
+            gameArea.appendChild(info);
+
+            const pulse = document.createElement('div');
+            pulse.style.fontSize = '32px';
+            pulse.style.textAlign = 'center';
+            pulse.style.marginTop = '20px';
+            gameArea.appendChild(pulse);
+
+            const bar = document.createElement('div');
+            bar.className = 'bar-container';
+            bar.style.marginTop = '10px';
+            const fill = document.createElement('div');
+            fill.className = 'bar-fill';
+            bar.appendChild(fill);
+            gameArea.appendChild(bar);
+
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = 'Breathe';
+            btn.style.display = 'block';
+            btn.style.margin = '18px auto 0';
+            gameArea.appendChild(btn);
+
+            const msg = document.createElement('div');
+            msg.className = 'game-info-line';
+            msg.style.marginTop = '10px';
+            gameArea.appendChild(msg);
+
+            let bpm = 130;
+            let time = 0;
+            function renderBpm() {
+                pulse.textContent = bpm + ' bpm';
+                fill.style.width = Math.min(100, (bpm / 150) * 100) + '%';
+                if (bpm > 100) pulse.style.color = '#ff6b6b';
+                else if (bpm < 60) pulse.style.color = '#f9c74f';
+                else pulse.style.color = '#00ffcc';
+            }
+            renderBpm();
+
+            activeInterval = setInterval(() => {
+                bpm += 1; // stage stress
+                time++;
+                if (time >= 60) {
+                    clearInterval(activeInterval);
+                    btn.disabled = true;
+                    msg.textContent = (bpm >= 60 && bpm <= 90)
+                        ? 'You stayed calm on stage. This is performance EQ.'
+                        : 'Stage ended. Next time, practise more gentle breathing.';
+                }
+                renderBpm();
+            }, 1000);
+
+            btn.onclick = () => {
+                bpm -= 5;
+                if (bpm < 40) bpm = 40;
+                renderBpm();
+            };
+        }
+
+        /* ---------- 12. 2% Harder ---------- */
+        function initGameTwoPercent() {
+            openGame('2% Harder', 'Press Stop as close as possible to the target time. Each level tightens the window.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Press “Start” then “Stop” at the target time. Window gets 2% tighter per level.';
+            gameArea.appendChild(info);
+
+            const targetLine = document.createElement('div');
+            targetLine.className = 'game-info-line';
+            targetLine.style.marginTop = '10px';
+            gameArea.appendChild(targetLine);
+
+            const btnStart = document.createElement('button');
+            btnStart.className = 'btn';
+            btnStart.textContent = 'Start';
+            const btnStop = document.createElement('button');
+            btnStop.className = 'btn btn-secondary';
+            btnStop.textContent = 'Stop';
+            btnStop.disabled = true;
+
+            const row = document.createElement('div');
+            row.style.marginTop = '14px';
+            row.appendChild(btnStart);
+            row.appendChild(btnStop);
+            gameArea.appendChild(row);
+
+            const result = document.createElement('div');
+            result.className = 'game-info-line';
+            result.style.marginTop = '10px';
+            gameArea.appendChild(result);
+
+            let level = 1;
+            let target = 2000;
+            let windowMs = 600;
+            let startTime = 0;
+
+            function updateTarget() {
+                targetLine.textContent = 'Level ' + level + ' — target: ' + (target/1000).toFixed(2) + 's, allowed window ±' + windowMs + ' ms';
+            }
+            updateTarget();
+
+            btnStart.onclick = () => {
+                startTime = Date.now();
+                btnStart.disabled = true;
+                btnStop.disabled = false;
+                result.textContent = 'Counting...';
+            };
+
+            btnStop.onclick = () => {
+                const elapsed = Date.now() - startTime;
+                const diff = Math.abs(elapsed - target);
+                if (diff <= windowMs) {
+                    result.textContent = 'Great! You hit ' + elapsed + ' ms (diff ' + diff + ').';
+                    level++;
+                    target += 200;
+                    windowMs = Math.max(80, Math.floor(windowMs * 0.98));
+                    updateTarget();
+                    if (level > 10) {
+                        result.textContent += ' You mastered micro-challenge. This is mastery mode.';
+                        btnStart.disabled = true;
+                        btnStop.disabled = true;
+                    }
+                } else {
+                    result.textContent = 'Missed: ' + elapsed + ' ms (diff ' + diff + '). Try again at same level.';
+                }
+                btnStart.disabled = false;
+                btnStop.disabled = true;
+            };
+        }
+
+        /* ---------- 13. Timing Symphony ---------- */
+        function initGameTimingSymphony() {
+            openGame('Timing Symphony', 'Tap in sync with the pulsing bar to stay inside the flow rhythm.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Tap when the bar is at the center. The beat speeds slightly over time.';
+            gameArea.appendChild(info);
+
+            const bar = document.createElement('div');
+            bar.className = 'bar-container';
+            bar.style.marginTop = '20px';
+            const fill = document.createElement('div');
+            fill.className = 'bar-fill';
+            bar.appendChild(fill);
+            gameArea.appendChild(bar);
+
+            const btn = document.createElement('button');
+            btn.className = 'btn';
+            btn.textContent = 'Tap to Beat';
+            btn.style.display = 'block';
+            btn.style.margin = '16px auto 0';
+            gameArea.appendChild(btn);
+
+            const scoreLine = document.createElement('div');
+            scoreLine.className = 'game-info-line';
+            scoreLine.style.marginTop = '10px';
+            scoreLine.textContent = 'Score: 0';
+            gameArea.appendChild(scoreLine);
+
+            let t = 0;
+            let score = 0;
+            let speed = 0.04;
+
+            activeInterval = setInterval(() => {
+                t += speed;
+                if (t > 1) {
+                    t = 0;
+                }
+                fill.style.width = (Math.sin(t * Math.PI) * 100) + '%';
+            }, 40);
+
+            btn.onclick = () => {
+                const val = parseFloat(fill.style.width) || 0;
+                const centerDiff = Math.abs(val - 50);
+                if (centerDiff < 10) {
+                    score++;
+                    scoreLine.textContent = 'Score: ' + score;
+                    speed += 0.002;
+                } else {
+                    scoreLine.textContent = 'Score: ' + score + ' (missed beat)';
+                }
+                if (score >= 15) {
+                    const end = document.createElement('div');
+                    end.className = 'game-info-line';
+                    end.style.marginTop = '12px';
+                    end.textContent = 'You stayed with the rhythm. This is what flow feels like.';
+                    gameArea.appendChild(end);
+                    btn.disabled = true;
+                }
+            };
+        }
+
+        /* ---------- 14. Silent Compassion ---------- */
+        function initGameSilentCompassion() {
+            openGame('Silent Compassion', 'Click on figures to send silent compassion. No score, just presence.');
+
+            const info = document.createElement('div');
+            info.className = 'game-info-line';
+            info.textContent = 'Breathe slowly. With each exhale, click one figure and imagine sending kindness.';
+            gameArea.appendChild(info);
+
+            const grid = document.createElement('div');
+            grid.className = 'grid';
+            grid.style.gridTemplateColumns = 'repeat(4, 1fr)';
+            grid.style.gap = '12px';
+            grid.style.marginTop = '18px';
+            gameArea.appendChild(grid);
+
+            for (let i = 0; i < 8; i++) {
+                const fig = document.createElement('div');
+                fig.style.height = '70px';
+                fig.style.borderRadius = '18px';
+                fig.style.background = 'rgba(0,0,0,0.45)';
+                fig.style.display = 'flex';
+                fig.style.alignItems = 'center';
+                fig.style.justifyContent = 'center';
+                fig.style.fontSize = '26px';
+                fig.textContent = '👤';
+                fig.onclick = () => {
+                    fig.style.background = 'rgba(0,255,204,0.35)';
+                    fig.textContent = '💜';
+                };
+                grid.appendChild(fig);
+            }
+
+            const note = document.createElement('div');
+            note.className = 'game-info-line';
+            note.style.marginTop = '16px';
+            note.textContent = 'Notice how your chest feels softer after sending compassion. This is God mode energy.';
+            gameArea.appendChild(note);
+        }
+    </script>
+</body>
+</html>

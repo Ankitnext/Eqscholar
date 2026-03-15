@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Addiction Loop – EQ Journey Hub</title>
+
+  <!-- Shared styles + core js -->
+  <link rel="stylesheet" href="../shared/game-ui.css" />
+  <script src="../../js/eq-core.js"></script>
+  <script src="../shared/modal.js" defer></script>
+  <script src="addiction.js" defer></script>
+
+  <style>
+    :root {
+      --addict-accent: #e67e22;
+      --addict-bg: #050713;
+      --addict-card: rgba(10, 10, 24, 0.94);
+      --addict-border: rgba(255, 255, 255, 0.06);
+      --pill-bg: rgba(255,255,255,0.08);
+      --good-green: #2ecc71;
+      --warn-red: #e74c3c;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1b1938 0, #050713 55%, #020309 100%);
+      color: #ecf0f1;
+      min-height: 100vh;
+    }
+
+    .nav-bar {
+      background: rgba(3, 7, 30, 0.96);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mode-wrapper {
+      max-width: 1100px;
+      margin: 110px auto 60px;
+      padding: 0 18px 40px;
+    }
+
+    /* HERO */
+    .mode-hero {
+      background: linear-gradient(145deg, rgba(9, 15, 48, 0.96), rgba(26, 16, 44, 0.98));
+      border-radius: 24px;
+      padding: 26px 24px 26px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.75);
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 24px;
+    }
+
+    .mode-title {
+      font-size: 2.3rem;
+      line-height: 1.1;
+      color: var(--addict-accent);
+      margin-bottom: 4px;
+    }
+
+    .mode-subtitle {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+
+    .mode-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .pill-chip {
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--pill-bg);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .mode-hero-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      text-align: right;
+    }
+
+    .state-tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(142, 68, 173, 0.18);
+      border: 1px solid rgba(155, 89, 182, 0.55);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-stat-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      width: 100%;
+      max-width: 260px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+
+    .btn-soft,
+    .btn-primary {
+      border-radius: 999px;
+      padding: 9px 18px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .btn-soft {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ecf0f1;
+    }
+
+    .btn-soft:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #e67e22, #f1c40f);
+      color: #111;
+      box-shadow: 0 10px 30px rgba(230, 126, 34, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 36px rgba(230, 126, 34, 0.6);
+    }
+
+    .back-link {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin-top: 12px;
+    }
+
+    .back-link a {
+      color: #bdc3c7;
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      color: var(--addict-accent);
+      text-decoration: underline;
+    }
+
+    /* GENERIC SECTION */
+    .mode-section {
+      margin-top: 32px;
+      background: var(--addict-card);
+      border-radius: 20px;
+      padding: 22px 20px 18px;
+      border: 1px solid var(--addict-border);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+    }
+
+    .mode-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: var(--addict-accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-section p.section-lead {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 14px;
+    }
+
+    .section-grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+      gap: 18px;
+    }
+
+    .bullet-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .bullet-card ul {
+      padding-left: 18px;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .note-box {
+      background: radial-gradient(circle at top left, rgba(230, 126, 34, 0.25), rgba(0, 0, 0, 0.3));
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(230, 126, 34, 0.5);
+    }
+
+    /* OBJECTIVES */
+    .objective-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .objective-item {
+      display: flex;
+      gap: 10px;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .objective-icon {
+      font-size: 1.1rem;
+      margin-top: 1px;
+    }
+
+    /* SKILLS */
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .skill-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 12px 13px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .skill-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* METHODS */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .method-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 12px 14px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .method-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .method-steps {
+      margin-left: 16px;
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+
+    /* CHAIN REACTION */
+    .chain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .chain-column {
+      background: rgba(0, 0, 0, 0.23);
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .chain-heading-bad {
+      color: var(--warn-red);
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chain-heading-good {
+      color: var(--good-green);
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chain-step {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 8px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      margin-top: 8px;
+    }
+
+    .chain-step-header {
+      font-weight: 600;
+      font-size: 0.86rem;
+      margin-bottom: 3px;
+    }
+
+    .chain-step-body {
+      font-size: 0.83rem;
+      opacity: 0.9;
+    }
+
+    .chain-arrow {
+      text-align: center;
+      font-size: 1.1rem;
+      opacity: 0.65;
+      margin-top: 2px;
+    }
+
+    .one-percent-box {
+      margin-top: 14px;
+      background: radial-gradient(circle at top left, rgba(230, 126, 34, 0.3), rgba(0, 0, 0, 0.3));
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(230, 126, 34, 0.6);
+      font-size: 0.9rem;
+    }
+
+    .one-percent-box strong {
+      color: var(--addict-accent);
+    }
+
+    /* GAMES */
+    .games-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .game-card {
+      flex: 1 1 220px;
+      max-width: 260px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 18px;
+      padding: 16px 14px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .game-pill {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 0.7rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .game-icon {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .game-name {
+      font-weight: 700;
+      color: #f9c74f;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .game-desc {
+      font-size: 0.86rem;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+
+    .play-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(120deg, #e67e22, #f1c40f);
+      color: #111;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* NEXT STEPS */
+    .next-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .next-steps a {
+      text-decoration: none;
+    }
+
+    #game-modal.hidden {
+      display: none;
+    }
+
+    @media (max-width: 880px) {
+      .mode-hero {
+        grid-template-columns: 1fr;
+      }
+      .mode-hero-right {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Top Nav -->
+  <nav class="nav-bar">
+    <div class="logo">🔄 Addiction Loop Hub</div>
+    <div class="nav-links">
+      <a href="../../journey-map.html">Journey Map</a>
+      <a href="../../index.html">Home</a>
+      <a href="../../games.html">Game Arcade</a>
+    </div>
+  </nav>
+
+  <main class="mode-wrapper">
+    <!-- HERO -->
+    <section class="mode-hero">
+      <div>
+        <div class="mode-title">Addiction Loop – 200–299 EQ</div>
+        <div class="mode-subtitle">
+          Stuck in scrolling, junk food, games or drama loops? This league trains you
+          to see the loop, break it, and swap in healthier micro-rewards.
+        </div>
+
+        <div class="mode-pills">
+          <span class="pill-chip">Current League: Addiction Loop</span>
+          <span class="pill-chip">Pattern: Quick dopamine & guilt</span>
+          <span class="pill-chip">Goal: Swap 1 loop with 1 better habit</span>
+        </div>
+
+        <p class="back-link">
+          You unlocked this league from the <a href="../../lesson-map.html">EQ Journey Map</a>.
+        </p>
+      </div>
+
+      <div class="mode-hero-right">
+        <div class="state-tag">🧪 Loop Alchemy Zone</div>
+        <div class="hero-stat-box">
+          <strong>On this page you will:</strong>
+          <ul style="margin-top:6px; margin-left:18px; font-size:0.85rem;">
+            <li>Understand how loops work in brain & body</li>
+            <li>Spot your own triggers & rewards</li>
+            <li>Practise 5 loop-breaking mini-games</li>
+          </ul>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-soft" onclick="startLesson('addiction-loop')">
+            Read Intro Lesson
+          </button>
+          <button class="btn-primary" onclick="document.getElementById('games-section').scrollIntoView({behavior:'smooth'})">
+            Jump to Games
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. WHERE YOU ARE -->
+    <section class="mode-section">
+      <h2>🕳 Where You Are Right Now</h2>
+      <p class="section-lead">
+        Addiction Loop doesn’t mean you are “weak”. It means your brain found a
+        fast relief button and is pressing it again and again.
+      </p>
+
+      <div class="section-grid-2">
+        <div class="bullet-card">
+          <strong>Typical loop signals:</strong>
+          <ul>
+            <li>“I’ll just check for 5 minutes” → suddenly 2 hours passed</li>
+            <li>Doing the same escape (phone, food, drama, game) when stressed</li>
+            <li>Feeling guilty after, but still repeating it next day</li>
+            <li>Knowing it hurts your goals but still clicking “play / open / order”</li>
+          </ul>
+        </div>
+
+        <div class="note-box">
+          <strong>Reality check:</strong>
+          <p style="margin-top:6px;">
+            Loops are just <em>cue → routine → reward</em> programs in the brain.
+            Shiva-style detachment says: don’t hate yourself – study the program,
+            then slowly rewrite it with better rewards.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. WHAT YOU WILL LEARN -->
+    <section class="mode-section">
+      <h2>🎯 What You Learn in Addiction Loop</h2>
+      <p class="section-lead">
+        You move from “I can’t control it” to “I understand the loop and can
+        change 1 part of it.”
+      </p>
+
+      <div class="objective-list">
+        <div class="objective-item">
+          <div class="objective-icon">🧩</div>
+          <div>See your main triggers (time of day, feelings, places, apps).</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">💊</div>
+          <div>Understand how quick dopamine + guilt keeps the loop alive.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🔁</div>
+          <div>Map your own Cue → Routine → Reward cycle for 1 habit.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🧪</div>
+          <div>Test micro-swaps: same cue, new routine, similar reward.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SKILLS YOU UNLOCK -->
+    <section class="mode-section">
+      <h2>🧠 Skills You Unlock in This League</h2>
+      <p class="section-lead">
+        You don’t need to quit everything. You only need skill to catch one loop
+        and replace it with a slightly better one.
+      </p>
+
+      <div class="skill-grid">
+        <div class="skill-card">
+          <div class="skill-title">📡 Trigger Radar</div>
+          <p>Notice when and where urges start instead of only after you clicked.</p>
+          <span class="skill-tag">Game-linked: Trigger Scanner</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">♻ Loop Mapping</div>
+          <p>Write out Cue → Routine → Reward so the loop stops being “mystery”.</p>
+          <span class="skill-tag">Game-linked: Loop Mapper</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🔄 Habit Swapping</div>
+          <p>Replace one part of the loop with a healthier 10-minute routine.</p>
+          <span class="skill-tag">Game-linked: Habit Swap Lab</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🌊 Urge Surfing</div>
+          <p>Ride the urge like a wave until it passes instead of acting instantly.</p>
+          <span class="skill-tag">Game-linked: Urge Surf Timer</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🔥 Streak Protection</div>
+          <p>Protect small streaks so one slip doesn’t become full relapse.</p>
+          <span class="skill-tag">Game-linked: Streak Guardian</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. METHODS -->
+    <section class="mode-section">
+      <h2>🕉 Daily Methods (Loop Disarming)</h2>
+      <p class="section-lead">
+        These are small, practical methods you can use when the urge hits. No
+        self-hate, just experiments.
+      </p>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-title">⏸ 2-Minute Pause Rule</div>
+          <p>Use this right when you feel the urge.</p>
+          <ul class="method-steps">
+            <li>Before opening the app / food / game, set a 2-minute timer.</li>
+            <li>Ask: “What am I actually feeling right now?” (bored, lonely, tired?)</li>
+            <li>After 2 minutes, choose: micro-swap or still go ahead – no guilt.</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-title">📓 Loop Journal Line</div>
+          <p>End of the day, use just one line.</p>
+          <ul class="method-steps">
+            <li>Write: “Trigger – what I did – how I felt after – 1 better option.”</li>
+            <li>Do this for only <strong>one</strong> loop you care about.</li>
+            <li>Look for patterns after 7 days.</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-title">🎁 Reward Swap</div>
+          <p>Keep the feeling, change the method.</p>
+          <ul class="method-steps">
+            <li>Identify what your loop gives you (comfort, excitement, escape).</li>
+            <li>Brainstorm 3 healthier ways to get the same feeling.</li>
+            <li>Test each one for 10 minutes on different days.</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CHAIN REACTION -->
+    <section class="mode-section">
+      <h2>⚠ Chain Reactions in Addiction Loop</h2>
+      <p class="section-lead">
+        Loops work like hidden compound interest: 1% worse every day or 1% better.
+        Here’s how it stacks on both paths.
+      </p>
+
+      <div class="chain-grid">
+        <!-- Negative -->
+        <div class="chain-column">
+          <div class="chain-heading-bad">❌ If you keep the old loop</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">1. Trigger appears</div>
+            <div class="chain-step-body">
+              Bored at night, stressed from exam, fight with someone, loneliness.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">2. Auto routine</div>
+            <div class="chain-step-body">
+              Open same app, same game, same snack without thinking.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">3. Quick dopamine</div>
+            <div class="chain-step-body">
+              Brain gets instant “ahh” relief, but only for few minutes.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">4. Crash + guilt</div>
+            <div class="chain-step-body">
+              Sleep late, work left undone, body heavy, self-talk becomes harsh.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">5. Identity story</div>
+            <div class="chain-step-body">
+              Brain concludes: “I am the type who can’t control myself”, which
+              lowers motivation further.
+            </div>
+          </div>
+        </div>
+
+        <!-- Positive -->
+        <div class="chain-column">
+          <div class="chain-heading-good">✅ If you use loop methods</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">1. Trigger appears</div>
+            <div class="chain-step-body">
+              You notice: “Oh, this is my 11pm boredom / stress trigger.”
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">2. 2-minute pause</div>
+            <div class="chain-step-body">
+              Set tiny timer, breathe, name the feeling instead of instantly tapping.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">3. Micro-swap</div>
+            <div class="chain-step-body">
+              You choose a 10-minute swap (walk, stretch, journaling, call, reading).
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">4. After-feeling upgrade</div>
+            <div class="chain-step-body">
+              Instead of guilt, you feel 5–20% better and slightly proud.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">5. New identity story</div>
+            <div class="chain-step-body">
+              After weeks, brain updates: “When I get urges, I experiment.
+              I’m not stuck, I’m training.”
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="one-percent-box">
+        <strong>🧮 1% Game:</strong>
+        If you swap just <strong>one</strong> urge per day with a healthier 10-minute action,
+        you get ~300 better choices in a year. That’s how Addiction Loop slowly
+        turns into **Balanced / Monk mode** over time.
+      </div>
+    </section>
+
+    <!-- 6. GAMES -->
+    <section class="mode-section" id="games-section">
+      <h2>🎮 Addiction Loop – 5 Training Games</h2>
+      <p class="section-lead">
+        These mini-games are small “lab experiments” to train your loop-breaking muscle.
+      </p>
+
+      <div class="games-row">
+        <!-- 1 Trigger Scanner -->
+        <div class="game-card">
+          <div class="game-pill">Trigger awareness</div>
+          <div class="game-icon">📡</div>
+          <div class="game-name">Trigger Scanner</div>
+          <div class="game-desc">
+            Decide if each situation is a loop trigger or just neutral.
+          </div>
+          <button class="play-btn" data-game="addTrigger">Play</button>
+        </div>
+
+        <!-- 2 Habit Swap Lab -->
+        <div class="game-card">
+          <div class="game-pill">Swap routine</div>
+          <div class="game-icon">♻️</div>
+          <div class="game-name">Habit Swap Lab</div>
+          <div class="game-desc">
+            Pick better micro-swaps for common escape behaviours.
+          </div>
+          <button class="play-btn" data-game="addSwap">Play</button>
+        </div>
+
+        <!-- 3 Urge Surf Timer -->
+        <div class="game-card">
+          <div class="game-pill">Urge surfing</div>
+          <div class="game-icon">🌊</div>
+          <div class="game-name">Urge Surf Timer</div>
+          <div class="game-desc">
+            Ride 3 waves of urge without pressing the “quick hit” button.
+          </div>
+          <button class="play-btn" data-game="addSurf">Play</button>
+        </div>
+
+        <!-- 4 Loop Mapper -->
+        <div class="game-card">
+          <div class="game-pill">Loop mapping</div>
+          <div class="game-icon">🧩</div>
+          <div class="game-name">Loop Mapper</div>
+          <div class="game-desc">
+            Build your own Cue → Routine → Reward chain for one habit.
+          </div>
+          <button class="play-btn" data-game="addMap">Play</button>
+        </div>
+
+        <!-- 5 Streak Guardian -->
+        <div class="game-card">
+          <div class="game-pill">Streak protection</div>
+          <div class="game-icon">🛡️</div>
+          <div class="game-name">Streak Guardian</div>
+          <div class="game-desc">
+            Protect a 7-day micro-streak by choosing tiny wins over quick hits.
+          </div>
+          <button class="play-btn" data-game="addStreak">Play</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. NEXT STEPS -->
+    <section class="mode-section">
+      <h2>🚀 After Addiction Loop – What Next?</h2>
+      <p class="section-lead">
+        Once you can see loops and swap one of them, you’re ready to move to Storm
+        Mode and higher emotional mastery.
+      </p>
+      <div class="next-steps">
+        <a href="../../journey-map.html">
+          <button class="btn-soft">⬅ Back to EQ Journey Map</button>
+        </a>
+        <a href="../../games.html">
+          <button class="btn-soft">🎮 Explore All Games</button>
+        </a>
+        <a href="../../index5.html">
+          <button class="btn-primary">📝 Take Addiction Loop Quiz</button>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- GAME MODAL (reused by modal.js + addiction.js) -->
+  <div id="game-modal">
+    <div id="game-box">
+      <div id="game-header">
+        <div>
+          <div id="game-title">Game</div>
+          <div id="game-meta"></div>
+        </div>
+        <button id="game-close">&times;</button>
+      </div>
+      <div id="game-area"></div>
+    </div>
+  </div>
+</body>
+</html>

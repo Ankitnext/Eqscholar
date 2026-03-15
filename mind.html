@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Mind Architecture | EQScholar</title>
+
+  <style>
+    /* ===== Reset & Base ===== */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, "Segoe UI", Roboto, Arial;
+      background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:#fff;
+      min-height:100vh;
+    }
+
+    /* ===== Navbar ===== */
+    .nav-bar {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(0,0,0,0.9);
+      backdrop-filter: blur(10px);
+      padding: 16px 40px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-size: 22px;
+      font-weight: 800;
+      display:flex;
+      align-items:center;
+      gap:8px;
+    }
+    .nav-links {
+      display:flex;
+      gap:24px;
+    }
+    .nav-links a {
+      color:#fff;
+      text-decoration:none;
+      font-weight:600;
+    }
+    .nav-links a:hover { color:#f39c12; }
+
+    /* ===== Page Header ===== */
+    .page-header {
+      padding-top: 120px;
+      padding-bottom: 60px;
+      text-align: center;
+    }
+    .page-title {
+      font-size: 46px;
+      font-weight: 900;
+      background: linear-gradient(45deg,#f39c12,#e74c3c,#9b59b6);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .page-sub {
+      margin-top: 14px;
+      font-size: 18px;
+      color:#eaeaea;
+      max-width: 820px;
+      margin-left:auto;
+      margin-right:auto;
+      line-height:1.6;
+    }
+
+    /* ===== Mind Architecture Section ===== */
+    .mind-arch-section {
+      padding: 40px 40px 100px;
+      background: linear-gradient(180deg, rgba(0,0,0,0.88), rgba(20,20,40,0.95));
+    }
+
+    .mind-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 28px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .mind-card {
+      background: linear-gradient(135deg, rgba(52,152,219,0.12), rgba(155,89,182,0.12));
+      border-radius: 18px;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,0.12);
+      backdrop-filter: blur(14px);
+      transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .mind-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.35);
+    }
+
+    .mind-card h3 {
+      font-size: 22px;
+      color:#f39c12;
+      margin-bottom: 12px;
+    }
+
+    .mind-formula {
+      font-size: 15px;
+      font-weight: 700;
+      background: rgba(0,0,0,0.35);
+      padding: 10px 14px;
+      border-radius: 10px;
+      border: 1px dashed rgba(255,255,255,0.2);
+      margin-bottom: 14px;
+    }
+
+    .mind-desc {
+      font-size: 14px;
+      color:#eaeaea;
+      line-height:1.6;
+    }
+
+    /* ===== Footer ===== */
+    footer {
+      text-align:center;
+      padding: 24px;
+      font-size: 13px;
+      color:#ddd;
+      background: rgba(0,0,0,0.9);
+    }
+
+    /* ===== Mobile ===== */
+    @media (max-width:768px) {
+      .nav-bar { padding: 12px 16px; }
+      .page-title { font-size: 34px; }
+      .page-sub { font-size: 15px; padding: 0 10px; }
+      .mind-arch-section { padding: 30px 16px 80px; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ===== NAV ===== -->
+  <nav class="nav-bar">
+    <div class="logo">🧠 EQScholar</div>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="journey-map.html">Journey</a>
+      <a href="mental-check.html">Check-up</a>
+    </div>
+  </nav>
+
+  <!-- ===== HEADER ===== -->
+  <header class="page-header">
+    <div class="page-title">Mind Architecture</div>
+    <div class="page-sub">
+      Every belief, habit, emotion and decision is built from smaller mental blocks.
+      Understand the blocks and you control the outcome.
+    </div>
+  </header>
+
+  <!-- ===== MAIN CONTENT ===== -->
+  <section class="mind-arch-section">
+    <div class="mind-grid">
+
+      <div class="mind-card">
+        <h3>1. Belief</h3>
+        <div class="mind-formula">Experience + Emotion + Repetition</div>
+        <div class="mind-desc">What feels true without proof. Beliefs silently guide actions.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>2. Mindset</h3>
+        <div class="mind-formula">Beliefs + Interpretation Style + Time Horizon</div>
+        <div class="mind-desc">How you interpret events: threat or opportunity.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>3. Identity</h3>
+        <div class="mind-formula">Repeated Self-Talk + Emotional Memory + Social Feedback</div>
+        <div class="mind-desc">Who you believe you are allowed to be.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>4. Habit</h3>
+        <div class="mind-formula">Trigger + Action + Reward</div>
+        <div class="mind-desc">Automatic behavior running without thinking.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>5. Attitude</h3>
+        <div class="mind-formula">Belief + Emotional Tone</div>
+        <div class="mind-desc">Your emotional posture toward situations.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>6. Values</h3>
+        <div class="mind-formula">Emotional Importance + Long-Term Meaning</div>
+        <div class="mind-desc">What you protect even when it costs you.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>7. Motivation</h3>
+        <div class="mind-formula">Goal Clarity + Expected Reward − Perceived Pain</div>
+        <div class="mind-desc">Why you act or procrastinate.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>8. Confidence</h3>
+        <div class="mind-formula">Past Success Evidence + Emotional Safety</div>
+        <div class="mind-desc">Expectation of success without panic.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>9. Fear</h3>
+        <div class="mind-formula">Uncertainty + Negative Prediction + Low Control</div>
+        <div class="mind-desc">Future pain felt as present danger.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>10. Courage</h3>
+        <div class="mind-formula">Fear + Meaning Greater Than Fear</div>
+        <div class="mind-desc">Action despite emotional resistance.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>11. Willpower</h3>
+        <div class="mind-formula">Energy + Value Alignment − Emotional Friction</div>
+        <div class="mind-desc">Holding decisions under pressure.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>12. Discipline</h3>
+        <div class="mind-formula">Identity + System + Repetition</div>
+        <div class="mind-desc">Consistency without negotiation.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>13. Wisdom</h3>
+        <div class="mind-formula">Experience + Reflection + Pattern Recognition</div>
+        <div class="mind-desc">Seeing consequences before they arrive.</div>
+      </div>
+
+      <div class="mind-card">
+        <h3>14. Decision Quality</h3>
+        <div class="mind-formula">Perception Accuracy × Emotion Control × Reasoning</div>
+        <div class="mind-desc">How good your choices really are.</div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ===== FOOTER ===== -->
+  <footer>
+    © <script>document.write(new Date().getFullYear())</script> EQScholar — Mind is the real OS
+  </footer>
+
+</body>
+</html>

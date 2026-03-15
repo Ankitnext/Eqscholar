@@ -1,0 +1,359 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Lessons — EQScholar</title>
+<meta name="description" content="Micro-lessons to build emotional, cognitive and spiritual skills. Short, daily practice—Teach, Practice, Apply." />
+<style>
+  /* Minimal reset + consistent styling with Home/Assessment pages */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+    background:linear-gradient(180deg,#071026,#021025);
+    color:#e6eef8;min-height:100vh;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    line-height:1.45;
+  }
+  .wrap{max-width:1100px;margin:88px auto;padding:18px}
+  .topbar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  .topbar h1{font-size:20px;margin-bottom:4px}
+  .muted{color:#9fb0d6;font-size:14px}
+
+  .grid{display:grid;grid-template-columns:320px 1fr;gap:20px}
+  @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+  /* Lesson list */
+  .lessons-list{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:14px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+  .lesson-item{display:flex;gap:12px;align-items:center;padding:12px;border-radius:10px;border:1px solid rgba(255,255,255,0.02);margin-bottom:10px;cursor:pointer;background:transparent;transition:transform 120ms ease,box-shadow 120ms ease}
+  .lesson-item:hover{transform:translateY(-6px);box-shadow:0 18px 40px rgba(0,0,0,0.5)}
+  .lesson-item.active{background:linear-gradient(90deg,#6b46ff22,#06b6d422);border-color:rgba(107,70,255,0.08)}
+  .lesson-icon{width:56px;height:56px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-weight:800;color:#061122;background:linear-gradient(135deg,#7c5cff,#3dd4ff)}
+  .lesson-meta{flex:1}
+  .lesson-meta h3{font-size:15px;margin-bottom:6px}
+  .lesson-meta p{font-size:13px;color:#bcd3f7}
+
+  /* Lesson detail */
+  .lesson-card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:18px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+  .section{margin-bottom:14px}
+  .section h4{color:#ffd68a;margin-bottom:8px}
+  .section p{color:#dfeeff;font-size:15px}
+  .small{font-size:13px;color:#9fb0d6}
+
+  /* Audio player */
+  .audio-row{display:flex;align-items:center;gap:12px;margin-top:8px}
+  .play-btn{background:linear-gradient(90deg,#6b46ff,#06b6d4);border:none;padding:10px 12px;border-radius:8px;color:#061122;font-weight:700;cursor:pointer}
+  .mini{font-size:13px;color:#cfe6ff}
+
+  /* Action row */
+  .action-row{display:flex;gap:12px;align-items:center;margin-top:12px}
+  button.primary{background:linear-gradient(90deg,#6b46ff,#06b6d4);color:#061122;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:700}
+  button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px 14px;border-radius:10px;color:#cfe6ff;cursor:pointer}
+
+  /* XP badge */
+  .xp-badge{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-weight:700;color:#ffd68a}
+
+  /* Progress bar for lesson completion */
+  .lesson-progress{height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;margin-top:10px}
+  .lesson-progress > i{display:block;height:100%;background:linear-gradient(90deg,#7c5cff,#06b6d4);width:0%;transition:width 360ms ease}
+
+  /* small print */
+  .hint{font-size:13px;color:#9fb0d6;margin-top:8px}
+
+</style>
+</head>
+<body>
+  <div class="wrap" role="main">
+    <div class="topbar">
+      <div>
+        <h1>Lessons — Micro-modules (Teach • Practice • Apply)</h1>
+        <div class="muted">Short lessons mapped to your Mind Profile. Complete to earn XP and unlock applied quizzes.</div>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center">
+        <div class="xp-badge" id="totalXp">XP: 0</div>
+        <button class="ghost" id="backToAssessment">Back to Assessment</button>
+      </div>
+    </div>
+
+    <div class="grid">
+      <!-- LEFT: Lessons List -->
+      <aside class="lessons-list" aria-label="Lessons list">
+        <!-- Items populated by JS -->
+      </aside>
+
+      <!-- RIGHT: Lesson Detail -->
+      <section class="lesson-card" id="lessonDetail" aria-live="polite">
+        <div id="lessonEmpty">
+          <p class="small">Select a lesson on the left to open it. Lessons are short — 2–10 minutes, and include a sound/breath exercise.</p>
+        </div>
+
+        <!-- Active lesson area -->
+        <div id="lessonActive" style="display:none">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div id="lessonTitle" style="font-size:18px;font-weight:800;color:#fff"></div>
+              <div id="lessonSkill" class="small" style="margin-top:4px"></div>
+            </div>
+            <div style="text-align:right">
+              <div class="small">Estimated time</div>
+              <div id="lessonTime" class="small" style="font-weight:800">—</div>
+            </div>
+          </div>
+
+          <div class="lesson-progress" aria-hidden="false">
+            <i id="lessonProgressBar" style="width:0%"></i>
+          </div>
+
+          <div class="section" id="teachSection">
+            <h4>Teach</h4>
+            <p id="teachText">—</p>
+          </div>
+
+          <div class="section" id="practiceSection">
+            <h4>Practice (2–3 min)</h4>
+            <p id="practiceText">—</p>
+
+            <!-- audio/gurukul -->
+            <div class="audio-row">
+              <button id="playAudio" class="play-btn" aria-pressed="false">Play 60s Exercise</button>
+              <div class="mini" id="audioStatus">Sound exercise (breath rhythm & mantra)</div>
+            </div>
+            <audio id="lessonAudio" preload="none">
+              <!-- Replace src with your recorded mp3 file for each lesson -->
+              <source id="audioSrc" src="" type="audio/mpeg">
+              Your browser does not support the audio element.
+            </audio>
+
+            <div class="hint">Tip: do the audio exercise standing with a straight spine to feel it better.</div>
+          </div>
+
+          <div class="section" id="applySection">
+            <h4>Apply (daily)</h4>
+            <p id="applyText">—</p>
+            <div style="display:flex;gap:10px;margin-top:8px;">
+              <button id="markDone" class="primary">Mark Practice Complete</button>
+              <button id="openMiniQuiz" class="ghost">Take 3-question quiz</button>
+            </div>
+          </div>
+
+          <div class="section">
+            <h4>Progress & Next</h4>
+            <p class="small" id="nextLessonHint">—</p>
+            <div style="display:flex;gap:10px;margin-top:8px;align-items:center">
+              <button id="prevLessonBtn" class="ghost">Previous</button>
+              <button id="nextLessonBtn" class="ghost">Next</button>
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+/* Lessons page logic
+   - Lessons mapped to skill IDs A..F
+   - LocalStorage keys: 'eq_lessons_progress' & 'eq_total_xp'
+   - Callbacks where you should replace with server API are commented
+*/
+
+/* ---------- SAMPLE LESSONS ---------- 
+Each lesson: { id, skill, title, timeMins, teach, practice, apply, audioSrc, xp }
+*/
+const LESSONS = [
+  { id:'L-A-01', skill:'A', title:'Reduce Ego Bias — Micro Awareness', time:7,
+    teach: 'Ego clarity means noticing when your mind seeks praise. This lesson teaches a 3-step awareness loop: Notice → Name → Reframe.',
+    practice: 'When praised today, silently name the feeling and say: "This is a result of effort, not identity." Repeat 3 times.',
+    apply: 'For the next 3 days, log one moment when you felt ego arise. Reframe it using the 3-step loop.',
+    audioSrc: '', // replace with real mp3 path
+    xp: 30
+  },
+  { id:'L-B-01', skill:'B', title:'3 Breath Resets for Impulse Control', time:5,
+    teach: 'Impulse control starts with physiological regulation. A 3-breath reset (inhale 4s, hold 2s, exhale 6s) calms the amygdala and creates space.',
+    practice: 'Practice the 3-breath reset three times during the day when you feel tension.',
+    apply: 'Use the reset before responding in heated conversations for 5 days.',
+    audioSrc: '',
+    xp: 20
+  },
+  { id:'L-C-01', skill:'C', title:'Chunked Learning & Spaced Repetition', time:8,
+    teach: 'Break big skills into 15-minute chunks and repeat them across days. Spacing solidifies memory.',
+    practice: 'Choose a small sub-skill and practice 15 minutes today; note one micro-improvement.',
+    apply: 'Use spaced repetition scheduling (today, +2 days, +5 days) for new topics.',
+    audioSrc: '',
+    xp: 25
+  },
+  { id:'L-D-01', skill:'D', title:'Viveka — Decision Clarity Framework', time:8,
+    teach: 'Viveka is discrimination — separating essential from non-essential. Use 3 questions: Is it true? Is it necessary? Is it timely?',
+    practice: 'Apply the 3-question test to one decision today.',
+    apply: 'For one week, check each meaningful decision with Viveka before acting.',
+    audioSrc: '',
+    xp: 28
+  },
+  { id:'L-E-01', skill:'E', title:'Journaling for Emotional Processing', time:6,
+    teach: 'Write fast for 6 minutes about a strong emotion. Name the emotion, what triggered it, and one action to process it.',
+    practice: 'Do a 6-minute write now and reflect briefly on changes.',
+    apply: 'Keep a 3-day emotional log and note patterns.',
+    audioSrc: '',
+    xp: 18
+  },
+  { id:'L-F-01', skill:'F', title:'5-day Practice Discipline Bootcamp', time:10,
+    teach: 'Discipline is built by tiny wins. 5 days of 10-minute daily drills solidify habit formation.',
+    practice: 'Start with 10 minutes today on a chosen skill; set a timer.',
+    apply: 'Repeat for 5 consecutive days and record completion.',
+    audioSrc: '',
+    xp: 35
+  }
+];
+
+/* ---------- Progress storage ---------- */
+const STORAGE_KEY = 'eq_lessons_progress_v1';
+const XP_KEY = 'eq_total_xp_v1';
+
+function loadProgress(){
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    const xpRaw = localStorage.getItem(XP_KEY);
+    return {
+      lessons: raw ? JSON.parse(raw) : {},
+      xp: xpRaw ? Number(xpRaw) : 0
+    };
+  } catch(e){ return { lessons:{}, xp:0 } }
+}
+
+function saveProgress(state){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(state.lessons));
+  localStorage.setItem(XP_KEY, String(state.xp));
+}
+
+/* ---------- UI rendering ---------- */
+const lessonsListEl = document.querySelector('.lessons-list');
+const lessonActiveEl = document.getElementById('lessonActive');
+const lessonEmptyEl = document.getElementById('lessonEmpty');
+const lessonTitle = document.getElementById('lessonTitle');
+const lessonSkill = document.getElementById('lessonSkill');
+const lessonTime = document.getElementById('lessonTime');
+const teachText = document.getElementById('teachText');
+const practiceText = document.getElementById('practiceText');
+const applyText = document.getElementById('applyText');
+const audioEl = document.getElementById('lessonAudio');
+const audioSrc = document.getElementById('audioSrc');
+const playBtn = document.getElementById('playAudio');
+const markDoneBtn = document.getElementById('markDone');
+const openQuizBtn = document.getElementById('openMiniQuiz');
+const lessonProgressBar = document.getElementById('lessonProgressBar');
+const totalXpEl = document.getElementById('totalXp');
+
+let appState = { selectedLessonId: null, progress: loadProgress() };
+
+/* render list */
+function renderList(){
+  lessonsListEl.innerHTML = '';
+  LESSONS.forEach(ls => {
+    const done = !!appState.progress.lessons[ls.id]?.done;
+    const el = document.createElement('div');
+    el.className = 'lesson-item' + (appState.selectedLessonId === ls.id ? ' active' : '');
+    el.setAttribute('tabindex','0');
+    el.innerHTML = `
+      <div class="lesson-icon">${ls.skill}</div>
+      <div class="lesson-meta">
+        <h3>${ls.title}</h3>
+        <p>${ls.time} min • Skill: ${ls.skill} • XP ${ls.xp} ${done ? '• DONE' : ''}</p>
+      </div>
+    `;
+    el.addEventListener('click', ()=> openLesson(ls.id));
+    el.addEventListener('keydown', (e)=> { if(e.key === 'Enter') openLesson(ls.id); });
+    lessonsListEl.appendChild(el);
+  });
+  updateXpUI();
+}
+
+/* open lesson */
+function openLesson(id){
+  const lesson = LESSONS.find(l=>l.id===id);
+  if(!lesson) return;
+  appState.selectedLessonId = id;
+  lessonEmptyEl.style.display='none';
+  lessonActiveEl.style.display='';
+  lessonTitle.textContent = lesson.title;
+  lessonSkill.textContent = `Skill: ${lesson.skill} • Estimated ${lesson.time} min`;
+  lessonTime.textContent = lesson.time + ' min';
+  teachText.textContent = lesson.teach;
+  practiceText.textContent = lesson.practice;
+  applyText.textContent = lesson.apply;
+  audioSrc.src = lesson.audioSrc || '';
+  audioEl.load();
+
+  // progress UI for this lesson
+  const lsProgress = appState.progress.lessons[lesson.id] || { done:false, percent:0 };
+  lessonProgressBar.style.width = (lsProgress.percent || 0) + '%';
+  renderList();
+}
+
+/* audio controls */
+let audioPlaying=false;
+playBtn.addEventListener('click', ()=>{
+  if(!appState.selectedLessonId) return;
+  if(!audioEl.src){
+    // no audio: show quick guidance (optional)
+    playBtn.textContent = 'No audio available';
+    setTimeout(()=> playBtn.textContent = 'Play 60s Exercise', 1200);
+    return;
+  }
+  if(!audioPlaying){
+    audioEl.play(); audioPlaying=true; playBtn.textContent='Pause Exercise';
+  } else { audioEl.pause(); audioPlaying=false; playBtn.textContent='Play 60s Exercise'; }
+});
+audioEl.addEventListener('ended', ()=> { audioPlaying=false; playBtn.textContent='Play 60s Exercise'; });
+
+/* mark complete -> award XP & update progress */
+markDoneBtn.addEventListener('click', ()=>{
+  const id = appState.selectedLessonId;
+  if(!id) return;
+  const lesson = LESSONS.find(l=>l.id===id);
+  const doneObj = appState.progress.lessons[id] || { done:false, percent:0 };
+  if(doneObj.done){
+    alert('You already completed this lesson.');
+    return;
+  }
+  // award XP
+  appState.progress.lessons[id] = { done:true, percent:100, completedAt:Date.now(), awardedXP: lesson.xp };
+  appState.progress.xp = (appState.progress.xp || 0) + lesson.xp;
+  appState.progress.total = (appState.progress.total || 0) + lesson.xp;
+  // local storage
+  saveProgress({ lessons: appState.progress.lessons, xp: appState.progress.xp });
+  lessonProgressBar.style.width = '100%';
+  updateXpUI();
+  // friendly confirmation
+  alert(`Lesson complete — +${lesson.xp} XP awarded.`);
+  // TODO: server POST /api/lesson-complete { lessonId, userId, xp } to persist centrally
+});
+
+/* mini quiz open */
+openQuizBtn.addEventListener('click', ()=>{
+  // wired to your assessment/quiz flow — ideally open a modal with 3 quick questions filtered by skill
+  const id = appState.selectedLessonId;
+  if(!id) { alert('Select a lesson first'); return; }
+  const lesson = LESSONS.find(l => l.id === id);
+  // For demo we redirect to assessment or to a filtered quiz. Replace with modal or route.
+  // Example: open 'index5.html?skill=D'
+  window.location.href = 'index5.html';
+});
+
+/* navigation */
+document.getElementById('backToAssessment').addEventListener('click', ()=> window.location.href = 'index5.html');
+
+/* helper to update XP UI */
+function updateXpUI(){
+  const xp = appState.progress.xp || 0;
+  totalXpEl.textContent = 'XP: ' + xp;
+}
+
+/* init */
+(function init(){
+  // load XP value stored separately
+  const xpStored = localStorage.getItem('eq_total_xp_v1');
+  if(xpStored) appState.progress.xp = Number(xpStored);
+  renderList();
+})();
+</script>
+</body>
+</html>

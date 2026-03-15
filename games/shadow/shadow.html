@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shadow Walker – EQ Journey Hub</title>
+
+  <!-- Shared styles + core js -->
+  <link rel="stylesheet" href="../shared/game-ui.css" />
+  <script src="../../js/eq-core.js"></script>
+  <script src="../shared/modal.js" defer></script>
+  <script src="shadow.js" defer></script>
+
+  <style>
+    :root {
+      --shadow-accent: #9b59b6;
+      --shadow-bg: #050713;
+      --shadow-card: rgba(10, 10, 24, 0.94);
+      --shadow-border: rgba(255, 255, 255, 0.06);
+      --pill-bg: rgba(255,255,255,0.08);
+      --good-green: #2ecc71;
+      --warn-red: #e74c3c;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #221b3f 0, #050713 55%, #020309 100%);
+      color: #ecf0f1;
+      min-height: 100vh;
+    }
+
+    .nav-bar {
+      background: rgba(3, 7, 30, 0.96);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mode-wrapper {
+      max-width: 1100px;
+      margin: 110px auto 60px;
+      padding: 0 18px 40px;
+    }
+
+    /* HERO */
+    .mode-hero {
+      background: linear-gradient(145deg, rgba(9, 13, 48, 0.96), rgba(32, 16, 44, 0.98));
+      border-radius: 24px;
+      padding: 26px 24px 26px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 22px 55px rgba(0, 0, 0, 0.75);
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2fr);
+      gap: 24px;
+    }
+
+    .mode-title {
+      font-size: 2.3rem;
+      line-height: 1.1;
+      color: var(--shadow-accent);
+      margin-bottom: 4px;
+    }
+
+    .mode-subtitle {
+      font-size: 1.05rem;
+      opacity: 0.9;
+      margin-bottom: 16px;
+    }
+
+    .mode-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .pill-chip {
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: var(--pill-bg);
+      font-size: 0.78rem;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      border: 1px solid rgba(255, 255, 255, 0.09);
+    }
+
+    .mode-hero-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+      text-align: right;
+    }
+
+    .state-tag {
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(155, 89, 182, 0.18);
+      border: 1px solid rgba(155, 89, 182, 0.55);
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .hero-stat-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 10px 14px;
+      font-size: 0.85rem;
+      width: 100%;
+      max-width: 260px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 6px;
+    }
+
+    .btn-soft,
+    .btn-primary {
+      border-radius: 999px;
+      padding: 9px 18px;
+      border: none;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .btn-soft {
+      background: rgba(255, 255, 255, 0.06);
+      color: #ecf0f1;
+    }
+
+    .btn-soft:hover {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #9b59b6, #8e44ad);
+      color: #fff;
+      box-shadow: 0 10px 30px rgba(155, 89, 182, 0.45);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 12px 36px rgba(155, 89, 182, 0.6);
+    }
+
+    .back-link {
+      font-size: 0.85rem;
+      opacity: 0.85;
+      margin-top: 12px;
+    }
+
+    .back-link a {
+      color: #bdc3c7;
+      text-decoration: none;
+    }
+
+    .back-link a:hover {
+      color: var(--shadow-accent);
+      text-decoration: underline;
+    }
+
+    /* GENERIC SECTION */
+    .mode-section {
+      margin-top: 32px;
+      background: var(--shadow-card);
+      border-radius: 20px;
+      padding: 22px 20px 18px;
+      border: 1px solid var(--shadow-border);
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.7);
+    }
+
+    .mode-section h2 {
+      font-size: 1.3rem;
+      margin-bottom: 8px;
+      color: var(--shadow-accent);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .mode-section p.section-lead {
+      font-size: 0.95rem;
+      opacity: 0.9;
+      margin-bottom: 14px;
+    }
+
+    .section-grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 3fr) minmax(0, 2.2fr);
+      gap: 18px;
+    }
+
+    .bullet-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      font-size: 0.95rem;
+    }
+
+    .bullet-card ul {
+      padding-left: 18px;
+      margin-top: 6px;
+      line-height: 1.45;
+    }
+
+    .note-box {
+      background: radial-gradient(circle at top left, rgba(155, 89, 182, 0.25), rgba(0, 0, 0, 0.3));
+      border-radius: 14px;
+      padding: 14px 16px;
+      font-size: 0.9rem;
+      border: 1px solid rgba(155, 89, 182, 0.5);
+    }
+
+    /* OBJECTIVES */
+    .objective-list {
+      display: grid;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .objective-item {
+      display: flex;
+      gap: 10px;
+      font-size: 0.95rem;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .objective-icon {
+      font-size: 1.1rem;
+      margin-top: 1px;
+    }
+
+    /* SKILLS */
+    .skill-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .skill-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 12px 13px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .skill-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .skill-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.78rem;
+      padding: 3px 8px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+    }
+
+    /* METHODS */
+    .method-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+      margin-top: 10px;
+    }
+
+    .method-card {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 16px;
+      padding: 12px 14px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .method-title {
+      font-weight: 600;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .method-steps {
+      margin-left: 16px;
+      margin-top: 4px;
+      line-height: 1.45;
+    }
+
+    /* CHAIN REACTION */
+    .chain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 12px;
+    }
+
+    .chain-column {
+      background: rgba(0, 0, 0, 0.23);
+      border-radius: 18px;
+      padding: 14px 14px 16px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 0.9rem;
+    }
+
+    .chain-heading-bad {
+      color: var(--warn-red);
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chain-heading-good {
+      color: var(--good-green);
+      font-weight: 700;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .chain-step {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 14px;
+      padding: 8px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+      margin-top: 8px;
+    }
+
+    .chain-step-header {
+      font-weight: 600;
+      font-size: 0.86rem;
+      margin-bottom: 3px;
+    }
+
+    .chain-step-body {
+      font-size: 0.83rem;
+      opacity: 0.9;
+    }
+
+    .chain-arrow {
+      text-align: center;
+      font-size: 1.1rem;
+      opacity: 0.65;
+      margin-top: 2px;
+    }
+
+    .one-percent-box {
+      margin-top: 14px;
+      background: radial-gradient(circle at top left, rgba(155, 89, 182, 0.3), rgba(0, 0, 0, 0.3));
+      border-radius: 14px;
+      padding: 10px 12px;
+      border: 1px solid rgba(155, 89, 182, 0.6);
+      font-size: 0.9rem;
+    }
+
+    .one-percent-box strong {
+      color: var(--shadow-accent);
+    }
+
+    /* GAMES */
+    .games-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      margin-top: 16px;
+    }
+
+    .game-card {
+      flex: 1 1 220px;
+      max-width: 260px;
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 18px;
+      padding: 16px 14px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+    }
+
+    .game-pill {
+      position: absolute;
+      top: 8px;
+      right: 10px;
+      font-size: 0.7rem;
+      padding: 4px 9px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.45);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+    }
+
+    .game-icon {
+      font-size: 2rem;
+      margin-bottom: 4px;
+    }
+
+    .game-name {
+      font-weight: 700;
+      color: #f9c74f;
+      margin-bottom: 4px;
+      font-size: 1rem;
+    }
+
+    .game-desc {
+      font-size: 0.86rem;
+      opacity: 0.9;
+      margin-bottom: 10px;
+    }
+
+    .play-btn {
+      padding: 7px 16px;
+      border-radius: 999px;
+      border: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: linear-gradient(120deg, #9b59b6, #8e44ad);
+      color: #fff;
+    }
+
+    .play-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* NEXT STEPS */
+    .next-steps {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .next-steps a {
+      text-decoration: none;
+    }
+
+    #game-modal.hidden {
+      display: none;
+    }
+
+    @media (max-width: 880px) {
+      .mode-hero {
+        grid-template-columns: 1fr;
+      }
+      .mode-hero-right {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Top Nav -->
+  <nav class="nav-bar">
+    <div class="logo">🌫️ Shadow Walker Hub</div>
+    <div class="nav-links">
+      <a href="../../journey-map.html">Journey Map</a>
+      <a href="../../index.html">Home</a>
+      <a href="../../games.html">Game Arcade</a>
+    </div>
+  </nav>
+
+  <main class="mode-wrapper">
+    <!-- HERO -->
+    <section class="mode-hero">
+      <div>
+        <div class="mode-title">Shadow Walker – 400–499 EQ</div>
+        <div class="mode-subtitle">
+          You can see your patterns… but can’t always change them yet. This league
+          trains the gap between awareness and control.
+        </div>
+
+        <div class="mode-pills">
+          <span class="pill-chip">Current League: Shadow Walker</span>
+          <span class="pill-chip">Theme: Awareness without mastery</span>
+          <span class="pill-chip">Goal: From “I know” → “I choose”</span>
+        </div>
+
+        <p class="back-link">
+          You unlocked this league from the <a href="../../lesson-map.html">EQ Journey Map</a>.
+        </p>
+      </div>
+
+      <div class="mode-hero-right">
+        <div class="state-tag">🌫 Gap Awareness Zone</div>
+        <div class="hero-stat-box">
+          <strong>Here you will:</strong>
+          <ul style="margin-top:6px; margin-left:18px; font-size:0.85rem;">
+            <li>Notice your “shadow reactions” in real time</li>
+            <li>See the gap between thought and action</li>
+            <li>Practise choosing 1 different move</li>
+          </ul>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-soft" onclick="startLesson('shadow-walker')">
+            Read Intro Lesson
+          </button>
+          <button class="btn-primary" onclick="document.getElementById('games-section').scrollIntoView({behavior:'smooth'})">
+            Jump to Games
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. WHERE YOU ARE -->
+    <section class="mode-section">
+      <h2>🛰 Where You Are Right Now</h2>
+      <p class="section-lead">
+        Shadow Walker mode is when you can see your patterns clearly but still
+        get dragged by them. You’re not lost anymore – you’re watching the shadow.
+      </p>
+
+      <div class="section-grid-2">
+        <div class="bullet-card">
+          <strong>Shadow Walker signals:</strong>
+          <ul>
+            <li>“I know I’m procrastinating… and still not moving.”</li>
+            <li>Seeing your anger, jealousy or envy but reacting anyway</li>
+            <li>Being very self-aware, but still repeating old loops</li>
+            <li>Feeling frustrated: “Why do I do this even after understanding?”</li>
+          </ul>
+        </div>
+
+        <div class="note-box">
+          <strong>Important:</strong>
+          <p style="margin-top:6px;">
+            This is a <em>high EQ stage</em>, not failure. Even Shiva
+            teachings show: first you become the witness, then slowly the
+            witness gains influence. Shadow Walker league trains that middle zone.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. WHAT YOU WILL LEARN -->
+    <section class="mode-section">
+      <h2>🎯 What You Learn in Shadow Walker</h2>
+      <p class="section-lead">
+        You move from “I see it but can’t stop it” to “I can interrupt it,
+        even once a day.”
+      </p>
+
+      <div class="objective-list">
+        <div class="objective-item">
+          <div class="objective-icon">👁️</div>
+          <div>Separate “what I feel” from “what I choose to do”.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">⏸</div>
+          <div>Catch the 1–3 second gap before auto-reaction.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🌫</div>
+          <div>Label thoughts, urges and stories instead of fusing with them.</div>
+        </div>
+        <div class="objective-item">
+          <div class="objective-icon">🔁</div>
+          <div>Practise replacing one shadow reaction with a micro-choice.</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. SKILLS -->
+    <section class="mode-section">
+      <h2>🧠 Skills You Unlock in This League</h2>
+      <p class="section-lead">
+        These skills are like switching ON the “observer camera” inside your own mind.
+      </p>
+
+      <div class="skill-grid">
+        <div class="skill-card">
+          <div class="skill-title">👁️ Observer Camera</div>
+          <p>Notice “Oh, I’m doing it again” <em>while</em> it’s happening.</p>
+          <span class="skill-tag">Game-linked: Scene Observer</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">⚡ Gap Detection</div>
+          <p>Spot the small pause between urge and action.</p>
+          <span class="skill-tag">Game-linked: Gap Meter</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">☁ Thought Labeling</div>
+          <p>Mark inner content as Thought / Feeling / Urge / Story.</p>
+          <span class="skill-tag">Game-linked: Thought Clouds 2.0</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">🔁 Auto vs Choice</div>
+          <p>See when you ran on autopilot vs when you chose.</p>
+          <span class="skill-tag">Game-linked: Auto-Pilot Switch</span>
+        </div>
+        <div class="skill-card">
+          <div class="skill-title">📜 Inner Narrator Upgrade</div>
+          <p>Rewrite “I’m useless” into realistic, kinder lines.</p>
+          <span class="skill-tag">Game-linked: Shadow Narrator</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. METHODS -->
+    <section class="mode-section">
+      <h2>🕉 Daily Methods (Shadow Work Lite)</h2>
+      <p class="section-lead">
+        These are small practices to bring the “witness” online during normal days.
+      </p>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <div class="method-title">🔍 “I Notice…” Script</div>
+          <p>Use when you catch yourself mid-pattern.</p>
+          <ul class="method-steps">
+            <li>Say silently: “I notice that right now I am ___ (scrolling / snapping / shouting).”</li>
+            <li>Add: “Part of me wants ___ (comfort / control / revenge).”</li>
+            <li>End: “Seeing this does not make me bad. It makes me aware.”</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-title">⏸ 3-Second Gap</div>
+          <p>Use before sending a message, reply, or reaction.</p>
+          <ul class="method-steps">
+            <li>Pause 3 seconds before pressing “send / post / shout”.</li>
+            <li>Ask: “Will I respect this version of me tomorrow?”</li>
+            <li>If yes, continue. If no, rewrite or walk away.</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <div class="method-title">📜 Shadow-to-Story Rewrite</div>
+          <p>Use when harsh self-talk appears.</p>
+          <ul class="method-steps">
+            <li>Write the harsh line: “I am ___.”</li>
+            <li>Rewrite as story: “A part of me <em>believes</em> I am ___ when I fail.”</li>
+            <li>Add: “This is a story, not full truth. I am still in training.”</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CHAIN REACTION -->
+    <section class="mode-section">
+      <h2>⚠ Chain Reactions in Shadow Walker</h2>
+      <p class="section-lead">
+        Awareness alone can become a trap (“I know, but still…”), or a ladder.
+        It depends what you do with the gap.
+      </p>
+
+      <div class="chain-grid">
+        <!-- Negative -->
+        <div class="chain-column">
+          <div class="chain-heading-bad">❌ If you only observe & judge</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">1. You notice the shadow</div>
+            <div class="chain-step-body">
+              “I know I’m procrastinating / overreacting / doom scrolling.”
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">2. Inner critic attack</div>
+            <div class="chain-step-body">
+              “I’m so stupid. Why can’t I change even after knowing?”
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">3. Shame spiral</div>
+            <div class="chain-step-body">
+              Shame increases stress → more escape behaviour.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">4. Freeze / avoid</div>
+            <div class="chain-step-body">
+              You avoid work, people, mirrors, journaling – anything that
+              shows the pattern.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">5. Identity story</div>
+            <div class="chain-step-body">
+              “I understand everything but can’t change” – brain locks this
+              as your permanent identity.
+            </div>
+          </div>
+        </div>
+
+        <!-- Positive -->
+        <div class="chain-column">
+          <div class="chain-heading-good">✅ If you observe & experiment</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">1. You notice the shadow</div>
+            <div class="chain-step-body">
+              “I see I’m doing it again right now.”
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">2. Kind witness</div>
+            <div class="chain-step-body">
+              “Of course I do this – it protected me earlier. Now I’m training a new way.”
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">3. Micro-choice</div>
+            <div class="chain-step-body">
+              You change one small thing: tone, word, timing, duration.
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">4. Evidence update</div>
+            <div class="chain-step-body">
+              Brain gets proof: “Sometimes I do choose differently.”
+            </div>
+          </div>
+          <div class="chain-arrow">⬇</div>
+
+          <div class="chain-step">
+            <div class="chain-step-header">5. New identity story</div>
+            <div class="chain-step-body">
+              “I’m the person who sees my shadow and experiments with better moves.”
+              This is the bridge to Seeker / Monk modes.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="one-percent-box">
+        <strong>🧮 1% Game:</strong>
+        If you interrupt just <strong>one</strong> shadow reaction per day, in 100 days
+        you have 100 pieces of evidence that “I can choose, even a little.”
+        That’s how Shadow Walker becomes real mastery.
+      </div>
+    </section>
+
+    <!-- 6. GAMES -->
+    <section class="mode-section" id="games-section">
+      <h2>🎮 Shadow Walker – 5 Training Games</h2>
+      <p class="section-lead">
+        These games train your observer camera, gap detection and inner narrator.
+      </p>
+
+      <div class="games-row">
+        <!-- 1 Scene Observer -->
+        <div class="game-card">
+          <div class="game-pill">Observer camera</div>
+          <div class="game-icon">🎥</div>
+          <div class="game-name">Scene Observer</div>
+          <div class="game-desc">
+            Watch small scenes and mark what is awareness and what is reaction.
+          </div>
+          <button class="play-btn" data-game="shadowObserve">Play</button>
+        </div>
+
+        <!-- 2 Gap Meter -->
+        <div class="game-card">
+          <div class="game-pill">Gap detection</div>
+          <div class="game-icon">⏸</div>
+          <div class="game-name">Gap Meter</div>
+          <div class="game-desc">
+            Spot the tiny pause where you could choose a different move.
+          </div>
+          <button class="play-btn" data-game="shadowGap">Play</button>
+        </div>
+
+        <!-- 3 Thought Clouds 2.0 -->
+        <div class="game-card">
+          <div class="game-pill">Label inner content</div>
+          <div class="game-icon">☁</div>
+          <div class="game-name">Thought Clouds 2.0</div>
+          <div class="game-desc">
+            Tag bubbles as Thought / Feeling / Urge / Story to reduce intensity.
+          </div>
+          <button class="play-btn" data-game="shadowClouds">Play</button>
+        </div>
+
+        <!-- 4 Auto-Pilot Switch -->
+        <div class="game-card">
+          <div class="game-pill">Choice vs auto</div>
+          <div class="game-icon">🔁</div>
+          <div class="game-name">Auto-Pilot Switch</div>
+          <div class="game-desc">
+            Choose between auto reaction and conscious response in quick scenarios.
+          </div>
+          <button class="play-btn" data-game="shadowSwitch">Play</button>
+        </div>
+
+        <!-- 5 Shadow Narrator -->
+        <div class="game-card">
+          <div class="game-pill">Inner voice</div>
+          <div class="game-icon">📜</div>
+          <div class="game-name">Shadow Narrator</div>
+          <div class="game-desc">
+            Rewrite harsh self-talk into realistic, training-focused lines.
+          </div>
+          <button class="play-btn" data-game="shadowNarrator">Play</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. NEXT STEPS -->
+    <section class="mode-section">
+      <h2>🚀 After Shadow Walker – What Next?</h2>
+      <p class="section-lead">
+        Once you can notice your shadow in real time and interrupt it sometimes,
+        you’re ready to step into Seeker Mode and higher leagues.
+      </p>
+      <div class="next-steps">
+        <a href="../../journey-map.html">
+          <button class="btn-soft">⬅ Back to EQ Journey Map</button>
+        </a>
+        <a href="../../games.html">
+          <button class="btn-soft">🎮 Explore All Games</button>
+        </a>
+        <a href="../../index5.html">
+          <button class="btn-primary">📝 Take Shadow Walker Quiz</button>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <!-- GAME MODAL -->
+  <div id="game-modal">
+    <div id="game-box">
+      <div id="game-header">
+        <div>
+          <div id="game-title">Game</div>
+          <div id="game-meta"></div>
+        </div>
+        <button id="game-close">&times;</button>
+      </div>
+      <div id="game-area"></div>
+    </div>
+  </div>
+</body>
+</html>

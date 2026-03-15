@@ -1,0 +1,512 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Baseline Assessment — EQScholar</title>
+<meta name="description" content="Adaptive baseline assessment — find your weakest mind skills and get a targeted path." />
+<style>
+  /* Lightweight styles matching home page — improved contrast & readability */
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    font-family:Inter,system-ui,Segoe UI,Roboto,Arial;
+    background:linear-gradient(180deg,#071026,#021025);
+    color:#e6eef8;min-height:100vh;
+    -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+    line-height:1.45;
+  }
+
+  .container{max-width:980px;margin:96px auto 60px;padding:20px}
+  .card{
+    background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));
+    border:1px solid rgba(255,255,255,0.03);
+    padding:22px;border-radius:12px;
+    box-shadow: 0 8px 30px rgba(2,6,23,0.6);
+  }
+
+  header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+  h1{font-size:20px;color:#fff}
+  .muted{color:#9fb0d6;font-size:14px}
+
+  /* Progress */
+  .progress{height:10px;background:rgba(255,255,255,0.03);border-radius:999px;overflow:hidden;margin:14px 0}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,#7c5cff,#06b6d4);width:0%;box-shadow:0 4px 12px rgba(80,40,160,0.18); transition:width 300ms ease}
+
+  /* QUESTION */
+  .question{margin:18px 0}
+  .scenario{
+    background:linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.02));
+    padding:18px;border-radius:10px;margin-bottom:14px;border:1px solid rgba(255,255,255,0.03);
+    color:#f5f9ff;font-weight:600;font-size:16px;
+    box-shadow: inset 0 -1px 0 rgba(0,0,0,0.25);
+  }
+
+  .choices{display:grid;gap:12px}
+  .choice{
+    background:transparent;
+    border:1px solid rgba(255,255,255,0.06);
+    padding:14px 16px;border-radius:10px;cursor:pointer;
+    color:#dfeeff;text-align:left;font-size:15px;font-weight:600;
+    transition:transform 140ms ease, box-shadow 160ms ease, background 140ms ease, border-color 140ms ease;
+    display:flex;align-items:center;gap:12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.45);
+  }
+  .choice:hover{
+    transform: translateY(-4px);
+    border-color: rgba(124,92,255,0.9);
+    background: linear-gradient(180deg, rgba(107,70,255,0.06), rgba(6,182,212,0.04));
+    color:#fff;
+    box-shadow: 0 18px 40px rgba(15,10,40,0.45);
+  }
+  .choice:focus{outline:none; box-shadow:0 0 0 4px rgba(107,70,255,0.12); border-color: #6b46ff;}
+
+  /* selected state - make it unmissable */
+  .choice.selected{
+    background:linear-gradient(90deg,#6b46ff,#06b6d4);
+    border-color:transparent;
+    color:#ffffff;
+    transform: translateY(-3px);
+    box-shadow: 0 18px 40px rgba(40,10,80,0.45), 0 6px 18px rgba(6,182,212,0.06);
+  }
+
+  /* small label inside choice if needed */
+  .choice .meta {font-size:12px;color:rgba(255,255,255,0.85);opacity:0.9}
+
+  .btn-row{display:flex;gap:12px;justify-content:flex-end;margin-top:14px}
+  button.primary{
+    background:linear-gradient(90deg,#6b46ff,#06b6d4);color:#061122;border:none;padding:12px 16px;border-radius:10px;cursor:pointer;font-weight:700;
+    box-shadow: 0 10px 30px rgba(59,53,120,0.25);
+  }
+  button.ghost{background:transparent;border:1px solid rgba(255,255,255,0.04);padding:10px 14px;border-radius:10px;color:#cfe6ff;cursor:pointer}
+  button.primary:disabled{opacity:0.5;cursor:not-allowed}
+
+  .profile{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px}
+  .skill{background:rgba(255,255,255,0.02);padding:12px;border-radius:8px;display:flex;justify-content:space-between;align-items:center;color:#ecf6ff;font-weight:700}
+  small.hint{display:block;color:#9fb0d6;margin-top:6px}
+  .center{text-align:center}
+  input[type="email"]{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:#e6eef8;width:100%}
+
+  .footer-note{margin-top:18px;color:#9fb0d6;font-size:13px}
+  @media (max-width:700px){.profile{grid-template-columns:1fr}}
+
+  /* ensure clickable area is large on mobile */
+  @media (max-width:480px){
+    .choice{padding:16px 18px;font-size:16px}
+    .scenario{font-size:15px;padding:16px}
+    button.primary{padding:14px 18px}
+  }
+</style>
+
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <div>
+          <div class="muted">Baseline Assessment</div>
+          <h1>Discover your Mind Profile — 6 minute adaptive test</h1>
+        </div>
+        <div class="muted">No wrong answers • Adaptive • Actionable results</div>
+      </header>
+
+      <div id="intro" class="">
+        <p class="muted">This short assessment detects your weakest skill area and then runs a 4-question focused check. You'll see a clear Mind Profile and 3 targeted lessons — only then we ask for email to save your progress.</p>
+        <div style="margin-top:14px" class="center">
+          <button id="beginBtn" class="primary" aria-label="Begin Assessment">Begin assessment — 6 min</button>
+          <button id="demoBtn" class="ghost" style="margin-left:10px">Preview sample profile</button>
+        </div>
+      </div>
+
+      <!-- Question area -->
+      <div id="quizArea" style="display:none">
+        <div class="progress" aria-hidden="false"><i id="progBar"></i></div>
+        <div id="questionWrap"></div>
+        <div class="btn-row">
+          <button id="prevBtn" class="ghost" disabled>Back</button>
+          <button id="nextBtn" class="primary" disabled>Next</button>
+        </div>
+      </div>
+
+      <!-- Result area -->
+      <div id="resultArea" style="display:none;margin-top:14px">
+        <h2 style="margin-bottom:6px">Your Mind Profile</h2>
+        <p class="muted">This is a baseline. Train using recommended micro-lessons to close your gaps.</p>
+        <div class="profile" id="skillGrid"></div>
+
+        <div style="margin-top:12px">
+          <h3 style="margin-bottom:6px">Top 3 recommended micro-lessons</h3>
+          <ol id="lessonList" class="muted"></ol>
+        </div>
+
+        <div style="margin-top:12px">
+          <label for="email" class="muted">Save your profile (optional) so we can preserve progress:</label>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <input id="email" type="email" placeholder="you@domain.com" aria-label="email to save profile">
+            <button id="saveBtn" class="primary">Save profile</button>
+            <button id="continueBtn" class="ghost">Continue without saving</button>
+          </div>
+          <small class="footer-note">We only store minimal profile data. See privacy page for details.</small>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+<script>
+/* =============================
+   SIMPLE ADAPTIVE QUIZ ENGINE
+   - Screening questions: first 6 short scenarios
+   - Each question maps to skillTags[] and has weight
+   - After 6, engine finds lowest scoring skill and loads 4 focused questions on that skill
+   - Scoring is simple: choose option -> assign points to skills
+   - This is client-side demo logic; move to server for production
+   ============================= */
+
+/* ---------- QUESTION BANK (expandable) ---------- 
+Each question: { id, text, choices:[{text,scoreMap}], skills:[] }
+scoreMap: {skillId: points} => when this choice selected, add points to skills.
+*/
+const QUESTION_BANK = [
+  // Screening (6)
+  { id: 's1', text: 'Your colleague takes partial credit for your work in a meeting. You:', skills:['A','B'], choices:[
+    { text: 'Call them out publicly — they must be exposed', scoreMap:{A: -1, B: 0} },
+    { text: 'Speak privately later to clarify', scoreMap:{A: 2, B: 1} },
+    { text: 'Let it go; focus on long-term reputation', scoreMap:{A: 1, B: 2} },
+    { text: 'Document and escalate to manager', scoreMap:{A: 0, B: -1} }
+  ]},
+  { id: 's2', text: 'You must decide between two jobs: high-pay vs meaningful low-pay. You:', skills:['C','D'], choices:[
+    { text: 'Take high-pay; security matters', scoreMap:{C: -1, D: 0} },
+    { text: 'Pick meaningful work even if pay less', scoreMap:{C: 2, D: 1} },
+    { text: 'Ask mentors and gather more data', scoreMap:{C: 1, D: 2} },
+    { text: 'Flip a coin — decisions are futile', scoreMap:{C: -1, D: -1} }
+  ]},
+  { id: 's3', text: 'Someone insults you online. You:', skills:['B','E'], choices:[
+    { text: 'Fire back — show them they are wrong', scoreMap:{B: -1, E: 0} },
+    { text: 'Ignore and block', scoreMap:{B: 1, E: 1} },
+    { text: 'Reflect on why it hurt; write privately', scoreMap:{B: 2, E: 2} },
+    { text: 'Share publicly to get support', scoreMap:{B: 0, E: -1} }
+  ]},
+  { id: 's4', text: 'A plan you relied on fails. Your immediate response:', skills:['C','D'], choices:[
+    { text: 'Panic and blame others', scoreMap:{C: -1, D: -1} },
+    { text: 'Analyze causes and rebuild', scoreMap:{C: 2, D: 2} },
+    { text: 'Wait for direction from leader', scoreMap:{C: 0, D: 0} },
+    { text: 'Ignore and move to next task', scoreMap:{C: 1, D: 0} }
+  ]},
+  { id: 's5', text: 'During a heated debate you notice you are losing control. You:', skills:['B','E'], choices:[
+    { text: 'Raise voice to dominate', scoreMap:{B: -1, E: -1} },
+    { text: 'Take a breath, ask to pause', scoreMap:{B: 2, E: 2} },
+    { text: 'Change topic to avoid conflict', scoreMap:{B: 0, E: 0} },
+    { text: 'Walk away silently', scoreMap:{B: 1, E: 0} }
+  ]},
+  { id: 's6', text: 'You must learn a hard skill quickly. Which approach?', skills:['C','F'], choices:[
+    { text: 'Practice small chunks daily', scoreMap:{C: 2, F: 1} },
+    { text: 'Read everything first, then practice', scoreMap:{C: 1, F: 0} },
+    { text: 'Find an expert mentor', scoreMap:{C: 2, F: 2} },
+    { text: 'Ignore it — focus on what you know', scoreMap:{C: -1, F: -1} }
+  ]},
+
+  // Focused questions for skill A (Ahamkara / Ego clarity)
+  { id: 'A1', text: 'You are praised publicly but notice envy in a teammate. You:', skills:['A'], choices:[
+    { text:'Use praise to uplift team and acknowledge them', scoreMap:{A:3} },
+    { text:'Enjoy praise privately; ignore others', scoreMap:{A:1} },
+    { text:'Diminish the praise by pointing out faults', scoreMap:{A:0} },
+    { text:'Avoid team until praise fades', scoreMap:{A:-1} }
+  ]},
+  { id: 'A2', text: 'A mentor criticizes your work sharply. You:', skills:['A'], choices:[
+    { text:'Listen, ask for specifics, apply feedback', scoreMap:{A:3} },
+    { text:'Defend yourself and list reasons', scoreMap:{A:0} },
+    { text:'Ignore and continue unchanged', scoreMap:{A:-1} },
+    { text:'Quit the task entirely', scoreMap:{A:-2} }
+  ]},
+  { id: 'A3', text: 'You win a competition. Which thought is likely?', skills:['A'], choices:[
+    { text:'This win shows my learning; how to improve next', scoreMap:{A:2} },
+    { text:'I am better than others', scoreMap:{A:-2} },
+    { text:'Luck played a role', scoreMap:{A:0} },
+    { text:'I deserve public praise', scoreMap:{A:-1} }
+  ]},
+  { id: 'A4', text: 'You are ignored in a group conversation. You:', skills:['A'], choices:[
+    { text:'Observe, then contribute a useful point', scoreMap:{A:2} },
+    { text:'Interrupt to be heard', scoreMap:{A:-1} },
+    { text:'Leave the group', scoreMap:{A:-2} },
+    { text:'Post about it later online', scoreMap:{A:0} }
+  ]},
+
+  // (Add focused banks for other skills B,C,D,E,F similarly)
+];
+
+/* ---------- SKILL LIST DEFINITIONS ----------
+ A: Ego clarity (Ahamkara)
+ B: Patience / impulse control
+ C: Cognitive learning strategy
+ D: Decision clarity (Viveka)
+ E: Emotional processing / reflection
+ F: Practice discipline / learning persistence
+-------------------------------------------*/
+const SKILLS = {
+  'A': { name:'Ego Clarity', short:'Ego', color:'#ffd68a' },
+  'B': { name:'Impulse Control', short:'Patience', color:'#9bdcff' },
+  'C': { name:'Learning Strategy', short:'Learning', color:'#c6f6d5' },
+  'D': { name:'Decision Clarity', short:'Clarity', color:'#f7c6ff' },
+  'E': { name:'Emotional Reflection', short:'Reflection', color:'#f8d7a8' },
+  'F': { name:'Practice Discipline', short:'Discipline', color:'#bde0ff' }
+};
+
+/* ---------- STATE ---------- */
+let state = {
+  phase: 'intro', // intro | screening | focused | result
+  screeningOrder: [], // ids of first screening questions
+  answers: {}, // qid -> choiceIndex
+  scores: {}, // skillId -> numeric
+  questionQueue: [], // active questions to show
+  currentIndex: 0,
+  focusedSkill: null
+};
+
+/* ---------- UTIL ---------- */
+function pickScreeningQs() {
+  // choose first 6 screening items (s1..s6) in bank order or randomize
+  return QUESTION_BANK.filter(q => q.id.startsWith('s')).slice(0,6).map(q=>q.id);
+}
+
+function resetState() {
+  state = { phase:'intro', screeningOrder:[], answers:{}, scores:{}, questionQueue:[], currentIndex:0, focusedSkill:null };
+}
+
+function renderIntro() {
+  document.getElementById('intro').style.display = '';
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('resultArea').style.display = 'none';
+}
+
+function startScreening() {
+  // prepare
+  state.screeningOrder = pickScreeningQs();
+  state.phase = 'screening';
+  state.currentIndex = 0;
+  state.questionQueue = state.screeningOrder.slice();
+  // init scores
+  Object.keys(SKILLS).forEach(k => state.scores[k]=0);
+  document.getElementById('intro').style.display = 'none';
+  document.getElementById('quizArea').style.display = '';
+  document.getElementById('resultArea').style.display = 'none';
+  renderQuestion();
+}
+
+function getQuestionById(id) {
+  return QUESTION_BANK.find(q => q.id === id);
+}
+
+function renderQuestion() {
+  const qWrap = document.getElementById('questionWrap');
+  qWrap.innerHTML = '';
+  const idx = state.currentIndex;
+  const qid = state.questionQueue[idx];
+  if (!qid) return;
+  const q = getQuestionById(qid);
+  // progress
+  const total = state.phase === 'screening' ? state.questionQueue.length : state.questionQueue.length;
+  const progressPct = Math.round(((idx) / total) * 100);
+  document.getElementById('progBar').style.width = progressPct + '%';
+
+  // question DOM
+  const el = document.createElement('div');
+  el.className = 'question';
+  el.innerHTML = `
+    <div class="scenario"><strong>Scenario:</strong><div style="margin-top:6px">${escapeHtml(q.text)}</div></div>
+    <div class="choices" role="list"></div>
+  `;
+  qWrap.appendChild(el);
+  const choicesDiv = el.querySelector('.choices');
+
+  q.choices.forEach((ch, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'choice';
+    btn.type = 'button';
+    btn.innerHTML = `<div style="text-align:left">${escapeHtml(ch.text)}</div>`;
+    btn.addEventListener('click', () => {
+      // mark selected visually
+      el.querySelectorAll('.choice').forEach(c => c.classList.remove('selected'));
+      btn.classList.add('selected');
+      // record answer
+      state.answers[q.id] = i;
+      document.getElementById('nextBtn').disabled = false;
+    });
+    choicesDiv.appendChild(btn);
+  });
+
+  // next/prev button states
+  document.getElementById('prevBtn').disabled = idx === 0 ? true : false;
+  document.getElementById('nextBtn').disabled = state.answers[qid] === undefined;
+}
+
+function applyChoiceToScores(qid, choiceIndex) {
+  const q = getQuestionById(qid);
+  if (!q) return;
+  const choice = q.choices[choiceIndex];
+  if (!choice || !choice.scoreMap) return;
+  Object.entries(choice.scoreMap).forEach(([skillId, delta]) => {
+    if (!state.scores[skillId]) state.scores[skillId] = 0;
+    state.scores[skillId] += delta;
+  });
+}
+
+function goNext() {
+  const qid = state.questionQueue[state.currentIndex];
+  const chosen = state.answers[qid];
+  if (chosen === undefined) return;
+  // apply scoring for current question
+  applyChoiceToScores(qid, chosen);
+
+  // advance pointer
+  state.currentIndex++;
+  // if screening finished, determine weakest skill and load focused questions
+  if (state.phase === 'screening' && state.currentIndex >= state.questionQueue.length) {
+    determineFocusedSkillAndLoad();
+    return;
+  }
+  // if focused finished -> results
+  if (state.phase === 'focused' && state.currentIndex >= state.questionQueue.length) {
+    showResults();
+    return;
+  }
+  renderQuestion();
+}
+
+function goPrev() {
+  // allow going back (remove last scoring effect)
+  if (state.currentIndex === 0) return;
+  // undo scoring for current index-1 selection
+  const prevIndex = state.currentIndex - 1;
+  const prevQid = state.questionQueue[prevIndex];
+  const prevChoice = state.answers[prevQid];
+  // reverse the applied scores by subtracting
+  if (prevChoice !== undefined) {
+    const prevQ = getQuestionById(prevQid);
+    Object.entries(prevQ.choices[prevChoice].scoreMap || {}).forEach(([skillId, delta])=>{
+      state.scores[skillId] = (state.scores[skillId] || 0) - delta;
+    });
+  }
+  // move pointer back
+  state.currentIndex = prevIndex;
+  // clear the recorded answer for the question we moved back from (optional)
+  // delete state.answers[state.questionQueue[state.currentIndex+1]];
+  renderQuestion();
+}
+
+function determineFocusedSkillAndLoad() {
+  // find skill with lowest score (we scored with positives for good choices)
+  let lowest = null;
+  Object.entries(state.scores).forEach(([k,v]) => {
+    if (lowest === null || v < lowest.value) lowest = { key:k, value:v };
+  });
+  state.focusedSkill = lowest.key;
+  state.phase = 'focused';
+  // pick focused questions from bank where id startsWith skillId (like 'A1','A2' etc)
+  const focusedQs = QUESTION_BANK.filter(q => q.id.startsWith(state.focusedSkill)).slice(0,4).map(q=>q.id);
+  if (focusedQs.length === 0) {
+    // if no focused questions available, skip to results
+    showResults();
+    return;
+  }
+  state.questionQueue = focusedQs;
+  state.currentIndex = 0;
+  // reset nextBtn disabled state (will be set by renderQuestion)
+  renderQuestion();
+}
+
+/* ---------- RESULTS ---------- */
+function showResults() {
+  state.phase = 'result';
+  document.getElementById('quizArea').style.display = 'none';
+  document.getElementById('resultArea').style.display = '';
+  renderProfile();
+}
+
+function normalizeScoresForDisplay(scores) {
+  // simple normalization: map raw scores to 0..100 by shifting and scaling
+  // find min/max
+  const vals = Object.values(scores);
+  const min = Math.min(...vals);
+  const max = Math.max(...vals);
+  const range = Math.max(1, max - min);
+  const mapped = {};
+  Object.entries(scores).forEach(([k,v])=>{
+    // lower raw values -> lower percentages (we invert if needed)
+    mapped[k] = Math.round(((v - min) / range) * 100);
+  });
+  return mapped;
+}
+
+function renderProfile() {
+  const grid = document.getElementById('skillGrid');
+  grid.innerHTML = '';
+  const normalized = normalizeScoresForDisplay(state.scores);
+  // create skill blocks (sort by lowest first)
+  const sorted = Object.keys(normalized).sort((a,b)=> normalized[a]-normalized[b]);
+  sorted.forEach(k=>{
+    const div = document.createElement('div');
+    div.className = 'skill';
+    div.innerHTML = `<div>${SKILLS[k].name}</div><div><strong>${normalized[k]}</strong></div>`;
+    grid.appendChild(div);
+  });
+
+  // generate lesson recommendations (top 3 targetting weakest skills)
+  const lessonList = document.getElementById('lessonList');
+  lessonList.innerHTML = '';
+  const weakest = sorted.slice(0,3);
+  const LESSON_MAP = {
+    'A':'Micro-lesson: Reduce ego bias — 7min practice',
+    'B':'Micro-lesson: 3 breath resets for impulse control',
+    'C':'Micro-lesson: Chunked learning & spaced repetition',
+    'D':'Micro-lesson: Viveka — decision clarity framework',
+    'E':'Micro-lesson: Journaling for emotional processing',
+    'F':'Micro-lesson: 5-day practice discipline bootcamp'
+  };
+  weakest.forEach(k=>{
+    const li = document.createElement('li');
+    li.textContent = LESSON_MAP[k] || 'Focused micro-lesson';
+    lessonList.appendChild(li);
+  });
+}
+
+/* ---------- UI WIRING ---------- */
+document.getElementById('beginBtn').addEventListener('click', ()=> startScreening());
+document.getElementById('demoBtn').addEventListener('click', ()=> {
+  // show a demo profile quickly without running test
+  state.scores = {'A':2,'B':5,'C':1,'D':3,'E':4,'F':2};
+  showResults();
+});
+
+document.getElementById('nextBtn').addEventListener('click', ()=> goNext());
+document.getElementById('prevBtn').addEventListener('click', ()=> goPrev());
+
+document.getElementById('saveBtn').addEventListener('click', ()=>{
+  const email = document.getElementById('email').value.trim();
+  if (!email || !email.includes('@')) {
+    alert('Enter a valid email to save your profile.');
+    return;
+  }
+  // store minimal profile locally for demo — replace with server API in production
+  const normalized = normalizeScoresForDisplay(state.scores);
+  const payload = { email, profile: normalized, focused: state.focusedSkill, timestamp: Date.now() };
+  localStorage.setItem('eq_profile_'+email, JSON.stringify(payload));
+  alert('Profile saved locally. In production we will save this on server.');
+});
+
+document.getElementById('continueBtn').addEventListener('click', ()=>{
+  // user continues — redirect to lessons or quiz runner
+  window.location.href = 'lesson2.html'; // change to whatever page you use for lessons
+});
+
+/* ---------- helper: escape html ---------- */
+function escapeHtml(str) {
+  return String(str).replace(/[&<>"'`=\/]/g, function (s) {
+    return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;',"/":'&#47;','`':'&#96;','=':'&#61;'})[s];
+  });
+}
+
+/* ---------- render initial state ---------- */
+renderIntro();
+</script>
+</body>
+</html>

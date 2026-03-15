@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EQ Quiz - Multiple Design Variations</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Arial', sans-serif;
+            background: #000;
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        .variation-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.9);
+            padding: 15px;
+            border-radius: 10px;
+            border: 1px solid #333;
+        }
+        
+        .variation-selector select {
+            background: #333;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        
+        .variation {
+            display: none;
+            min-height: 100vh;
+        }
+        
+        .variation.active {
+            display: block;
+        }
+        
+        /* VARIATION 1: Cyberpunk Style */
+        .v1 {
+            background: linear-gradient(135deg, #0f0f23, #1a1a2e, #16213e);
+        }
+        
+        .v1 .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .v1 .duality-split {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            position: relative;
+        }
+        
+        .v1 .god-half {
+            width: 50%;
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            clip-path: polygon(0 0, 80% 0, 70% 100%, 0 100%);
+        }
+        
+        .v1 .devil-half {
+            width: 50%;
+            background: linear-gradient(45deg, #ff0080, #ff4040);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            clip-path: polygon(30% 0, 100% 0, 100% 100%, 20% 100%);
+        }
+        
+        .v1 .symbol {
+            font-size: 120px;
+            margin-bottom: 20px;
+            text-shadow: 0 0 30px currentColor;
+            animation: v1-glow 2s ease-in-out infinite alternate;
+        }
+        
+        .v1 .center-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0,0,0,0.9);
+            padding: 60px;
+            border: 2px solid #00ff88;
+            border-radius: 0;
+            box-shadow: 0 0 50px #00ff88;
+        }
+        
+        .v1 .main-text {
+            font-size: 56px;
+            font-weight: bold;
+            background: linear-gradient(45deg, #00ff88, #ff0080);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            margin-bottom: 20px;
+        }
+        
+        .v1 .cta {
+            background: linear-gradient(45deg, #ff0080, #00ff88);
+            border: none;
+            padding: 20px 50px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 2px;
+        }
+        
+        .v1 .cta:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 30px #ff0080;
+        }
+        
+        @keyframes v1-glow {
+            from { text-shadow: 0 0 20px currentColor; }
+            to { text-shadow: 0 0 40px currentColor, 0 0 60px currentColor; }
+        }
+        
+        /* VARIATION 2: Dark Academic */
+        .v2 {
+            background: radial-gradient(circle at center, #2c1810, #1a0f08);
+        }
+        
+        .v2 .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .v2 .book-container {
+            width: 800px;
+            height: 500px;
+            position: relative;
+            background: linear-gradient(135deg, #8b4513, #654321);
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            transform: perspective(1000px) rotateX(5deg);
+        }
+        
+        .v2 .book-left {
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffd700, #ffed4e);
+            border-radius: 20px 0 0 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #8b4513;
+        }
+        
+        .v2 .book-right {
+            position: absolute;
+            right: 0;
+            top: 0;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #4a0e0e, #2c0505);
+            border-radius: 0 20px 20px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: #ff6b6b;
+        }
+        
+        .v2 .page-symbol {
+            font-size: 80px;
+            margin-bottom: 30px;
+            filter: drop-shadow(2px 2px 10px rgba(0,0,0,0.5));
+        }
+        
+        .v2 .overlay-quote {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0,0,0,0.85);
+            padding: 50px;
+            border: 3px solid #ffd700;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .v2 .academic-title {
+            font-family: serif;
+            font-size: 48px;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+        }
+        
+        /* VARIATION 3: Minimalist Zen */
+        .v3 {
+            background: linear-gradient(180deg, #f8f9fa, #e9ecef);
+            color: #212529;
+        }
+        
+        .v3 .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .v3 .yin-yang-container {
+            width: 600px;
+            height: 600px;
+            position: relative;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .v3 .yang-side {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            float: left;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 300px 0 0 300px;
+        }
+        
+        .v3 .yin-side {
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(135deg, #212529, #495057);
+            float: right;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0 300px 300px 0;
+            color: white;
+        }
+        
+        .v3 .zen-symbol {
+            font-size: 60px;
+            margin-bottom: 20px;
+            opacity: 0.8;
+        }
+        
+        .v3 .zen-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(255,255,255,0.95);
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        .v3 .zen-title {
+            font-size: 42px;
+            color: #495057;
+            margin-bottom: 15px;
+            font-weight: 300;
+        }
+        
+        /* VARIATION 4: Neon Retro */
+        .v4 {
+            background: linear-gradient(135deg, #0c0c0c, #1a0033, #330066);
+        }
+        
+        .v4 .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .v4 .neon-frame {
+            width: 900px;
+            height: 500px;
+            border: 4px solid #ff00ff;
+            border-radius: 20px;
+            box-shadow: 0 0 50px #ff00ff, inset 0 0 50px rgba(255,0,255,0.1);
+            position: relative;
+            animation: v4-pulse 3s ease-in-out infinite;
+        }
+        
+        .v4 .light-side {
+            position: absolute;
+            left: 20px;
+            top: 20px;
+            width: calc(50% - 30px);
+            height: calc(100% - 40px);
+            background: linear-gradient(135deg, #00ffff, #0080ff);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px #00ffff;
+        }
+        
+        .v4 .dark-side {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            width: calc(50% - 30px);
+            height: calc(100% - 40px);
+            background: linear-gradient(135deg, #ff0080, #8000ff);
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 30px #ff0080;
+        }
+        
+        .v4 .neon-icon {
+            font-size: 80px;
+            text-shadow: 0 0 20px currentColor;
+            margin-bottom: 20px;
+        }
+        
+        .v4 .retro-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(0,0,0,0.9);
+            padding: 50px;
+            border: 2px solid #00ffff;
+            border-radius: 10px;
+            box-shadow: 0 0 40px #00ffff;
+        }
+        
+        .v4 .retro-title {
+            font-size: 48px;
+            color: #00ffff;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #00ffff;
+            animation: v4-flicker 2s ease-in-out infinite alternate;
+        }
+        
+        @keyframes v4-pulse {
+            0%, 100% { box-shadow: 0 0 50px #ff00ff, inset 0 0 50px rgba(255,0,255,0.1); }
+            50% { box-shadow: 0 0 80px #ff00ff, inset 0 0 80px rgba(255,0,255,0.2); }
+        }
+        
+        @keyframes v4-flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        /* VARIATION 5: Glass Morphism */
+        .v5 {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+        
+        .v5 .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .v5 .glass-container {
+            width: 800px;
+            height: 500px;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.2);
+            border-radius: 30px;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+        
+        .v5 .glass-left {
+            position: absolute;
+            left: 30px;
+            top: 30px;
+            width: calc(50% - 45px);
+            height: calc(100% - 60px);
+            background: rgba(255,215,0,0.3);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(255,215,0,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .v5 .glass-right {
+            position: absolute;
+            right: 30px;
+            top: 30px;
+            width: calc(50% - 45px);
+            height: calc(100% - 60px);
+            background: rgba(220,20,60,0.3);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            border: 1px solid rgba(220,20,60,0.4);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .v5 .glass-icon {
+            font-size: 70px;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+        
+        .v5 .glass-overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(25px);
+            padding: 50px;
+            border-radius: 25px;
+            border: 1px solid rgba(255,255,255,0.3);
+        }
+        
+        .v5 .glass-title {
+            font-size: 45px;
+            color: white;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        /* Common Rewards Section */
+        .rewards-section {
+            padding: 80px 40px;
+            text-align: center;
+            margin-top: 50px;
+        }
+        
+        .rewards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+        
+        .reward-card {
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: transform 0.3s ease;
+        }
+        
+        .reward-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .v1 .reward-card { background: rgba(0,255,136,0.1); }
+        .v2 .reward-card { background: rgba(255,215,0,0.1); }
+        .v3 .reward-card { background: rgba(255,255,255,0.9); color: #212529; }
+        .v4 .reward-card { background: rgba(0,255,255,0.1); }
+        .v5 .reward-card { background: rgba(255,255,255,0.1); }
+        
+        .common-btn {
+            padding: 15px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            margin-top: 30px;
+        }
+        
+        @media (max-width: 768px) {
+            .duality-split { flex-direction: column; }
+            .god-half, .devil-half, .yang-side, .yin-side { width: 100%; height: 50%; clip-path: none; }
+            .book-container, .yin-yang-container, .neon-frame, .glass-container { width: 90%; height: 400px; }
+            .center-message, .overlay-quote, .zen-overlay, .retro-overlay, .glass-overlay { padding: 30px; }
+            .main-text, .academic-title, .zen-title, .retro-title, .glass-title { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="variation-selector">
+        <label for="variation-select" style="color: white; margin-right: 10px;">Choose Design:</label>
+        <select id="variation-select" onchange="switchVariation(this.value)">
+            <option value="v1">Cyberpunk Neon</option>
+            <option value="v2">Dark Academic</option>
+            <option value="v3">Minimalist Zen</option>
+            <option value="v4">Retro Gaming</option>
+            <option value="v5">Glass Morphism</option>
+        </select>
+    </div>
+
+    <!-- VARIATION 1: Cyberpunk Style -->
+    <div class="variation v1 active">
+        <div class="hero">
+            <div class="duality-split">
+                <div class="god-half">
+                    <div class="symbol">⚡</div>
+                    <h3>ENLIGHTENMENT</h3>
+                    <p>Channel your energy<br>towards wisdom</p>
+                </div>
+                <div class="devil-half">
+                    <div class="symbol">🔥</div>
+                    <h3>DESTRUCTION</h3>
+                    <p>Let anger consume<br>your potential</p>
+                </div>
+                <div class="center-message">
+                    <div class="main-text">UNLOCK YOUR POWER</div>
+                    <p style="color: #ccc; margin-bottom: 30px;">The choice defines your reality</p>
+                    <button class="cta" onclick="startQuiz()">ENTER THE MATRIX</button>
+                </div>
+            </div>
+        </div>
+        <div class="rewards-section" style="background: linear-gradient(135deg, #0f0f23, #1a1a2e);">
+            <h2 style="color: #00ff88; font-size: 36px; margin-bottom: 20px;">🏆 ELITE REWARDS PROGRAM</h2>
+            <div class="rewards-grid">
+                <div class="reward-card">
+                    <h3 style="color: #00ff88;">TOP 3</h3>
+                    <p>$500 + Certification<br>+ VIP Mentorship</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: #ff0080;">RANK 4-8</h3>
+                    <p>$200 + Workshop<br>+ Premium Resources</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: #00d4ff;">RANK 9-15</h3>
+                    <p>$100 + Certificate<br>+ Resource Library</p>
+                </div>
+            </div>
+            <button class="common-btn" style="background: linear-gradient(45deg, #00ff88, #ff0080); color: white;">HACK THE LEADERBOARD</button>
+        </div>
+    </div>
+
+    <!-- VARIATION 2: Dark Academic -->
+    <div class="variation v2">
+        <div class="hero">
+            <div class="book-container">
+                <div class="book-left">
+                    <div class="page-symbol">📚</div>
+                    <h3>WISDOM</h3>
+                    <p>Knowledge illuminates<br>the path forward</p>
+                </div>
+                <div class="book-right">
+                    <div class="page-symbol">⚔️</div>
+                    <h3>VENGEANCE</h3>
+                    <p>Darkness consumes<br>rational thought</p>
+                </div>
+                <div class="overlay-quote">
+                    <div class="academic-title">UNLOCK YOUR POWER</div>
+                    <p style="color: #ccc; font-style: italic; margin-bottom: 25px;">"The unexamined life is not worth living" - Socrates</p>
+                    <button class="common-btn" style="background: #8b4513; color: #ffd700;" onclick="startQuiz()">OPEN THE TOME</button>
+                </div>
+            </div>
+        </div>
+        <div class="rewards-section" style="background: radial-gradient(circle, #2c1810, #1a0f08);">
+            <h2 style="color: #ffd700; font-size: 36px; margin-bottom: 20px;">🎓 SCHOLARLY HONORS</h2>
+            <div class="rewards-grid">
+                <div class="reward-card">
+                    <h3 style="color: #ffd700;">MAGNA CUM LAUDE</h3>
+                    <p>$500 Prize + Honorary Degree<br>+ Research Fellowship</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: #daa520;">CUM LAUDE</h3>
+                    <p>$200 Prize + Certificate<br>+ Academic Workshop</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: #cd853f;">HONORS</h3>
+                    <p>$100 Prize + Recognition<br>+ Library Access</p>
+                </div>
+            </div>
+            <button class="common-btn" style="background: #8b4513; color: #ffd700;">JOIN THE ACADEMY</button>
+        </div>
+    </div>
+
+    <!-- VARIATION 3: Minimalist Zen -->
+    <div class="variation v3">
+        <div class="hero">
+            <div class="yin-yang-container">
+                <div class="yang-side">
+                    <div class="zen-symbol">☯️</div>
+                    <h3>HARMONY</h3>
+                    <p>Balance creates<br>inner peace</p>
+                </div>
+                <div class="yin-side">
+                    <div class="zen-symbol">⚡</div>
+                    <h3>CHAOS</h3>
+                    <p>Disorder breeds<br>suffering</p>
+                </div>
+                <div class="zen-overlay">
+                    <div class="zen-title">UNLOCK YOUR POWER</div>
+                    <p style="color: #666; margin-bottom: 25px;">Find balance within yourself</p>
+                    <button class="common-btn" style="background: #495057; color: white;" onclick="startQuiz()">BEGIN MEDITATION</button>
+                </div>
+            </div>
+        </div>
+        <div class="rewards-section" style="background: linear-gradient(180deg, #e9ecef, #f8f9fa);">
+            <h2 style="color: #495057; font-size: 36px; margin-bottom: 20px;">🧘 MINDFUL REWARDS</h2>
+            <div class="rewards-grid">
+                <div class="reward-card">
+                    <h3 style="color: #495057;">MASTER LEVEL</h3>
+                    <p>$500 + Certification<br>+ Meditation Retreat</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: #6c757d;">PRACTITIONER</h3>
+                    <p>$200 + Workshop<br>+ Mindfulness Tools</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: #868e96;">STUDENT</h3>
+                    <p>$100 + Certificate<br>+ Guided Sessions</p>
+                </div>
+            </div>
+            <button class="common-btn" style="background: #495057; color: white;">FIND YOUR BALANCE</button>
+        </div>
+    </div>
+
+    <!-- VARIATION 4: Neon Retro -->
+    <div class="variation v4">
+        <div class="hero">
+            <div class="neon-frame">
+                <div class="light-side">
+                    <div class="neon-icon">🎮</div>
+                    <h3>PLAYER ONE</h3>
+                    <p>Choose cooperation<br>Level up together</p>
+                </div>
+                <div class="dark-side">
+                    <div class="neon-icon">💀</div>
+                    <h3>GAME OVER</h3>
+                    <p>Select destruction<br>Everyone loses</p>
+                </div>
+                <div class="retro-overlay">
+                    <div class="retro-title">UNLOCK YOUR POWER</div>
+                    <p style="color: #ff00ff; margin-bottom: 25px;">Ready Player One?</p>
+                    <button class="common-btn" style="background: linear-gradient(45deg, #00ffff, #ff0080); color: white;" onclick="startQuiz()">INSERT COIN</button>
+                </div>
+            </div>
+        </div>
+        <div class="rewards-section" style="background: linear-gradient(135deg, #0c0c0c, #1a0033);">
+            <h2 style="color: #00ffff; font-size: 36px; margin-bottom: 20px;">🏅 HIGH SCORE REWARDS</h2>
+            <div class="rewards-grid">
+                <div class="reward-card">
+                    <h3 style="color: #00ffff;">LEGENDARY</h3>
+                    <p>$500 + Golden Trophy<br>+ Hall of Fame</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: #ff0080;">EPIC</h3>
+                    <p>$200 + Silver Badge<br>+ Power-Up Pack</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: #8000ff;">RARE</h3>
+                    <p>$100 + Bronze Medal<br>+ Bonus Round</p>
+                </div>
+            </div>
+            <button class="common-btn" style="background: linear-gradient(45deg, #00ffff, #ff0080); color: white;">PLAY TO WIN</button>
+        </div>
+    </div>
+
+    <!-- VARIATION 5: Glass Morphism -->
+    <div class="variation v5">
+        <div class="hero">
+            <div class="glass-container">
+                <div class="glass-left">
+                    <div class="glass-icon">✨</div>
+                    <h3>CLARITY</h3>
+                    <p>See through illusions<br>with pure intention</p>
+                </div>
+                <div class="glass-right">
+                    <div class="glass-icon">🌪️</div>
+                    <h3>CONFUSION</h3>
+                    <p>Lost in the storm<br>of negative emotions</p>
+                </div>
+                <div class="glass-overlay">
+                    <div class="glass-title">UNLOCK YOUR POWER</div>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 25px;">Transparency reveals truth</p>
+                    <button class="common-btn" style="background: rgba(255,255,255,0.2); color: white; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);" onclick="startQuiz()">REVEAL YOURSELF</button>
+                </div>
+            </div>
+        </div>
+        <div class="rewards-section" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+            <h2 style="color: white; font-size: 36px; margin-bottom: 20px;">💎 CRYSTAL CLEAR REWARDS</h2>
+            <div class="rewards-grid">
+                <div class="reward-card">
+                    <h3 style="color: white;">DIAMOND TIER</h3>
+                    <p>$500 + Crystal Trophy<br>+ Elite Coaching</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: white;">PLATINUM TIER</h3>
+                    <p>$200 + Glass Award<br>+ Premium Workshop</p>
+                </div>
+                <div class="reward-card">
+                    <h3 style="color: white;">GOLD TIER</h3>
+                    <p>$100 + Certificate<br>+ Resource Access</p>
+                </div>
+            </div>
+            <button class="common-btn" style="background: rgba(255,255,255,0.2); color: white; backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.3);">CLAIM YOUR PRIZE</button>
+        </div>
+    </div>
+
+    <script>
+        function switchVariation(variation) {
+            // Hide all variations
+            document.querySelectorAll('.variation').forEach(v => {
+                v.classList.remove('active');
+            });
+            
+            // Show selected variation
+            document.querySelector('.v' + variation.charAt(1)).classList.add('active');
+        }
+        
+        function startQuiz() {
+            const variation = document.querySelector('.variation.active').classList[1];
+            const messages = {
+                v1: 'Welcome to the Matrix of Emotional Intelligence! Your cybernetic journey begins now.',
+                v2: 'The ancient tome of wisdom opens before you. Your scholarly quest for emotional mastery awaits.',
+                v3: 'Find your center and begin the path to inner balance. Your mindful journey starts here.',
+                v4: 'Game Start! Player One, prepare for the ultimate EQ challenge. Insert your emotions to continue.',
+                v5: 'Through the looking glass of self-awareness, your transparent journey to emotional clarity begins.'
+            };
+            
+            alert(messages[variation] || 'Your emotional intelligence journey begins now!');
+            // In a real implementation, this would navigate to the quiz
+        }
+
+        // Add dynamic background effects for each variation
+        function createBackgroundEffects() {
+            const activeVariation = document.querySelector('.variation.active');
+            
+            // Remove existing effects
+            document.querySelectorAll('.bg-effect').forEach(effect => effect.remove());
+            
+            if (activeVariation.classList.contains('v1')) {
+                // Cyberpunk matrix rain effect
+                createMatrixRain();
+            } else if (activeVariation.classList.contains('v4')) {
+                // Retro gaming particles
+                createRetroParticles();
+            } else if (activeVariation.classList.contains('v5')) {
+                // Floating glass orbs
+                createGlassOrbs();
+            }
+        }
+        
+        function createMatrixRain() {
+            const hero = document.querySelector('.v1 .hero');
+            for (let i = 0; i < 20; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'bg-effect matrix-drop';
+                drop.style.cssText = `
+                    position: absolute;
+                    left: ${Math.random() * 100}%;
+                    top: -50px;
+                    width: 2px;
+                    height: 100px;
+                    background: linear-gradient(to bottom, transparent, #00ff88, transparent);
+                    animation: matrix-fall ${3 + Math.random() * 3}s linear infinite;
+                    animation-delay: ${Math.random() * 3}s;
+                `;
+                hero.appendChild(drop);
+            }
+            
+            // Add matrix fall animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes matrix-fall {
+                    to { transform: translateY(100vh); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        function createRetroParticles() {
+            const hero = document.querySelector('.v4 .hero');
+            for (let i = 0; i < 15; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'bg-effect retro-particle';
+                particle.style.cssText = `
+                    position: absolute;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    width: 4px;
+                    height: 4px;
+                    background: ${Math.random() > 0.5 ? '#00ffff' : '#ff0080'};
+                    box-shadow: 0 0 10px currentColor;
+                    animation: retro-float ${4 + Math.random() * 4}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 2}s;
+                `;
+                hero.appendChild(particle);
+            }
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes retro-float {
+                    0%, 100% { transform: translateY(0px) rotate(0deg); opacity: 1; }
+                    50% { transform: translateY(-20px) rotate(180deg); opacity: 0.5; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        function createGlassOrbs() {
+            const hero = document.querySelector('.v5 .hero');
+            for (let i = 0; i < 10; i++) {
+                const orb = document.createElement('div');
+                orb.className = 'bg-effect glass-orb';
+                const size = 20 + Math.random() * 40;
+                orb.style.cssText = `
+                    position: absolute;
+                    left: ${Math.random() * 100}%;
+                    top: ${Math.random() * 100}%;
+                    width: ${size}px;
+                    height: ${size}px;
+                    background: rgba(255,255,255,0.1);
+                    border-radius: 50%;
+                    backdrop-filter: blur(5px);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    animation: glass-drift ${6 + Math.random() * 6}s ease-in-out infinite;
+                    animation-delay: ${Math.random() * 3}s;
+                `;
+                hero.appendChild(orb);
+            }
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes glass-drift {
+                    0%, 100% { transform: translate(0px, 0px) scale(1); }
+                    33% { transform: translate(30px, -20px) scale(1.1); }
+                    66% { transform: translate(-20px, 30px) scale(0.9); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Initialize effects when page loads
+        window.addEventListener('load', () => {
+            createBackgroundEffects();
+        });
+        
+        // Update effects when variation changes
+        document.getElementById('variation-select').addEventListener('change', () => {
+            setTimeout(createBackgroundEffects, 100);
+        });
+        
+        // Add smooth transitions between variations
+        document.querySelectorAll('.variation').forEach(variation => {
+            variation.style.transition = 'opacity 0.5s ease-in-out';
+        });
+        
+        // Enhanced button hover effects
+        document.querySelectorAll('.common-btn').forEach(btn => {
+            btn.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-3px) scale(1.05)';
+            });
+            
+            btn.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0) scale(1)';
+            });
+        });
+        
+        // Add typing effect to quotes
+        function typeWriter(element, text, speed = 50) {
+            element.innerHTML = '';
+            let i = 0;
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+        
+        // Initialize typing effect for active variation
+        function initTypingEffect() {
+            const activeVariation = document.querySelector('.variation.active');
+            const titleElement = activeVariation.querySelector('.main-text, .academic-title, .zen-title, .retro-title, .glass-title');
+            if (titleElement) {
+                const originalText = titleElement.textContent;
+                setTimeout(() => typeWriter(titleElement, originalText), 500);
+            }
+        }
+        
+        // Add intersection observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        });
+        
+        // Observe reward cards for scroll animation
+        document.querySelectorAll('.reward-card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(30px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+        
+        // Add keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key >= '1' && e.key <= '5') {
+                const variationNumber = e.key;
+                document.getElementById('variation-select').value = 'v' + variationNumber;
+                switchVariation('v' + variationNumber);
+                createBackgroundEffects();
+            }
+        });
+        
+        // Add welcome message
+        setTimeout(() => {
+            const tooltip = document.createElement('div');
+            tooltip.style.cssText = `
+                position: fixed;
+                bottom: 20px;
+                left: 20px;
+                background: rgba(0,0,0,0.9);
+                color: white;
+                padding: 15px;
+                border-radius: 10px;
+                font-size: 14px;
+                z-index: 1000;
+                animation: fadeInOut 4s ease-in-out;
+            `;
+            tooltip.textContent = 'Press keys 1-5 to switch between design variations!';
+            document.body.appendChild(tooltip);
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes fadeInOut {
+                    0%, 100% { opacity: 0; transform: translateY(20px); }
+                    20%, 80% { opacity: 1; transform: translateY(0); }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            setTimeout(() => tooltip.remove(), 4000);
+        }, 2000);
+    </script>
+</body>
+</html>

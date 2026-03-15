@@ -1,0 +1,62 @@
+/* Keep this small – all modes reuse this */
+
+body {
+    background: linear-gradient(135deg,#667eea,#764ba2);
+    color:white;
+    font-family:'Inter',sans-serif;
+    padding-bottom:50px;
+}
+
+.nav-bar {
+    padding:15px;
+}
+
+.game-card {
+    background:rgba(255,255,255,0.08);
+    padding:20px;
+    border-radius:14px;
+    width:220px;
+    min-width:220px;
+}
+
+.game-row {
+    display:flex;
+    gap:20px;
+    overflow-x:auto;
+    padding:20px;
+}
+
+.play-btn {
+    padding:8px 14px;
+    border-radius:20px;
+    border:none;
+    background:linear-gradient(45deg,#e74c3c,#f39c12);
+    color:white;
+}
+
+#game-modal {
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.7);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}
+
+#game-box {
+    width:90%;
+    max-width:800px;
+    background:#222;
+    padding:20px;
+    border-radius:18px;
+}
+
+.grid {
+    display:grid;
+    gap:4px;
+}
+
+.mobile-controller {
+    margin-top:20px;
+    text-align:center;
+}

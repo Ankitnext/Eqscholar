@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chaotic Mode – EQ Journey Hub</title>
+
+  <!-- Shared Game UI -->
+  <link rel="stylesheet" href="../shared/game-ui.css" />
+
+  <!-- Core + Modal + Mode JS -->
+  <script src="../../js/eq-core.js"></script>
+  <script src="../shared/modal.js" defer></script>
+  <script src="chaotic.js" defer></script>
+
+  <style>
+    :root {
+      --chaos-accent: #ff4757;
+      --chaos-bg: #0d0b12;
+      --chaos-card: rgba(12, 9, 20, 0.9);
+      --chaos-border: rgba(255, 255, 255, 0.08);
+      --pill-bg: rgba(255, 255, 255, 0.08);
+      --good-green: #2ecc71;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #2d1b2f, #0d0b12 60%, #050408);
+      min-height: 100vh;
+      color: #ecf0f1;
+    }
+
+    .nav-bar {
+      background: rgba(10, 0, 20, 0.95);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .mode-wrapper {
+      max-width: 1100px;
+      margin: 110px auto 60px;
+      padding: 0 18px 40px;
+    }
+
+    /* HERO */
+    .mode-hero {
+      background: linear-gradient(145deg, rgba(20, 6, 35, 0.95), rgba(46, 9, 49, 0.92));
+      border-radius: 24px;
+      padding: 26px 24px;
+      display: grid;
+      grid-template-columns: 3fr 2fr;
+      gap: 22px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75);
+    }
+
+    .mode-title {
+      font-size: 2.4rem;
+      color: var(--chaos-accent);
+      margin-bottom: 6px;
+    }
+
+    .mode-subtitle {
+      opacity: 0.9;
+      margin-bottom: 16px;
+      font-size: 1.05rem;
+    }
+
+    .mode-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pill-chip {
+      background: var(--pill-bg);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      border: 1px solid rgba(255,255,255,0.1);
+      text-transform: uppercase;
+    }
+
+    .mode-hero-right {
+      text-align: right;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 12px;
+    }
+
+    .state-tag {
+      background: rgba(255, 71, 87, 0.18);
+      border: 1px solid #ff6b81;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      border-radius: 999px;
+    }
+
+    .hero-stat-box {
+      background: rgba(0, 0, 0, 0.25);
+      border-radius: 12px;
+      padding: 10px 14px;
+      border: 1px solid rgba(255,255,255,0.1);
+    }
+
+    .hero-actions {
+      margin-top: 6px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .btn-soft {
+      background: rgba(255,255,255,0.06);
+      color: #fff;
+      padding: 9px 18px;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.9rem;
+    }
+
+    .btn-primary {
+      background: linear-gradient(120deg, #ff6b81, #ff4757);
+      color: #111;
+      padding: 9px 18px;
+      font-weight: 700;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+    }
+
+    .mode-section {
+      margin-top: 32px;
+      background: var(--chaos-card);
+      padding: 22px 20px;
+      border-radius: 18px;
+      border: 1px solid var(--chaos-border);
+      box-shadow: 0 10px 35px rgba(0,0,0,0.7);
+    }
+
+    .mode-section h2 {
+      color: var(--chaos-accent);
+      margin-bottom: 8px;
+      display: flex;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .section-lead {
+      opacity: 0.9;
+      margin-bottom: 12px;
+    }
+
+    .section-grid-2 {
+      display: grid;
+      grid-template-columns: 3fr 2.2fr;
+      gap: 18px;
+    }
+
+    .bullet-card, .note-box {
+      background: rgba(255,255,255,0.05);
+      padding: 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,0.06);
+    }
+
+    .objective-list {
+      display: grid;
+      gap: 10px;
+    }
+
+    .objective-item {
+      background: rgba(255,255,255,0.06);
+      padding: 10px;
+      border-radius: 14px;
+      display: flex;
+      gap: 10px;
+    }
+
+    .skill-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    }
+
+    .skill-card {
+      background: rgba(255,255,255,0.06);
+      padding: 12px;
+      border-radius: 16px;
+    }
+
+    .method-grid {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    }
+
+    .method-card {
+      background: rgba(255,255,255,0.05);
+      padding: 12px;
+      border-radius: 16px;
+    }
+
+    .chain-grid {
+      display: grid;
+      gap: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    }
+
+    .chain-column {
+      background: rgba(10,10,15,0.35);
+      padding: 14px;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.07);
+    }
+
+    .game-card {
+      background: rgba(255,255,255,0.05);
+      padding: 14px;
+      border-radius: 18px;
+      width: 240px;
+      border: 1px solid rgba(255,255,255,0.12);
+    }
+
+    .game-pill {
+      position: absolute;
+      right: 10px;
+      top: 8px;
+      background: rgba(0,0,0,0.3);
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.75rem;
+    }
+
+    .play-btn {
+      background: linear-gradient(120deg, #ff6b81, #ff4757);
+      color: #111;
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    @media (max-width: 850px) {
+      .mode-hero {
+        grid-template-columns: 1fr;
+      }
+      .mode-hero-right {
+        align-items: flex-start;
+        text-align: left;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- ••• TOP NAV ••• -->
+  <nav class="nav-bar">
+    <div class="logo">🔥 Chaotic Mode</div>
+    <div class="nav-links">
+      <a href="../../journey-map.html">Journey Map</a>
+      <a href="../../index.html">Home</a>
+      <a href="../../games.html">Games</a>
+    </div>
+  </nav>
+
+  <main class="mode-wrapper">
+
+    <!-- ••• HERO ••• -->
+    <section class="mode-hero">
+      <div>
+        <div class="mode-title">Chaotic Mode – 100–199 EQ</div>
+        <div class="mode-subtitle">Your emotions feel loud, fast, conflicting, or unstable. Here you learn control without suppression.</div>
+
+        <div class="mode-pills">
+          <span class="pill-chip">Energy: High</span>
+          <span class="pill-chip">Emotions: Reactive · Flip-flop</span>
+          <span class="pill-chip">Goal: Stability & Control</span>
+        </div>
+      </div>
+
+      <div class="mode-hero-right">
+        <div class="state-tag">🔥 Emotional Storming</div>
+        <div class="hero-stat-box">
+          <strong>Here you will learn:</strong>
+          <ul style="margin-left: 18px; margin-top: 6px;">
+            <li>Spot triggers behind chaos</li>
+            <li>Pause before reacting</li>
+            <li>Ground your body</li>
+            <li>Choose better responses</li>
+          </ul>
+        </div>
+
+        <div class="hero-actions">
+          <button class="btn-soft" onclick="startLesson('chaotic-mode')">Read Intro Lesson</button>
+          <button class="btn-primary" onclick="document.getElementById('games-section').scrollIntoView({behavior:'smooth'})">Jump to Games</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- 1. WHERE YOU ARE -->
+    <section class="mode-section">
+      <h2>⚡ Where You Are Right Now</h2>
+      <p class="section-lead">Chaotic Mode means energy without direction. Emotions fire fast, but aren’t grounded.</p>
+
+      <div class="section-grid-2">
+        <div class="bullet-card">
+          <ul>
+            <li>Mood swings within minutes</li>
+            <li>Overreaction to small triggers</li>
+            <li>Confusion between anger / fear / jealousy</li>
+            <li>Regretting reactions after calming down</li>
+          </ul>
+        </div>
+
+        <div class="note-box">
+          <strong>Note:</strong> Chaos is not “bad.” Shiva says: “Energy without precision becomes destruction.”  
+          Chaotic Mode is simply your energy asking for **focus**.
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. WHAT YOU LEARN -->
+    <section class="mode-section">
+      <h2>🎯 What You Will Learn</h2>
+
+      <div class="objective-list">
+        <div class="objective-item"><div>🔥 Name the trigger behind chaos</div></div>
+        <div class="objective-item"><div>🧱 Insert pause between trigger → reaction</div></div>
+        <div class="objective-item"><div>🫁 Control body heat through breath</div></div>
+        <div class="objective-item"><div>🧘 Understand your emotional “signature”</div></div>
+      </div>
+    </section>
+
+    <!-- 3. SKILLS -->
+    <section class="mode-section">
+      <h2>🧠 Skills You Unlock</h2>
+
+      <div class="skill-grid">
+        <div class="skill-card">
+          <strong>🎯 Trigger Awareness</strong>
+          <p>See the “real trigger” instead of reacting to the surface.</p>
+        </div>
+
+        <div class="skill-card">
+          <strong>⏸ Reaction Pause</strong>
+          <p>Create 1-second gap before exploding.</p>
+        </div>
+
+        <div class="skill-card">
+          <strong>🌡 Body Heat Control</strong>
+          <p>Calm physical storm through breath + grounding.</p>
+        </div>
+
+        <div class="skill-card">
+          <strong>🌀 Emotional Mapping</strong>
+          <p>Recognize whether it’s anger, jealousy, shame, or fear.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. METHODS -->
+    <section class="mode-section">
+      <h2>🧘 Daily Methods (Shiva Calm)</h2>
+
+      <div class="method-grid">
+        <div class="method-card">
+          <strong>🔥 Trigger Check (10s)</strong>
+          <ul>
+            <li>Pause</li>
+            <li>Ask: “What is the *real* pain?”</li>
+            <li>Name the trigger</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <strong>🌬 Cooling Exhale (4–8)</strong>
+          <ul>
+            <li>Inhale 4</li>
+            <li>Exhale 8</li>
+            <li>Repeat x5</li>
+          </ul>
+        </div>
+
+        <div class="method-card">
+          <strong>🌡 Storm Thermometer</strong>
+          <p>Rate intensity 1–10. Don’t act above 6.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. CHAIN -->
+    <section class="mode-section">
+      <h2>⚠ Chain Reaction of Chaos</h2>
+
+      <div class="chain-grid">
+
+        <div class="chain-column">
+          <strong style="color:#ff6b81;">❌ No Control</strong>
+          <ul>
+            <li>Small trigger → big reaction</li>
+            <li>Body heats up</li>
+            <li>Mind jumps to worst story</li>
+            <li>Hurt relationships</li>
+          </ul>
+        </div>
+
+        <div class="chain-column">
+          <strong style="color:#2ecc71;">✅ Controlled Chaos</strong>
+          <ul>
+            <li>Trigger spotted early</li>
+            <li>1-second pause</li>
+            <li>Cooled breath</li>
+            <li>Wise response</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- 6. GAMES -->
+    <section class="mode-section" id="games-section">
+      <h2>🎮 Chaotic Mode – Training Games</h2>
+
+      <div style="display:flex; flex-wrap:wrap; gap:16px; margin-top:12px;">
+
+        <div class="game-card">
+          <div class="game-icon">🎯</div>
+          <div class="game-name">Trigger Radar</div>
+          <div class="game-desc">Find the real emotional trigger under the chaos.</div>
+          <button class="play-btn" data-game="chaosRadar">Play</button>
+        </div>
+
+        <div class="game-card">
+          <div class="game-icon">⏸️</div>
+          <div class="game-name">Reaction Switch</div>
+          <div class="game-desc">Choose higher responses instead of impulsive reactions.</div>
+          <button class="play-btn" data-game="chaosSwitch">Play</button>
+        </div>
+
+        <div class="game-card">
+          <div class="game-icon">🫁</div>
+          <div class="game-name">Body Scan Alert</div>
+          <div class="game-desc">Tap where chaos lives in your body.</div>
+          <button class="play-btn" data-game="chaosBodyScan">Play</button>
+        </div>
+
+        <div class="game-card">
+          <div class="game-icon">🌬️</div>
+          <div class="game-name">Breath Warrior</div>
+          <div class="game-desc">Match breath cycles to calm the storm.</div>
+          <button class="play-btn" data-game="chaosBreath">Play</button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- NEXT -->
+    <section class="mode-section">
+      <h2>🚀 Next Steps</h2>
+
+      <button class="btn-soft" onclick="location.href='../../journey-map.html'">⬅ Back to Journey Map</button>
+      <button class="btn-soft" onclick="location.href='../../games.html'">🎮 Explore All Games</button>
+      <button class="btn-primary" onclick="location.href='../../index5.html'">📝 Take Chaotic Quiz</button>
+    </section>
+
+  </main>
+
+  <!-- GAME MODAL -->
+  <div id="game-modal">
+    <div id="game-box">
+      <div id="game-header">
+        <div>
+          <div id="game-title"></div>
+        </div>
+        <button id="game-close">&times;</button>
+      </div>
+      <div id="game-area"></div>
+    </div>
+  </div>
+
+</body>
+</html>
